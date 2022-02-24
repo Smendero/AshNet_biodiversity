@@ -1,0 +1,5838 @@
+%!PS-Adobe-3.0 EPSF-3.0
+%%DocumentNeededResources: font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Helvetica-Oblique
+%%+ font Helvetica-BoldOblique
+%%+ font Symbol
+%%Title: R Graphics Output
+%%Creator: R Software
+%%Pages: (atend)
+%%BoundingBox: 0 0 504 360
+%%EndComments
+%%BeginProlog
+/bp  { gs sRGB gs } def
+% begin .ps.prolog
+/gs  { gsave } bind def
+/gr  { grestore } bind def
+/ep  { showpage gr gr } bind def
+/m   { moveto } bind def
+/l  { rlineto } bind def
+/np  { newpath } bind def
+/cp  { closepath } bind def
+/f   { fill } bind def
+/o   { stroke } bind def
+/c   { newpath 0 360 arc } bind def
+/r   { 4 2 roll moveto 1 copy 3 -1 roll exch 0 exch rlineto 0 rlineto -1 mul 0 exch rlineto closepath } bind def
+/p1  { stroke } bind def
+/p2  { gsave bg fill grestore newpath } bind def
+/p3  { gsave bg fill grestore stroke } bind def
+/p6  { gsave bg eofill grestore newpath } bind def
+/p7  { gsave bg eofill grestore stroke } bind def
+/t   { 5 -2 roll moveto gsave rotate
+       1 index stringwidth pop
+       mul neg 0 rmoveto show grestore } bind def
+/ta  { 4 -2 roll moveto gsave rotate show } bind def
+/tb  { 2 -1 roll 0 rmoveto show } bind def
+/cl  { grestore gsave newpath 3 index 3 index moveto 1 index
+       4 -1 roll lineto  exch 1 index lineto lineto
+       closepath clip newpath } bind def
+/rgb { setrgbcolor } bind def
+/s   { scalefont setfont } bind def
+% end   .ps.prolog
+/sRGB { [ /CIEBasedABC
+          << /DecodeLMN
+               [ { dup 0.03928 le
+                        {12.92321 div}
+                        {0.055 add 1.055 div 2.4 exp }
+                     ifelse
+                 } bind dup dup
+               ]
+             /MatrixLMN [0.412457 0.212673 0.019334
+                         0.357576 0.715152 0.119192
+                         0.180437 0.072175 0.950301]
+             /WhitePoint [0.9505 1.0 1.0890]
+           >>
+         ] setcolorspace } bind def
+/srgb { setcolor } bind def
+% begin encoding
+/WinAnsiEncoding [
+ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+ /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef
+ /space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright
+ /parenleft /parenright /asterisk /plus /comma /minus /period /slash
+ /zero /one /two /three /four /five /six /seven
+ /eight /nine /colon /semicolon /less /equal /greater /question
+ /at /A /B /C /D /E /F /G
+ /H /I /J /K /L /M /N /O
+ /P /Q /R /S /T /U /V /W
+ /X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore
+ /grave /a /b /c /d /e /f /g
+ /h /i /j /k /l /m /n /o
+ /p /q /r /s /t /u /v /w
+ /x /y /z /braceleft /bar /braceright /asciitilde /.notdef
+ /Euro /.notdef /quotesinglbase /florin /quotedblbase /ellipsis /dagger /daggerdbl
+ /circumflex /perthousand /Scaron /guilsinglleft /OE /.notdef /Zcaron /.notdef
+ /.notdef /quoteleft /quoteright /quotedblleft /quotedblright /bullet /endash /emdash
+ /tilde /trademark /scaron /guilsinglright /oe /.notdef /zcaron /Ydieresis
+ /space /exclamdown /cent /sterling /currency /yen /brokenbar /section
+ /dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron
+ /degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /periodcentered
+ /cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown
+ /Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla
+ /Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis
+ /Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply
+ /Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls
+ /agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla
+ /egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis
+ /eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide
+ /oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis
+]
+ def
+% end encoding
+%%IncludeResource: font Helvetica
+/Helvetica findfont
+dup length dict begin
+  {1 index /FID ne {def} {pop pop} ifelse} forall
+  /Encoding WinAnsiEncoding def
+  currentdict
+  end
+/Font1 exch definefont pop
+%%IncludeResource: font Helvetica-Bold
+/Helvetica-Bold findfont
+dup length dict begin
+  {1 index /FID ne {def} {pop pop} ifelse} forall
+  /Encoding WinAnsiEncoding def
+  currentdict
+  end
+/Font2 exch definefont pop
+%%IncludeResource: font Helvetica-Oblique
+/Helvetica-Oblique findfont
+dup length dict begin
+  {1 index /FID ne {def} {pop pop} ifelse} forall
+  /Encoding WinAnsiEncoding def
+  currentdict
+  end
+/Font3 exch definefont pop
+%%IncludeResource: font Helvetica-BoldOblique
+/Helvetica-BoldOblique findfont
+dup length dict begin
+  {1 index /FID ne {def} {pop pop} ifelse} forall
+  /Encoding WinAnsiEncoding def
+  currentdict
+  end
+/Font4 exch definefont pop
+%%IncludeResource: font Symbol
+/Symbol findfont
+dup length dict begin
+  {1 index /FID ne {def} {pop pop} ifelse} forall
+  currentdict
+  end
+/Font5 exch definefont pop
+%%EndProlog
+%%Page: 1 1
+bp
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+45.99 31.91 380.46 354.52 cl
+0.9216 0.9216 0.9216 srgb
+0.53 setlinewidth
+[] 0 setdash
+0 setlinecap
+1 setlinejoin
+10.00 setmiterlimit
+np
+45.99 95.46 m
+334.47 0 l
+o
+np
+45.99 193.22 m
+334.47 0 l
+o
+np
+45.99 290.98 m
+334.47 0 l
+o
+1.07 setlinewidth
+[] 0 setdash
+np
+45.99 46.57 m
+334.47 0 l
+o
+np
+45.99 144.34 m
+334.47 0 l
+o
+np
+45.99 242.10 m
+334.47 0 l
+o
+np
+45.99 339.86 m
+334.47 0 l
+o
+np
+69.32 31.91 m
+0 322.61 l
+o
+np
+108.21 31.91 m
+0 322.61 l
+o
+np
+147.11 31.91 m
+0 322.61 l
+o
+np
+186.00 31.91 m
+0 322.61 l
+o
+np
+224.89 31.91 m
+0 322.61 l
+o
+np
+263.78 31.91 m
+0 322.61 l
+o
+np
+302.67 31.91 m
+0 322.61 l
+o
+np
+341.57 31.91 m
+0 322.61 l
+o
+0.5333 0.8000 0.9333 srgb
+0.71 setlinewidth
+[] 0 setdash
+1 setlinecap
+263.78 300.95 1.95 c p1
+263.78 339.86 1.95 c p1
+69.32 335.38 1.95 c p1
+69.32 310.43 1.95 c p1
+108.21 318.17 1.95 c p1
+108.21 318.17 1.95 c p1
+341.57 259.87 1.95 c p1
+341.57 320.71 1.95 c p1
+302.67 248.40 1.95 c p1
+224.89 184.90 1.95 c p1
+224.89 296.95 1.95 c p1
+224.89 209.13 1.95 c p1
+224.89 221.80 1.95 c p1
+186.00 237.62 1.95 c p1
+186.00 320.51 1.95 c p1
+186.00 248.40 1.95 c p1
+186.00 288.03 1.95 c p1
+186.00 276.34 1.95 c p1
+186.00 288.60 1.95 c p1
+147.11 259.59 1.95 c p1
+186.00 301.79 1.95 c p1
+186.00 276.34 1.95 c p1
+186.00 211.81 1.95 c p1
+186.00 312.82 1.95 c p1
+186.00 328.92 1.95 c p1
+186.00 266.10 1.95 c p1
+224.89 264.37 1.95 c p1
+224.89 285.96 1.95 c p1
+224.89 303.03 1.95 c p1
+224.89 234.18 1.95 c p1
+263.78 288.74 1.95 c p1
+263.78 335.38 1.95 c p1
+147.11 264.37 1.95 c p1
+69.32 324.71 1.95 c p1
+69.32 324.71 1.95 c p1
+341.57 305.86 1.95 c p1
+341.57 205.26 1.95 c p1
+108.21 335.38 1.95 c p1
+108.21 288.74 1.95 c p1
+302.67 278.01 1.95 c p1
+np
+ 263.78 333.42 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 263.78 321.21 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 69.32 342.90 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 69.32 338.42 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 108.21 333.42 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 108.21 338.42 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 341.57 318.73 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 341.57 295.05 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 302.67 301.59 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 224.89 336.93 m
+2.63 -4.55 l
+-5.26 0 l
+cp p1
+np
+ 224.89 300.34 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 336.98 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 335.75 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 186.00 191.09 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 313.04 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 331.80 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 317.36 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 308.42 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 323.01 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 147.11 252.52 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 286.51 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 339.36 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 309.84 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 324.87 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 334.78 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 288.55 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 224.89 308.81 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 306.37 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 329.88 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 314.06 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 263.78 303.99 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 263.78 303.99 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 147.11 302.92 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 69.32 321.21 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 69.32 327.75 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 341.57 272.83 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 341.57 342.90 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 108.21 303.99 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 108.21 327.75 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 302.67 313.21 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+66.56 310.43 m
+5.53 0 l
+o
+np
+69.32 307.66 m
+0 5.53 l
+o
+np
+66.56 310.43 m
+5.53 0 l
+o
+np
+69.32 307.66 m
+0 5.53 l
+o
+np
+105.45 335.38 m
+5.53 0 l
+o
+np
+108.21 332.62 m
+0 5.53 l
+o
+np
+105.45 318.17 m
+5.53 0 l
+o
+np
+108.21 315.40 m
+0 5.53 l
+o
+np
+261.02 335.38 m
+5.53 0 l
+o
+np
+263.78 332.62 m
+0 5.53 l
+o
+np
+261.02 335.38 m
+5.53 0 l
+o
+np
+263.78 332.62 m
+0 5.53 l
+o
+np
+299.91 195.03 m
+5.53 0 l
+o
+np
+302.67 192.26 m
+0 5.53 l
+o
+np
+338.80 327.36 m
+5.53 0 l
+o
+np
+341.57 324.59 m
+0 5.53 l
+o
+np
+338.80 289.44 m
+5.53 0 l
+o
+np
+341.57 286.68 m
+0 5.53 l
+o
+np
+144.34 279.97 m
+5.53 0 l
+o
+np
+147.11 277.20 m
+0 5.53 l
+o
+np
+183.23 337.18 m
+5.53 0 l
+o
+np
+186.00 334.42 m
+0 5.53 l
+o
+np
+183.23 301.17 m
+5.53 0 l
+o
+np
+186.00 298.40 m
+0 5.53 l
+o
+np
+183.23 302.31 m
+5.53 0 l
+o
+np
+186.00 299.55 m
+0 5.53 l
+o
+np
+183.23 302.31 m
+5.53 0 l
+o
+np
+186.00 299.55 m
+0 5.53 l
+o
+np
+183.23 306.52 m
+5.53 0 l
+o
+np
+186.00 303.75 m
+0 5.53 l
+o
+np
+183.23 332.05 m
+5.53 0 l
+o
+np
+186.00 329.28 m
+0 5.53 l
+o
+np
+222.13 297.87 m
+5.52 0 l
+o
+np
+224.89 295.11 m
+0 5.53 l
+o
+np
+222.13 285.66 m
+5.52 0 l
+o
+np
+224.89 282.89 m
+0 5.53 l
+o
+np
+222.13 283.31 m
+5.52 0 l
+o
+np
+224.89 280.55 m
+0 5.53 l
+o
+np
+222.13 255.77 m
+5.52 0 l
+o
+np
+224.89 253.01 m
+0 5.53 l
+o
+np
+66.56 300.95 m
+5.53 0 l
+o
+np
+69.32 298.19 m
+0 5.53 l
+o
+np
+66.56 324.71 m
+5.53 0 l
+o
+np
+69.32 321.95 m
+0 5.53 l
+o
+np
+105.45 288.74 m
+5.53 0 l
+o
+np
+108.21 285.98 m
+0 5.52 l
+o
+np
+105.45 300.95 m
+5.53 0 l
+o
+np
+108.21 298.19 m
+0 5.53 l
+o
+np
+144.34 280.49 m
+5.53 0 l
+o
+np
+147.11 277.72 m
+0 5.53 l
+o
+np
+183.23 298.10 m
+5.53 0 l
+o
+np
+186.00 295.34 m
+0 5.52 l
+o
+np
+183.23 321.37 m
+5.53 0 l
+o
+np
+186.00 318.61 m
+0 5.52 l
+o
+np
+183.23 193.72 m
+5.53 0 l
+o
+np
+186.00 190.95 m
+0 5.53 l
+o
+np
+183.23 288.03 m
+5.53 0 l
+o
+np
+186.00 285.26 m
+0 5.53 l
+o
+np
+183.23 240.36 m
+5.53 0 l
+o
+np
+186.00 237.60 m
+0 5.53 l
+o
+np
+183.23 216.71 m
+5.53 0 l
+o
+np
+186.00 213.95 m
+0 5.53 l
+o
+np
+222.13 284.11 m
+5.52 0 l
+o
+np
+224.89 281.34 m
+0 5.53 l
+o
+np
+222.13 169.29 m
+5.52 0 l
+o
+np
+224.89 166.53 m
+0 5.53 l
+o
+np
+222.13 286.56 m
+5.52 0 l
+o
+np
+224.89 283.80 m
+0 5.53 l
+o
+np
+222.13 324.65 m
+5.52 0 l
+o
+np
+224.89 321.89 m
+0 5.53 l
+o
+np
+261.02 324.71 m
+5.53 0 l
+o
+np
+263.78 321.95 m
+0 5.53 l
+o
+np
+261.02 310.43 m
+5.53 0 l
+o
+np
+263.78 307.66 m
+0 5.53 l
+o
+np
+299.91 262.32 m
+5.53 0 l
+o
+np
+302.67 259.55 m
+0 5.53 l
+o
+np
+338.80 316.29 m
+5.53 0 l
+o
+np
+341.57 313.52 m
+0 5.53 l
+o
+np
+338.80 226.34 m
+5.53 0 l
+o
+np
+341.57 223.58 m
+0 5.53 l
+o
+0.0667 0.4667 0.2000 srgb
+302.67 246.14 1.95 c p1
+341.57 261.78 1.95 c p1
+341.57 324.04 1.95 c p1
+263.78 330.38 1.95 c p1
+263.78 339.86 1.95 c p1
+69.32 300.95 1.95 c p1
+69.32 339.86 1.95 c p1
+108.21 271.52 1.95 c p1
+108.21 300.95 1.95 c p1
+186.00 322.21 1.95 c p1
+186.00 331.89 1.95 c p1
+186.00 295.65 1.95 c p1
+224.89 294.67 1.95 c p1
+224.89 249.48 1.95 c p1
+224.89 330.49 1.95 c p1
+224.89 302.31 1.95 c p1
+341.57 318.73 1.95 c p1
+341.57 202.12 1.95 c p1
+263.78 318.17 1.95 c p1
+263.78 335.38 1.95 c p1
+224.89 272.78 1.95 c p1
+224.89 316.36 1.95 c p1
+224.89 232.62 1.95 c p1
+224.89 321.17 1.95 c p1
+np
+ 302.67 248.01 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 341.57 236.71 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 341.57 285.70 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 263.78 245.14 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 263.78 274.56 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 69.32 245.14 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 69.32 342.90 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 108.21 245.14 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 108.21 303.99 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 341.82 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 338.33 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 342.90 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 224.89 325.25 m
+2.63 -4.55 l
+-5.26 0 l
+cp p1
+np
+ 224.89 329.82 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 324.01 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 336.15 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 341.57 264.82 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 341.57 272.83 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 263.78 274.56 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 263.78 291.78 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 331.36 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 331.13 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 315.54 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 324.08 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+66.56 339.86 m
+5.53 0 l
+o
+np
+69.32 337.09 m
+0 5.53 l
+o
+np
+66.56 288.74 m
+5.53 0 l
+o
+np
+69.32 285.98 m
+0 5.52 l
+o
+np
+105.45 288.74 m
+5.53 0 l
+o
+np
+108.21 285.98 m
+0 5.52 l
+o
+np
+105.45 318.17 m
+5.53 0 l
+o
+np
+108.21 315.40 m
+0 5.53 l
+o
+np
+261.02 324.71 m
+5.53 0 l
+o
+np
+263.78 321.95 m
+0 5.53 l
+o
+np
+261.02 339.86 m
+5.53 0 l
+o
+np
+263.78 337.09 m
+0 5.53 l
+o
+np
+299.91 246.14 m
+5.53 0 l
+o
+np
+302.67 243.38 m
+0 5.53 l
+o
+np
+338.80 310.85 m
+5.53 0 l
+o
+np
+341.57 308.09 m
+0 5.52 l
+o
+np
+338.80 326.90 m
+5.53 0 l
+o
+np
+341.57 324.14 m
+0 5.52 l
+o
+np
+183.23 339.86 m
+5.53 0 l
+o
+np
+186.00 337.09 m
+0 5.53 l
+o
+np
+183.23 325.26 m
+5.53 0 l
+o
+np
+186.00 322.49 m
+0 5.53 l
+o
+np
+183.23 322.34 m
+5.53 0 l
+o
+np
+186.00 319.58 m
+0 5.53 l
+o
+np
+222.13 283.95 m
+5.52 0 l
+o
+np
+224.89 281.19 m
+0 5.53 l
+o
+np
+222.13 262.58 m
+5.52 0 l
+o
+np
+224.89 259.81 m
+0 5.53 l
+o
+np
+222.13 306.61 m
+5.52 0 l
+o
+np
+224.89 303.85 m
+0 5.52 l
+o
+np
+222.13 339.34 m
+5.52 0 l
+o
+np
+224.89 336.58 m
+0 5.53 l
+o
+np
+222.13 315.31 m
+5.52 0 l
+o
+np
+224.89 312.55 m
+0 5.53 l
+o
+np
+222.13 266.10 m
+5.52 0 l
+o
+np
+224.89 263.33 m
+0 5.53 l
+o
+np
+222.13 281.84 m
+5.52 0 l
+o
+np
+224.89 279.07 m
+0 5.53 l
+o
+np
+222.13 317.09 m
+5.52 0 l
+o
+np
+224.89 314.33 m
+0 5.53 l
+o
+np
+261.02 324.71 m
+5.53 0 l
+o
+np
+263.78 321.95 m
+0 5.53 l
+o
+np
+261.02 339.86 m
+5.53 0 l
+o
+np
+263.78 337.09 m
+0 5.53 l
+o
+np
+338.80 296.83 m
+5.53 0 l
+o
+np
+341.57 294.07 m
+0 5.53 l
+o
+np
+338.80 190.98 m
+5.53 0 l
+o
+np
+341.57 188.21 m
+0 5.53 l
+o
+0.2000 0.1333 0.5333 srgb
+69.32 324.71 1.95 c p1
+69.32 339.86 1.95 c p1
+302.67 304.51 1.95 c p1
+263.78 339.86 1.95 c p1
+263.78 271.52 1.95 c p1
+341.57 287.30 1.95 c p1
+341.57 243.76 1.95 c p1
+108.21 339.86 1.95 c p1
+108.21 271.52 1.95 c p1
+147.11 284.74 1.95 c p1
+224.89 226.95 1.95 c p1
+224.89 242.52 1.95 c p1
+224.89 46.57 1.95 c p1
+224.89 93.22 1.95 c p1
+186.00 265.37 1.95 c p1
+186.00 211.81 1.95 c p1
+186.00 262.84 1.95 c p1
+186.00 279.44 1.95 c p1
+186.00 297.64 1.95 c p1
+186.00 304.32 1.95 c p1
+341.57 263.87 1.95 c p1
+341.57 324.71 1.95 c p1
+186.00 278.37 1.95 c p1
+186.00 290.95 1.95 c p1
+186.00 155.47 1.95 c p1
+186.00 314.71 1.95 c p1
+186.00 238.56 1.95 c p1
+186.00 313.93 1.95 c p1
+224.89 333.01 1.95 c p1
+224.89 326.55 1.95 c p1
+224.89 276.71 1.95 c p1
+224.89 218.23 1.95 c p1
+263.78 330.38 1.95 c p1
+263.78 300.95 1.95 c p1
+147.11 300.53 1.95 c p1
+69.32 339.86 1.95 c p1
+69.32 339.86 1.95 c p1
+302.67 333.55 1.95 c p1
+108.21 339.86 1.95 c p1
+108.21 339.86 1.95 c p1
+np
+ 69.32 338.42 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 69.32 327.75 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 302.67 329.71 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 263.78 245.14 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 263.78 327.75 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 341.57 213.97 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 341.57 260.62 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 108.21 327.75 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 108.21 338.42 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 147.11 311.56 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 224.89 311.47 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 316.02 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 316.89 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 297.59 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 186.00 269.62 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 320.42 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 276.03 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 271.94 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 274.14 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 338.89 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 341.57 331.08 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 341.57 327.75 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 342.81 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 336.69 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 340.58 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 254.95 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 342.30 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 186.00 339.72 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 224.89 254.61 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 332.24 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 222.01 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 224.89 268.65 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 263.78 291.78 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 263.78 313.47 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 147.11 298.93 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 69.32 325.68 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 69.32 296.25 m
+2.63 -4.56 l
+-5.26 0 l
+cp p1
+np
+ 302.67 307.65 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 108.21 325.68 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+ 108.21 330.68 m
+2.64 -4.56 l
+-5.27 0 l
+cp p1
+np
+66.56 335.38 m
+5.53 0 l
+o
+np
+69.32 332.62 m
+0 5.53 l
+o
+np
+66.56 330.38 m
+5.53 0 l
+o
+np
+69.32 327.62 m
+0 5.53 l
+o
+np
+105.45 288.74 m
+5.53 0 l
+o
+np
+108.21 285.98 m
+0 5.52 l
+o
+np
+105.45 288.74 m
+5.53 0 l
+o
+np
+108.21 285.98 m
+0 5.52 l
+o
+np
+261.02 300.95 m
+5.53 0 l
+o
+np
+263.78 298.19 m
+0 5.53 l
+o
+np
+261.02 310.43 m
+5.53 0 l
+o
+np
+263.78 307.66 m
+0 5.53 l
+o
+np
+299.91 321.57 m
+5.53 0 l
+o
+np
+302.67 318.80 m
+0 5.53 l
+o
+np
+338.80 288.46 m
+5.53 0 l
+o
+np
+341.57 285.69 m
+0 5.53 l
+o
+np
+338.80 327.13 m
+5.53 0 l
+o
+np
+341.57 324.37 m
+0 5.52 l
+o
+np
+144.34 338.34 m
+5.53 0 l
+o
+np
+147.11 335.58 m
+0 5.53 l
+o
+np
+183.23 319.01 m
+5.53 0 l
+o
+np
+186.00 316.24 m
+0 5.53 l
+o
+np
+183.23 269.79 m
+5.53 0 l
+o
+np
+186.00 267.03 m
+0 5.53 l
+o
+np
+183.23 296.24 m
+5.53 0 l
+o
+np
+186.00 293.48 m
+0 5.53 l
+o
+np
+183.23 321.76 m
+5.53 0 l
+o
+np
+186.00 319.00 m
+0 5.53 l
+o
+np
+183.23 325.79 m
+5.53 0 l
+o
+np
+186.00 323.03 m
+0 5.53 l
+o
+np
+183.23 292.91 m
+5.53 0 l
+o
+np
+186.00 290.15 m
+0 5.53 l
+o
+np
+222.13 164.29 m
+5.52 0 l
+o
+np
+224.89 161.53 m
+0 5.52 l
+o
+np
+222.13 220.41 m
+5.52 0 l
+o
+np
+224.89 217.64 m
+0 5.53 l
+o
+np
+222.13 134.86 m
+5.52 0 l
+o
+np
+224.89 132.10 m
+0 5.53 l
+o
+np
+222.13 252.24 m
+5.52 0 l
+o
+np
+224.89 249.48 m
+0 5.53 l
+o
+np
+66.56 339.86 m
+5.53 0 l
+o
+np
+69.32 337.09 m
+0 5.53 l
+o
+np
+66.56 339.86 m
+5.53 0 l
+o
+np
+69.32 337.09 m
+0 5.53 l
+o
+np
+105.45 310.43 m
+5.53 0 l
+o
+np
+108.21 307.66 m
+0 5.53 l
+o
+np
+105.45 339.86 m
+5.53 0 l
+o
+np
+108.21 337.09 m
+0 5.53 l
+o
+np
+144.34 294.92 m
+5.53 0 l
+o
+np
+147.11 292.15 m
+0 5.53 l
+o
+np
+183.23 335.81 m
+5.53 0 l
+o
+np
+186.00 333.04 m
+0 5.53 l
+o
+np
+183.23 337.90 m
+5.53 0 l
+o
+np
+186.00 335.14 m
+0 5.53 l
+o
+np
+183.23 328.76 m
+5.53 0 l
+o
+np
+186.00 326.00 m
+0 5.52 l
+o
+np
+183.23 309.13 m
+5.53 0 l
+o
+np
+186.00 306.37 m
+0 5.53 l
+o
+np
+183.23 327.87 m
+5.53 0 l
+o
+np
+186.00 325.10 m
+0 5.53 l
+o
+np
+183.23 319.49 m
+5.53 0 l
+o
+np
+186.00 316.73 m
+0 5.53 l
+o
+np
+222.13 322.41 m
+5.52 0 l
+o
+np
+224.89 319.64 m
+0 5.53 l
+o
+np
+222.13 249.12 m
+5.52 0 l
+o
+np
+224.89 246.36 m
+0 5.53 l
+o
+np
+222.13 286.71 m
+5.52 0 l
+o
+np
+224.89 283.95 m
+0 5.53 l
+o
+np
+222.13 260.43 m
+5.52 0 l
+o
+np
+224.89 257.66 m
+0 5.53 l
+o
+np
+261.02 288.74 m
+5.53 0 l
+o
+np
+263.78 285.98 m
+0 5.52 l
+o
+np
+261.02 300.95 m
+5.53 0 l
+o
+np
+263.78 298.19 m
+0 5.53 l
+o
+np
+299.91 322.21 m
+5.53 0 l
+o
+np
+302.67 319.45 m
+0 5.53 l
+o
+np
+338.80 299.22 m
+5.53 0 l
+o
+np
+341.57 296.46 m
+0 5.52 l
+o
+np
+338.80 288.74 m
+5.53 0 l
+o
+np
+341.57 285.98 m
+0 5.52 l
+o
+0.2667 0.6667 0.6000 srgb
+69.32 300.95 1.95 c p1
+69.32 324.71 1.95 c p1
+341.57 320.91 1.95 c p1
+341.57 289.16 1.95 c p1
+302.67 292.01 1.95 c p1
+108.21 324.71 1.95 c p1
+108.21 335.38 1.95 c p1
+263.78 310.43 1.95 c p1
+263.78 339.86 1.95 c p1
+186.00 318.59 1.95 c p1
+186.00 278.73 1.95 c p1
+186.00 330.54 1.95 c p1
+186.00 277.83 1.95 c p1
+186.00 293.68 1.95 c p1
+186.00 299.77 1.95 c p1
+224.89 303.83 1.95 c p1
+224.89 209.13 1.95 c p1
+224.89 202.12 1.95 c p1
+224.89 184.90 1.95 c p1
+147.11 292.27 1.95 c p1
+263.78 310.43 1.95 c p1
+263.78 324.71 1.95 c p1
+108.21 310.43 1.95 c p1
+108.21 330.38 1.95 c p1
+224.89 297.64 1.95 c p1
+224.89 207.24 1.95 c p1
+224.89 262.05 1.95 c p1
+224.89 221.11 1.95 c p1
+186.00 312.74 1.95 c p1
+186.00 292.91 1.95 c p1
+186.00 261.25 1.95 c p1
+186.00 267.52 1.95 c p1
+186.00 291.88 1.95 c p1
+186.00 314.01 1.95 c p1
+147.11 271.31 1.95 c p1
+341.57 228.15 1.95 c p1
+341.57 325.67 1.95 c p1
+302.67 278.37 1.95 c p1
+69.32 335.38 1.95 c p1
+69.32 339.86 1.95 c p1
+np
+66.56 324.71 m
+5.53 0 l
+o
+np
+69.32 321.95 m
+0 5.53 l
+o
+np
+66.56 318.17 m
+5.53 0 l
+o
+np
+69.32 315.40 m
+0 5.53 l
+o
+np
+105.45 339.86 m
+5.53 0 l
+o
+np
+108.21 337.09 m
+0 5.53 l
+o
+np
+105.45 324.71 m
+5.53 0 l
+o
+np
+108.21 321.95 m
+0 5.53 l
+o
+np
+261.02 339.86 m
+5.53 0 l
+o
+np
+263.78 337.09 m
+0 5.53 l
+o
+np
+261.02 330.38 m
+5.53 0 l
+o
+np
+263.78 327.62 m
+0 5.53 l
+o
+np
+299.91 275.76 m
+5.53 0 l
+o
+np
+302.67 273.00 m
+0 5.53 l
+o
+np
+338.80 334.81 m
+5.53 0 l
+o
+np
+341.57 332.05 m
+0 5.53 l
+o
+np
+338.80 322.85 m
+5.53 0 l
+o
+np
+341.57 320.09 m
+0 5.53 l
+o
+np
+144.34 316.88 m
+5.53 0 l
+o
+np
+147.11 314.11 m
+0 5.53 l
+o
+np
+183.23 338.96 m
+5.53 0 l
+o
+np
+186.00 336.19 m
+0 5.53 l
+o
+np
+183.23 333.21 m
+5.53 0 l
+o
+np
+186.00 330.44 m
+0 5.53 l
+o
+np
+183.23 331.38 m
+5.53 0 l
+o
+np
+186.00 328.61 m
+0 5.53 l
+o
+np
+183.23 339.39 m
+5.53 0 l
+o
+np
+186.00 336.62 m
+0 5.53 l
+o
+np
+183.23 322.79 m
+5.53 0 l
+o
+np
+186.00 320.03 m
+0 5.52 l
+o
+np
+183.23 335.00 m
+5.53 0 l
+o
+np
+186.00 332.24 m
+0 5.53 l
+o
+np
+222.13 276.15 m
+5.52 0 l
+o
+np
+224.89 273.38 m
+0 5.53 l
+o
+np
+222.13 265.37 m
+5.52 0 l
+o
+np
+224.89 262.60 m
+0 5.53 l
+o
+np
+222.13 214.33 m
+5.52 0 l
+o
+np
+224.89 211.57 m
+0 5.53 l
+o
+np
+222.13 211.81 m
+5.52 0 l
+o
+np
+224.89 209.04 m
+0 5.53 l
+o
+np
+66.56 330.38 m
+5.53 0 l
+o
+np
+69.32 327.62 m
+0 5.53 l
+o
+np
+66.56 339.86 m
+5.53 0 l
+o
+np
+69.32 337.09 m
+0 5.53 l
+o
+np
+105.45 300.95 m
+5.53 0 l
+o
+np
+108.21 298.19 m
+0 5.53 l
+o
+np
+105.45 335.38 m
+5.53 0 l
+o
+np
+108.21 332.62 m
+0 5.53 l
+o
+np
+144.34 294.67 m
+5.53 0 l
+o
+np
+147.11 291.91 m
+0 5.53 l
+o
+np
+183.23 319.49 m
+5.53 0 l
+o
+np
+186.00 316.73 m
+0 5.53 l
+o
+np
+183.23 247.66 m
+5.53 0 l
+o
+np
+186.00 244.89 m
+0 5.53 l
+o
+np
+183.23 312.34 m
+5.53 0 l
+o
+np
+186.00 309.57 m
+0 5.53 l
+o
+np
+183.23 321.89 m
+5.53 0 l
+o
+np
+186.00 319.13 m
+0 5.53 l
+o
+np
+183.23 293.68 m
+5.53 0 l
+o
+np
+186.00 290.91 m
+0 5.53 l
+o
+np
+183.23 312.66 m
+5.53 0 l
+o
+np
+186.00 309.90 m
+0 5.53 l
+o
+np
+222.13 249.48 m
+5.52 0 l
+o
+np
+224.89 246.72 m
+0 5.53 l
+o
+np
+222.13 152.08 m
+5.52 0 l
+o
+np
+224.89 149.31 m
+0 5.53 l
+o
+np
+222.13 229.31 m
+5.52 0 l
+o
+np
+224.89 226.55 m
+0 5.53 l
+o
+np
+222.13 245.75 m
+5.52 0 l
+o
+np
+224.89 242.99 m
+0 5.53 l
+o
+np
+261.02 335.38 m
+5.53 0 l
+o
+np
+263.78 332.62 m
+0 5.53 l
+o
+np
+261.02 324.71 m
+5.53 0 l
+o
+np
+263.78 321.95 m
+0 5.53 l
+o
+np
+299.91 307.62 m
+5.53 0 l
+o
+np
+302.67 304.86 m
+0 5.52 l
+o
+np
+338.80 317.60 m
+5.53 0 l
+o
+np
+341.57 314.83 m
+0 5.53 l
+o
+np
+338.80 324.96 m
+5.53 0 l
+o
+np
+341.57 322.19 m
+0 5.53 l
+o
+0.8000 0.4000 0.4667 srgb
+4.27 setlinewidth
+[ 17.07 17.07] 0 setdash
+0 setlinecap
+np
+45.99 212.67 m
+334.47 0 l
+o
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+/Font5 findfont 11 s
+342.63 226.12 (a) 0 0 t
+/Font1 findfont 11 s
+349.57 226.12 (= 0.05) 0 0 t
+0.5333 0.1333 0.3333 srgb
+4.27 setlinewidth
+[] 0 setdash
+np
+45.99 56.05 m
+334.47 0 l
+o
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+/Font1 findfont 11 s
+271.14 66.43 (Bonf) 0 ta
+-0.330 (erroni corrected ) tb gr
+/Font5 findfont 11 s
+373.52 66.43 (a) 0 0 t
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 9 s
+0.3020 0.3020 0.3020 srgb
+41.06 43.34 (0.001) 1 0 t
+41.06 141.10 (0.010) 1 0 t
+41.06 238.86 (0.100) 1 0 t
+41.06 336.63 (1.000) 1 0 t
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 9 s
+0.3020 0.3020 0.3020 srgb
+69.32 20.52 (ALN) .5 0 t
+108.21 20.52 (ALS) .5 0 t
+147.11 20.52 (ETM) .5 0 t
+186.00 20.52 (HLB) .5 0 t
+224.89 20.52 (ILK) .5 0 t
+263.78 20.52 (MSK) .5 0 t
+302.67 20.52 (PLD) .5 0 t
+341.57 20.52 (SRD) .5 0 t
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 11 s
+0 0 0 srgb
+213.22 7.90 (Site) .5 0 t
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 11 s
+0 0 0 srgb
+13.38 102.26 (p-v) 90 ta
+-0.275 (alue of adonis test against control) tb gr
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 11 s
+0 0 0 srgb
+396.90 271.34 (Set) 0 0 t
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0 0 0 srgb
+0.71 setlinewidth
+[] 0 setdash
+1 setlinecap
+1 setlinejoin
+10.00 setmiterlimit
+405.54 256.01 1.95 c p1
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0 0 0 srgb
+0.71 setlinewidth
+[] 0 setdash
+1 setlinecap
+1 setlinejoin
+10.00 setmiterlimit
+np
+ 405.54 241.77 m
+2.63 -4.56 l
+-5.27 0 l
+cp p1
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0 0 0 srgb
+0.71 setlinewidth
+[] 0 setdash
+1 setlinecap
+1 setlinejoin
+10.00 setmiterlimit
+np
+402.77 221.45 m
+5.53 0 l
+o
+np
+405.54 218.69 m
+0 5.53 l
+o
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 9 s
+0 0 0 srgb
+419.66 252.78 (ASV) 0 0 t
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 9 s
+0 0 0 srgb
+419.66 235.50 (Functional) 0 0 t
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 9 s
+0 0 0 srgb
+419.66 218.22 (Gen) 0 ta
+-0.090 (us) tb gr
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 11 s
+0 0 0 srgb
+396.90 181.79 (T) 0 ta
+-1.320 (arget) tb gr
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/bg { 0.2000 0.1333 0.5333 srgb } def
+0.2000 0.1333 0.5333 srgb
+0.71 setlinewidth
+[] 0 setdash
+1 setlinecap
+1 setlinejoin
+10.00 setmiterlimit
+405.54 166.46 1.95 c p3
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/bg { 0.0667 0.4667 0.2000 srgb } def
+0.0667 0.4667 0.2000 srgb
+0.71 setlinewidth
+[] 0 setdash
+1 setlinecap
+1 setlinejoin
+10.00 setmiterlimit
+405.54 149.18 1.95 c p3
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/bg { 0.2667 0.6667 0.6000 srgb } def
+0.2667 0.6667 0.6000 srgb
+0.71 setlinewidth
+[] 0 setdash
+1 setlinecap
+1 setlinejoin
+10.00 setmiterlimit
+405.54 131.90 1.95 c p3
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/bg { 0.5333 0.8000 0.9333 srgb } def
+0.5333 0.8000 0.9333 srgb
+0.71 setlinewidth
+[] 0 setdash
+1 setlinecap
+1 setlinejoin
+10.00 setmiterlimit
+405.54 114.62 1.95 c p3
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 9 s
+0 0 0 srgb
+419.66 163.23 (Ar) 0 ta
+0.360 (thropods \(F230\)) tb gr
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 9 s
+0 0 0 srgb
+419.66 145.95 (Bacter) 0 ta
+0.135 (ial \(16S\)) tb gr
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 9 s
+0 0 0 srgb
+419.66 128.67 (Eukar) 0 ta
+0.270 (y) tb
+-0.180 (otic \(18S\)) tb gr
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+/Font1 findfont 9 s
+0 0 0 srgb
+419.66 111.39 (Fungal \(ITS\)) 0 0 t
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+0.00 0.00 504.00 360.00 cl
+ep
+%%Trailer
+%%Pages: 1
+%%EOF

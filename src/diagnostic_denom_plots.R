@@ -1,0 +1,33 @@
+par(mfrow=c(1,3))
+
+blocks <- temp_inf$Treatment
+x <- aldex.clr(subset_aldex, blocks, denom="all")
+x.e <- aldex.effect(x)
+
+plot(x.e$diff.win, x.e$diff.btw, pch=19, col=rgb(0,0,0,0.1), cex=0.5, xlab="dispersion", ylab="difference", main="all")
+points(x.e$diff.win[x@denom], x.e$diff.btw[x@denom], pch=19, col=rgb(0.8,0.5,0,0.7), cex=0.5)
+points(x.e$diff.win[47:86], x.e$diff.btw[47:86], col=rgb(0.8,0,0,0.7), cex=0.5)
+points(x.e$diff.win[980:1000], x.e$diff.btw[980:1000], col=rgb(0.8,0,0,0.7), cex=0.5)
+abline(0,1)
+abline(0,-1)
+abline(h=0, col="gray", lty=2)
+
+x <- aldex.clr(subset_aldex, blocks, denom="iqlr")
+x.e <- aldex.effect(x)
+plot(x.e$diff.win, x.e$diff.btw, pch=19, col=rgb(0,0,0,0.1), cex=0.5, xlab="dispersion", ylab="difference", main="iqlr")
+points(x.e$diff.win[x@denom], x.e$diff.btw[x@denom], pch=19, col=rgb(0.8,0.5,0,0.7), cex=0.5)
+points(x.e$diff.win[47:86], x.e$diff.btw[47:86], col=rgb(0.8,0,0,0.7), cex=0.5)
+points(x.e$diff.win[980:1000], x.e$diff.btw[980:1000], col=rgb(0.8,0,0,0.7), cex=0.5)
+abline(0,1)
+abline(0,-1)
+abline(h=0, col="gray", lty=2)
+
+x <- aldex.clr(subset_aldex, blocks, denom="lvha")
+x.e <- aldex.effect(x)
+plot(x.e$diff.win, x.e$diff.btw, pch=19, col=rgb(0,0,0,0.1), cex=0.5, xlab="dispersion", ylab="difference", main="lvha")
+points(x.e$diff.win[x@denom], x.e$diff.btw[x@denom], pch=19, col=rgb(0.8,0.5,0,0.7), cex=0.5)
+points(x.e$diff.win[47:86], x.e$diff.btw[47:86], col=rgb(0.8,0,0,0.7), cex=0.5)
+points(x.e$diff.win[980:1000], x.e$diff.btw[980:1000], col=rgb(0.8,0,0,0.7), cex=0.5)
+abline(0,1)
+abline(0,-1)
+abline(h=0, col="gray", lty=2)

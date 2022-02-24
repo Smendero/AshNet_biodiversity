@@ -1,0 +1,1209 @@
+---
+title: "Spare"
+author: "Emily Smenderovac & Erik Emilson"
+date: "16/07/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Community Analyses Set up datasets for Aldex from non-rarefied data
+
+```{r initiate_dslist}
+ds_list = list()
+ds_list_count = 1
+```
+
+
+```{r ITS_diversity}
+
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_ITS.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-ITSraw[!ITSraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(ITSraw)[c(1, 4:ncol(ITSraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("ITS_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+rownames(Ord_data) <- Ord_data$`OTU ID`
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Dataframe with species information (e.g., Taxonomic breakdown, if applicable and to be used in plotting, example only has species code)
+spec_char_data <- data.frame(species = colnames(Orddf))
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = Ord_data)
+names(ds_list)[ds_list_count] <- "ITS_ASV"
+
+
+ds_list_count <- ds_list_count + 1
+
+FunGuild_data <- Ord_data
+
+FunGuild_data$Genus <- ifelse(FunGuild_data$gBP >=0.7, FunGuild_data$Genus, "unidentified")
+FunGuild_data$Species <- gsub("\\|.+$", "", ifelse(FunGuild_data$sBP >=0.6, FunGuild_data$Species, "unidentified"))
+
+FunGuild_data$`OTU ID` <- rownames(FunGuild_data)
+
+FunGuild_data <- FunGuild_data[,c("OTU ID", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")]
+
+write_delim(FunGuild_data, file("FUNGuild/FunGuild.taxa.txt", encoding="UTF-8"), delim="\t")
+
+```
+
+
+```{asis, eval=FALSE}
+## Conducted on Powershell on Windows
+cd FUNGuild
+
+python FUNGuild.py guild -taxa FunGuild.taxa.txt
+
+```
+
+```{r Fun_functional_data}
+FunGuild_data <- read.delim("FUNGuild/FunGuild.taxa.guilds.txt")
+
+Func_cover <- data.frame()
+
+## Make sure order matches
+FunGuild_data <- FunGuild_data[match(row.names(Ord_data), FunGuild_data$OTU), ]
+
+## Bind Ord_data and FunGuild assignments and cluster results
+funcOrddf <- Ord_data %>%
+  mutate(OTU = as.numeric(rownames(Ord_data))) %>%
+  left_join(FunGuild_data[, c("OTU", "taxon", "trait", "trophicMode", "guild", "growthForm")], by="OTU") %>%
+  filter(!guild %in% c("na", "NULL")) %>%
+  mutate(guild = gsub("Wood Saprotrop", "Wood Saprotroph", guild)) %>%
+  mutate(guild2 = ifelse(grepl("Gasteroid", growthForm),paste(guild, "Gasteroid", sep="-"), guild)) %>%
+  mutate(guild2 = ifelse(grepl("Rot", trait), paste(guild2, trait, sep="-"), guild2)) %>%
+  pivot_longer(cols = colnames(Orddf), names_to = "Sample", values_to = "count") %>%
+  group_by(Sample, guild2) %>%
+  summarize(count = sum(count>0)) %>% ## get the number of identified ASV in the sample with the activity
+  separate_rows(guild2, sep="-|=") %>%
+  filter(!guild2=="") %>%
+  pivot_wider(names_from = guild2, values_from = count, values_fn = sum) %>%
+  data.frame()
+
+row.names(funcOrddf) <- funcOrddf$Sample
+
+funcOrddf <- t(funcOrddf[, 2:ncol(funcOrddf)])
+
+cov.percent <- Ord_data %>%
+  mutate(OTU = as.numeric(rownames(Ord_data))) %>%
+  left_join(FunGuild_data[, c("OTU", "taxon", "trait", "trophicMode", "guild", "growthForm")], by="OTU") %>%
+  mutate(guild = gsub("Wood Saprotrop", "Wood Saprotroph", guild)) %>%
+  mutate(guild = ifelse(grepl("Gasteroid", growthForm),paste(guild, "Gasteroid", sep="-"), guild)) %>%
+  mutate(guild = ifelse(grepl("Rot", trait), paste(guild, trait, sep="-"), guild)) %>% 
+  select(c("guild", unique(as.character(char_data$Label)))) %>%
+  pivot_longer(-guild, values_to = "count", names_to = "sample") %>%
+  summarize(coverage = sum(count[!guild=="na"])/sum(count)*100)
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = funcOrddf, char_data=char_data, coverage = cov.percent$coverage)
+names(ds_list)[ds_list_count] <- "ITS_functional"
+
+ds_list_count <- ds_list_count + 1
+```
+
+
+```{r ITS_genus_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_ITS.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-ITSraw[!ITSraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(ITSraw)[c(1, 4:ncol(ITSraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("ITS_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.7, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "ITS_Genus"
+
+ds_list_count <- ds_list_count + 1
+```
+
+```{r 16S_data}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_16S.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-d16Sraw[!d16Sraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(d16Sraw)[c(1, 4:ncol(d16Sraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("X16S_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("\\.","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+rownames(Ord_data) <- Ord_data$`OTU ID`
+Orddf <- Ord_data[, colnames(Ord_data) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[ifelse(colnames(Orddf) %in% Sample_metadata$Label, 
+                                    match(colnames(Orddf), Sample_metadata$Label),
+                                    match(gsub("[[:alpha:]]$", "", colnames(Orddf)), gsub("[[:alpha:]]$", "", (Sample_metadata$Label)))), ]
+char_data$Label <- ifelse(char_data$Label %in% colnames(Orddf), char_data$Label, gsub("[[:alpha:]]$", "", (char_data$Label)))
+char_data$Seq_count <- low_num 
+
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = Ord_data)
+names(ds_list)[ds_list_count] <- "16S_ASV"
+
+ds_list_count <- ds_list_count + 1
+
+## Dataframe with species information (e.g., Taxonomic breakdown, if applicable and to be used in plotting, example only has species code)
+spec_char_data <- data.frame(species = colnames(Orddf))
+
+FaproTax_data <- Ord_data
+
+FaproTax_data$Genus <- ifelse(FaproTax_data$gBP >=0.5, FaproTax_data$Genus, "unidentified") 
+ ## No Species in bac df
+
+FaproTax_data$`OTU ID` <- rownames(FaproTax_data)
+
+FaproTax_data$taxonomy <- paste(paste("d", FaproTax_data$Domain, sep="__"), 
+                                paste("p", FaproTax_data$Phylum, sep="__"),
+                                paste("c", FaproTax_data$Class, sep="__"),
+                                paste("o", FaproTax_data$Order, sep="__"),
+                                paste("f", FaproTax_data$Family, sep="__"),
+                                paste("g", FaproTax_data$Genus, sep="__"),
+                                sep=";")
+
+FaproTax_data<- FaproTax_data[,c("taxonomy", colnames(Orddf))]
+
+write_delim(FaproTax_data, file("FAPROTAX_1.2.4/FaproTax_data.tsv", encoding="UTF-8"), delim="\t")
+
+```
+
+```{asis, eval=FALSE}
+## Conducted on Powershell on Windows
+cd FAPROTAX_1.2.4
+
+## Replaced is not statements with "!="
+
+python collapse_table_v2.py -i FaproTax_data.tsv -g FAPROTAX.txt -f -o functional_otu_table.tsv -r report.txt --column_names_are_in first_data_line  --keep_header_comments --non_numeric consolidate -v --row_names_are_in_column "taxonomy" --omit_columns 0 --normalize_collapsed none --group_leftovers_as 'other'
+
+## Matching was poor- as no id's to species - only 6087, 21452 leftovers
+
+```
+
+```{r 16S_functional_data}
+FaproTax_data <- read.delim("FAPROTAX_1.2.4/functional_otu_table.tsv", skip = 2)
+
+## Make sure order matches
+rownames(FaproTax_data) <- FaproTax_data$group
+
+funcOrddf <- FaproTax_data[,2:ncol(FaproTax_data)]
+
+colnames(funcOrddf) <- gsub("\\.", "-", colnames(funcOrddf))
+
+funcOrddf <- funcOrddf[, match(char_data$Label, colnames(funcOrddf))]
+
+cov.percent <- FaproTax_data %>% 
+  data.frame() %>% 
+  pivot_longer(-group, values_to = "count", names_to = "sample") %>%
+  summarize(coverage = sum(count[!group=="other"])/sum(count)*100)
+
+### Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = funcOrddf, char_data=char_data, coverage = cov.percent$coverage)
+names(ds_list)[ds_list_count] <- "16S_functional"
+
+ds_list_count <- ds_list_count + 1
+  
+```
+
+
+```{r 16S_genus_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_16S.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-d16Sraw[!d16Sraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(d16Sraw)[c(1, 4:ncol(d16Sraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("X16S_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("\\.","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.5, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[ifelse(colnames(Orddf) %in% Sample_metadata$Label, 
+                                    match(colnames(Orddf), Sample_metadata$Label),
+                                    match(gsub("[[:alpha:]]$", "", colnames(Orddf)), gsub("[[:alpha:]]$", "", (Sample_metadata$Label)))), ]
+char_data$Label <- ifelse(char_data$Label %in% colnames(Orddf), char_data$Label, gsub("[[:alpha:]]$", "", (char_data$Label)))
+char_data$Seq_count <- low_num 
+
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "16S_Genus"
+
+ds_list_count <- ds_list_count + 1
+```
+
+```{r arthropods_for_func}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_Arthro_Seq.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-F230raw[!F230raw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(F230raw)[c(1, 4:ncol(F230raw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("F230_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+rownames(Ord_data) <- Ord_data$`OTU ID`
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = Ord_data)
+names(ds_list)[ds_list_count] <- "F230_ASV"
+
+ds_list_count <- ds_list_count + 1
+
+
+
+BETSI_search <- str_c(gsub('^undef_', '', c(unique(Ord_data$Phylum), unique(Ord_data$Class), unique(Ord_data$Family), unique(Ord_data$Genus[Ord_data$gBP >= 0.3]), gsub("_", " ", unique(Ord_data$Species[Ord_data$sBP >= 0.7])))),
+                      collapse=";")
+
+
+BETSI_search1 <- str_c(c(unique(Ord_data$Class), unique(Ord_data$Family), unique(Ord_data$Genus[Ord_data$gBP >= 0.3])),
+                      collapse=";")
+
+BETSI_species <-  paste(c(gsub("_", " ", unique(Ord_data$Species[Ord_data$sBP >= 0.7]))), ";", sep="")
+write(c("Taxon_name", BETSI_species), "BETSI/BETSI_Species_check.csv")
+
+BETSI_species <- readLines("BETSI/transform.csv")[3:523]
+
+species_corrected <- data.frame()
+
+for(sp in BETSI_species){
+  species_corrected <-  rbind(species_corrected, 
+                              data.frame(original.species = str_split(sp, ";")[[1]][1], Corrected = str_split(sp, ";")[[1]][2]))
+}
+
+not_in_BETSI <- paste(sum(species_corrected$Corrected == "")/nrow(species_corrected)*100, "%")
+
+species_corrected <- species_corrected[!species_corrected$Corrected == "", ]
+
+BETSI_species_search <-  str_c(gsub("\t","", species_corrected$Corrected), collapse = ";")
+```
+
+```{r BETSI_diet_habitat}
+## Pull in the Class, Order, Genus search results for diet (includes species within the genus)
+unzip("BETSI/BETSI_0_cog_diet.zip", exdir="BETSI")
+
+BETSI_db_res <- read.delim("BETSI/BETSI_A.csv")
+BETSI_db_mat <- read.delim("BETSI/BETSI_B.csv")
+
+BETSI_db_mat <- BETSI_db_mat[, 1:(ncol(BETSI_db_mat)-2)]
+
+col_repl <- data.frame(orig=colnames(BETSI_db_mat), row.2 = t(BETSI_db_mat[1,])) %>%
+  mutate(grp = cumsum(!grepl("X", orig))) %>%
+  group_by(grp) %>%
+  mutate(first.term=orig[!grepl('X', orig)])
+
+colnames(BETSI_db_mat) <- c("Taxon", paste(col_repl$first.term, col_repl$X1, sep=".")[2:ncol(BETSI_db_mat)])
+
+BETSI_db_mat_diet <- BETSI_db_mat[2:nrow(BETSI_db_mat),] %>% pivot_longer(-Taxon, values_to = "presence", names_to = "Function")
+
+## Pull in the Class, Order, Genus search results for diet (includes species within the genus)
+unzip("BETSI/BETSI_0_cog_microhabitat.zip", exdir="BETSI")
+
+BETSI_db_res <- read.delim("BETSI/BETSI_A.csv")
+BETSI_db_mat <- read.delim("BETSI/BETSI_B.csv")
+
+BETSI_db_mat <- BETSI_db_mat[, 1:(ncol(BETSI_db_mat)-2)]
+
+col_repl <- data.frame(orig=colnames(BETSI_db_mat), row.2 = t(BETSI_db_mat[1,])) %>%
+  mutate(grp = cumsum(!grepl("X", orig))) %>%
+  group_by(grp) %>%
+  mutate(first.term=orig[!grepl('X', orig)])
+
+colnames(BETSI_db_mat) <- c("Taxon", paste(col_repl$first.term, col_repl$X1, sep=".")[2:ncol(BETSI_db_mat)])
+
+BETSI_db_mat_microhabitat <- BETSI_db_mat[2:nrow(BETSI_db_mat),] %>% pivot_longer(-Taxon, values_to = "presence", names_to = "Function")
+
+## Combine trait Matrixes
+
+BETSI_db_mat_combined <- rbind(BETSI_db_mat_diet, BETSI_db_mat_microhabitat)
+
+##
+
+BETSI_db_mat_combined <- BETSI_db_mat_combined %>%
+  filter(!presence == 0) %>%
+  group_by(Taxon) %>%
+  summarize(Function = str_c(unique(Function), collapse = "-")) 
+
+## Pull out traits data
+Traits <- data.frame()
+
+## Bind traits to each taxon by identified Genus - because almost as many distinct genus as identified species & not many species-level data in database from our dataset
+for(r in 1:nrow(Ord_data)){
+  
+  temp <- Ord_data[r,]
+  zOTU <- rownames(temp)
+  if(temp$gBP >= 0.3 & sum(grepl(temp$Genus, BETSI_db_mat_combined$Taxon))>0){
+     Trait <- unique(BETSI_db_mat_combined[grepl(temp$Genus, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else if(sum(grepl(temp$Family, BETSI_db_mat_combined$Taxon))>0){
+    Trait <- unique(BETSI_db_mat_combined[grepl(temp$Family, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else if(sum(grepl(temp$Order, BETSI_db_mat_combined$Taxon))>0){
+    Trait <- unique(BETSI_db_mat_combined[grepl(temp$Order, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else if(sum(grepl(temp$Class, BETSI_db_mat_combined$Taxon))>0){
+    Trait <- unique(BETSI_db_mat_combined[grepl(temp$Class, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else{Trait <- "other"}
+ 
+  
+  Traits <- rbind(Traits, 
+                  data.frame(OTU=zOTU, Trait=Trait))
+}
+
+
+## 1/3rd of data classified into a functional feeding group
+```
+
+```{r arthropods_functional_data_set-up}
+## Bind Ord_data and FunGuild assignments and cluster results
+funcOrddf <- Ord_data %>%
+  mutate(OTU = rownames(Ord_data)) %>%
+  left_join(Traits, by="OTU") %>%
+  pivot_longer(cols = colnames(Orddf), names_to = "Sample", values_to = "count") %>%
+  group_by(Sample, Trait) %>%
+  summarize(count = sum(count>0)) %>% ## get the number of identified ASV in the sample with the activity
+  separate_rows(Trait, sep="-|=") %>%
+  filter(!Trait=="|other") %>%
+  pivot_wider(names_from = Trait, values_from = count, values_fn = sum) %>%
+  data.frame()
+
+
+row.names(funcOrddf) <- funcOrddf$Sample
+
+funcOrddf <- funcOrddf[, !colnames(funcOrddf) == "Sample"]
+
+funcOrddf <- t(funcOrddf[match(char_data$Label, row.names(funcOrddf)), ])
+
+cov.percent <- Ord_data %>%
+  mutate(OTU = rownames(Ord_data)) %>%
+  left_join(Traits, by="OTU") %>%
+  select(-OTU) %>%
+  pivot_longer(cols = colnames(Orddf), values_to = "count", names_to = "sample") %>%
+  summarize(coverage = sum(count[!Trait=="other"])/sum(count)*100)
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = funcOrddf, char_data=char_data, coverage = cov.percent$coverage)
+names(ds_list)[ds_list_count] <- "F230_functional"
+
+ds_list_count <- ds_list_count + 1
+```
+
+```{r F230_genus_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_Arthro_Seq.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-F230raw[!F230raw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(F230raw)[c(1, 4:ncol(F230raw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("F230_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.3, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "F230_Genus"
+
+ds_list_count <- ds_list_count + 1
+
+```
+
+
+```{r 18S_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-d18Sraw[!d18Sraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(d18Sraw)[c(1, 4:ncol(d18Sraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("X18S_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("ESV"), Tax %>% rownames_to_column("ESV"), by="ESV")
+rownames(Ord_data) <- Ord_data$`OTU ID`
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = d18S)
+names(ds_list)[ds_list_count] <- "18S_ASV"
+
+ds_list_count <- ds_list_count + 1
+
+```
+
+```{r 18S_data_genus, echo=FALSE}
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-d18Sraw[!d18Sraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(d18Sraw)[c(1, 4:ncol(d18Sraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("X18S_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("ESV"), Tax %>% rownames_to_column("ESV"), by="ESV")
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.95, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "18S_Genus"
+
+ds_list_count <- ds_list_count + 1
+
+```
+
+```{r cleandata}
+clean_up <- ls()[!ls() %in% c("Sample_metadata", "metadata", "ds_list", "cust.cols", "diffs_chemistry", "num_p_tests")]
+rm(list=clean_up)
+rm(clean_up)
+```
+
+
+## Rarefied Datasets
+
+
+```{r initiate_dslist}
+ds_list = list()
+ds_list_count = 1
+```
+
+
+```{r ITS_diversity}
+
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_ITS.RData")
+
+## pull the matrix of species abundances
+  # row names should be sites, colnames species
+rownames(ITS) <- ITS$zOTU
+Ord_data <- ITS %>% select(-zOTU)
+colnames(Ord_data) <- gsub("_", "-", colnames(Ord_data))
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Dataframe with species information (e.g., Taxonomic breakdown, if applicable and to be used in plotting, example only has species code)
+spec_char_data <- data.frame(species = colnames(Orddf))
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = ITS)
+names(ds_list)[ds_list_count] <- "ITS_ASV"
+
+
+ds_list_count <- ds_list_count + 1
+
+FunGuild_data <- Ord_data
+
+FunGuild_data$Genus <- ifelse(FunGuild_data$gBP >=0.7, FunGuild_data$Genus, "unidentified")
+FunGuild_data$Species <- gsub("\\|.+$", "", ifelse(FunGuild_data$sBP >=0.6, FunGuild_data$Species, "unidentified"))
+
+FunGuild_data$`OTU ID` <- rownames(FunGuild_data)
+
+FunGuild_data <- FunGuild_data[,c("OTU ID", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")]
+
+write_delim(FunGuild_data, file("FUNGuild/FunGuild.taxa.txt", encoding="UTF-8"), delim="\t")
+
+```
+
+
+```{asis, eval=FALSE}
+## Conducted on Powershell on Windows
+cd FUNGuild
+
+python FUNGuild.py guild -taxa FunGuild.taxa.txt
+
+```
+
+```{r Fun_functional_data}
+FunGuild_data <- read.delim("FUNGuild/FunGuild.taxa.guilds.txt")
+
+Func_cover <- data.frame()
+
+## Make sure order matches
+FunGuild_data <- FunGuild_data[match(row.names(Ord_data), FunGuild_data$OTU), ]
+
+## Bind Ord_data and FunGuild assignments and cluster results
+funcOrddf <- Ord_data %>%
+  mutate(OTU = rownames(Ord_data)) %>%
+  left_join(FunGuild_data[, c("OTU", "taxon", "trait", "trophicMode", "guild", "growthForm")], by="OTU") %>%
+  filter(!guild %in% c("na", "NULL")) %>%
+  mutate(guild = gsub("Wood Saprotrop", "Wood Saprotroph", guild)) %>%
+  mutate(guild2 = ifelse(grepl("Gasteroid", growthForm),paste(guild, "Gasteroid", sep="-"), guild)) %>%
+  mutate(guild2 = ifelse(grepl("Rot", trait), paste(guild2, trait, sep="-"), guild2)) %>%
+  pivot_longer(cols = colnames(Orddf), names_to = "Sample", values_to = "count") %>%
+  group_by(Sample, guild2) %>%
+  summarize(count = sum(count>0)) %>% ## get the number of identified ASV in the sample with the activity
+  separate_rows(guild2, sep="-|=") %>%
+  filter(!guild2=="") %>%
+  pivot_wider(names_from = guild2, values_from = count, values_fn = sum) %>%
+  data.frame()
+
+row.names(funcOrddf) <- funcOrddf$Sample
+
+funcOrddf <- t(funcOrddf[, 2:ncol(funcOrddf)])
+
+cov.percent <- Ord_data %>%
+  mutate(OTU = rownames(Ord_data)) %>%
+  left_join(FunGuild_data[, c("OTU", "taxon", "trait", "trophicMode", "guild", "growthForm")], by="OTU") %>%
+  mutate(guild = gsub("Wood Saprotrop", "Wood Saprotroph", guild)) %>%
+  mutate(guild = ifelse(grepl("Gasteroid", growthForm),paste(guild, "Gasteroid", sep="-"), guild)) %>%
+  mutate(guild = ifelse(grepl("Rot", trait), paste(guild, trait, sep="-"), guild)) %>% 
+  select(c("guild", unique(as.character(char_data$Label)))) %>%
+  pivot_longer(-guild, values_to = "count", names_to = "sample") %>%
+  summarize(coverage = sum(count[!guild=="na"])/sum(count)*100)
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = funcOrddf, char_data=char_data, coverage = cov.percent$coverage)
+names(ds_list)[ds_list_count] <- "ITS_functional"
+
+ds_list_count <- ds_list_count + 1
+```
+
+
+```{r ITS_genus_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_ITS.RData")
+
+## Grab the matrix of species abundances
+  # row names should be sites, colnames species
+rownames(ITS) <- ITS$zOTU
+Ord_data <- ITS %>% select(-zOTU)
+colnames(Ord_data) <- gsub("_", "-", colnames(Ord_data))
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.7, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "ITS_Genus"
+
+ds_list_count <- ds_list_count + 1
+```
+
+
+```{r 16S_data}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_16S.RData")
+
+## Grab the matrix of species abundances
+  # row names should be sites, colnames species
+rownames(d16S) <- d16S$zOTU
+Ord_data <- d16S %>% select(-zOTU)
+colnames(Ord_data)[grep("-", colnames(Ord_data))] <- gsub("[[:alpha:]]$", "", gsub("_", "-", colnames(Ord_data)))[grep("-", colnames(Ord_data))]
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[ifelse(colnames(Orddf) %in% Sample_metadata$Label, 
+                                    match(colnames(Orddf), Sample_metadata$Label),
+                                    match(gsub("[[:alpha:]]$", "", colnames(Orddf)), gsub("[[:alpha:]]$", "", (Sample_metadata$Label)))), ]
+char_data$Label <- ifelse(char_data$Label %in% colnames(Orddf), char_data$Label, gsub("[[:alpha:]]$", "", (char_data$Label)))
+char_data$Seq_count <- low_num 
+
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = d16S)
+names(ds_list)[ds_list_count] <- "16S_ASV"
+
+ds_list_count <- ds_list_count + 1
+
+## Dataframe with species information (e.g., Taxonomic breakdown, if applicable and to be used in plotting, example only has species code)
+spec_char_data <- data.frame(species = colnames(Orddf))
+
+FaproTax_data <- Ord_data
+
+FaproTax_data$Genus <- ifelse(FaproTax_data$gBP >=0.5, FaproTax_data$Genus, "unidentified") 
+ ## No Species in bac df
+
+FaproTax_data$`OTU ID` <- rownames(FaproTax_data)
+
+FaproTax_data$taxonomy <- paste(paste("d", FaproTax_data$Domain, sep="__"), 
+                                paste("p", FaproTax_data$Phylum, sep="__"),
+                                paste("c", FaproTax_data$Class, sep="__"),
+                                paste("o", FaproTax_data$Order, sep="__"),
+                                paste("f", FaproTax_data$Family, sep="__"),
+                                paste("g", FaproTax_data$Genus, sep="__"),
+                                sep=";")
+
+FaproTax_data<- FaproTax_data[,c("taxonomy", colnames(Orddf))]
+
+write_delim(FaproTax_data, file("FAPROTAX_1.2.4/FaproTax_data.tsv", encoding="UTF-8"), delim="\t")
+
+```
+
+```{asis, eval=FALSE}
+## Conducted on Powershell on Windows
+cd FAPROTAX_1.2.4
+
+## Replaced is not statements with "!="
+
+python collapse_table_v2.py -i FaproTax_data.tsv -g FAPROTAX.txt -f -o functional_otu_table.tsv -r report.txt --column_names_are_in first_data_line  --keep_header_comments --non_numeric consolidate -v --row_names_are_in_column "taxonomy" --omit_columns 0 --normalize_collapsed none --group_leftovers_as 'other'
+
+## Matching was poor- as no id's to species - only 5628, 19740 leftovers
+
+```
+
+```{r 16S_functional_data}
+FaproTax_data <- read.delim("FAPROTAX_1.2.4/functional_otu_table.tsv", skip = 2)
+
+## Make sure order matches
+rownames(FaproTax_data) <- FaproTax_data$group
+
+funcOrddf <- FaproTax_data[,2:ncol(FaproTax_data)]
+
+colnames(funcOrddf) <- gsub("\\.", "-", colnames(funcOrddf))
+
+funcOrddf <- funcOrddf[, match(char_data$Label, colnames(funcOrddf))]
+
+cov.percent <- FaproTax_data %>% 
+  data.frame() %>% 
+  pivot_longer(-group, values_to = "count", names_to = "sample") %>%
+  summarize(coverage = sum(count[!group=="other"])/sum(count)*100)
+
+### Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = funcOrddf, char_data=char_data, coverage = cov.percent$coverage)
+names(ds_list)[ds_list_count] <- "16S_functional"
+
+ds_list_count <- ds_list_count + 1
+  
+```
+
+
+```{r 16S_genus_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_16S.RData")
+
+## Grab the matrix of species abundances
+  # row names should be sites, colnames species
+rownames(d16S) <- d16S$zOTU
+Ord_data <- d16S %>% select(-zOTU)
+colnames(Ord_data)[grep("-", colnames(Ord_data))] <- gsub("[[:alpha:]]$", "", gsub("_", "-", colnames(Ord_data)))[grep("-", colnames(Ord_data))]
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.5, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[ifelse(colnames(Orddf) %in% Sample_metadata$Label, 
+                                    match(colnames(Orddf), Sample_metadata$Label),
+                                    match(gsub("[[:alpha:]]$", "", colnames(Orddf)), gsub("[[:alpha:]]$", "", (Sample_metadata$Label)))), ]
+char_data$Label <- ifelse(char_data$Label %in% colnames(Orddf), char_data$Label, gsub("[[:alpha:]]$", "", (char_data$Label)))
+char_data$Seq_count <- low_num 
+
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "16S_Genus"
+
+ds_list_count <- ds_list_count + 1
+```
+
+
+```{r arthropods_for_func}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_Arthro_Seq.RData")
+
+## Grab the matrix of species abundances
+  # row names should be sites, colnames species
+rownames(F230) <- F230$zOTU
+Ord_data <- F230 %>% select(-zOTU)
+colnames(Ord_data) <- gsub("_", "-", colnames(Ord_data))
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = F230)
+names(ds_list)[ds_list_count] <- "F230_ASV"
+
+ds_list_count <- ds_list_count + 1
+
+
+
+BETSI_search <- str_c(gsub('^undef_', '', c(unique(Ord_data$Phylum), unique(Ord_data$Class), unique(Ord_data$Family), unique(Ord_data$Genus[Ord_data$gBP >= 0.3]), gsub("_", " ", unique(Ord_data$Species[Ord_data$sBP >= 0.7])))),
+                      collapse=";")
+
+
+BETSI_search1 <- str_c(c(unique(Ord_data$Class), unique(Ord_data$Family), unique(Ord_data$Genus[Ord_data$gBP >= 0.3])),
+                      collapse=";")
+
+BETSI_species <-  paste(c(gsub("_", " ", unique(Ord_data$Species[Ord_data$sBP >= 0.7]))), ";", sep="")
+write(c("Taxon_name", BETSI_species), "BETSI/BETSI_Species_check.csv")
+
+BETSI_species <- readLines("BETSI/transform.csv")[3:523]
+
+species_corrected <- data.frame()
+
+for(sp in BETSI_species){
+  species_corrected <-  rbind(species_corrected, 
+                              data.frame(original.species = str_split(sp, ";")[[1]][1], Corrected = str_split(sp, ";")[[1]][2]))
+}
+
+not_in_BETSI <- paste(sum(species_corrected$Corrected == "")/nrow(species_corrected)*100, "%")
+
+species_corrected <- species_corrected[!species_corrected$Corrected == "", ]
+
+BETSI_species_search <-  str_c(gsub("\t","", species_corrected$Corrected), collapse = ";")
+```
+
+```{r BETSI_diet_habitat}
+## Pull in the Class, Order, Genus search results for diet (includes species within the genus)
+unzip("BETSI/BETSI_0_cog_diet.zip", exdir="BETSI")
+
+BETSI_db_res <- read.delim("BETSI/BETSI_A.csv")
+BETSI_db_mat <- read.delim("BETSI/BETSI_B.csv")
+
+BETSI_db_mat <- BETSI_db_mat[, 1:(ncol(BETSI_db_mat)-2)]
+
+col_repl <- data.frame(orig=colnames(BETSI_db_mat), row.2 = t(BETSI_db_mat[1,])) %>%
+  mutate(grp = cumsum(!grepl("X", orig))) %>%
+  group_by(grp) %>%
+  mutate(first.term=orig[!grepl('X', orig)])
+
+colnames(BETSI_db_mat) <- c("Taxon", paste(col_repl$first.term, col_repl$X1, sep=".")[2:ncol(BETSI_db_mat)])
+
+BETSI_db_mat_diet <- BETSI_db_mat[2:nrow(BETSI_db_mat),] %>% pivot_longer(-Taxon, values_to = "presence", names_to = "Function")
+
+## Pull in the Class, Order, Genus search results for diet (includes species within the genus)
+unzip("BETSI/BETSI_0_cog_microhabitat.zip", exdir="BETSI")
+
+BETSI_db_res <- read.delim("BETSI/BETSI_A.csv")
+BETSI_db_mat <- read.delim("BETSI/BETSI_B.csv")
+
+BETSI_db_mat <- BETSI_db_mat[, 1:(ncol(BETSI_db_mat)-2)]
+
+col_repl <- data.frame(orig=colnames(BETSI_db_mat), row.2 = t(BETSI_db_mat[1,])) %>%
+  mutate(grp = cumsum(!grepl("X", orig))) %>%
+  group_by(grp) %>%
+  mutate(first.term=orig[!grepl('X', orig)])
+
+colnames(BETSI_db_mat) <- c("Taxon", paste(col_repl$first.term, col_repl$X1, sep=".")[2:ncol(BETSI_db_mat)])
+
+BETSI_db_mat_microhabitat <- BETSI_db_mat[2:nrow(BETSI_db_mat),] %>% pivot_longer(-Taxon, values_to = "presence", names_to = "Function")
+
+## Combine trait Matrixes
+
+BETSI_db_mat_combined <- rbind(BETSI_db_mat_diet, BETSI_db_mat_microhabitat)
+
+##
+
+BETSI_db_mat_combined <- BETSI_db_mat_combined %>%
+  filter(!presence == 0) %>%
+  group_by(Taxon) %>%
+  summarize(Function = str_c(unique(Function), collapse = "-")) 
+
+## Pull out traits data
+Traits <- data.frame()
+
+## Bind traits to each taxon by identified Genus - because almost as many distinct genus as identified species & not many species-level data in database from our dataset
+for(r in 1:nrow(Ord_data)){
+  
+  temp <- Ord_data[r,]
+  zOTU <- rownames(temp)
+  if(temp$gBP >= 0.3 & sum(grepl(temp$Genus, BETSI_db_mat_combined$Taxon))>0){
+     Trait <- unique(BETSI_db_mat_combined[grepl(temp$Genus, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else if(sum(grepl(temp$Family, BETSI_db_mat_combined$Taxon))>0){
+    Trait <- unique(BETSI_db_mat_combined[grepl(temp$Family, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else if(sum(grepl(temp$Order, BETSI_db_mat_combined$Taxon))>0){
+    Trait <- unique(BETSI_db_mat_combined[grepl(temp$Order, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else if(sum(grepl(temp$Class, BETSI_db_mat_combined$Taxon))>0){
+    Trait <- unique(BETSI_db_mat_combined[grepl(temp$Class, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else{Trait <- "other"}
+ 
+  
+  Traits <- rbind(Traits, 
+                  data.frame(OTU=zOTU, Trait=Trait))
+}
+
+
+## 1/3rd of data classified into a functional feeding group
+```
+
+```{r arthropods_functional_data_set-up}
+## Bind Ord_data and FunGuild assignments and cluster results
+funcOrddf <- Ord_data %>%
+  mutate(OTU = rownames(Ord_data)) %>%
+  left_join(Traits, by="OTU") %>%
+  pivot_longer(cols = colnames(Orddf), names_to = "Sample", values_to = "count") %>%
+  group_by(Sample, Trait) %>%
+  summarize(count = sum(count>0)) %>% ## get the number of identified ASV in the sample with the activity
+  separate_rows(Trait, sep="-|=") %>%
+  filter(!Trait=="|other") %>%
+  pivot_wider(names_from = Trait, values_from = count, values_fn = sum) %>%
+  data.frame()
+
+
+row.names(funcOrddf) <- funcOrddf$Sample
+
+funcOrddf <- funcOrddf[, !colnames(funcOrddf) == "Sample"]
+
+funcOrddf <- t(funcOrddf[match(char_data$Label, row.names(funcOrddf)), ])
+
+cov.percent <- Ord_data %>%
+  mutate(OTU = rownames(Ord_data)) %>%
+  left_join(Traits, by="OTU") %>%
+  select(-OTU) %>%
+  pivot_longer(cols = colnames(Orddf), values_to = "count", names_to = "sample") %>%
+  summarize(coverage = sum(count[!Trait=="other"])/sum(count)*100)
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = funcOrddf, char_data=char_data, coverage = cov.percent$coverage)
+names(ds_list)[ds_list_count] <- "F230_functional"
+
+ds_list_count <- ds_list_count + 1
+```
+
+
+```{r F230_genus_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_Arthro_Seq.RData")
+
+## Grab the matrix of species abundances
+  # row names should be sites, colnames species
+rownames(F230) <- F230$zOTU
+Ord_data <- F230 %>% select(-zOTU)
+colnames(Ord_data) <- gsub("_", "-", colnames(Ord_data))
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.3, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "F230_Genus"
+
+ds_list_count <- ds_list_count + 1
+
+```
+
+
+```{r 18S_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+
+## Grab the matrix of species abundances
+  # row names should be sites, colnames species
+rownames(d18S) <- d18S$zOTU
+Ord_data <- d18S %>% select(-zOTU)
+colnames(Ord_data) <- gsub("_", "-", colnames(Ord_data))
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = d18S)
+names(ds_list)[ds_list_count] <- "18S_ASV"
+
+ds_list_count <- ds_list_count + 1
+
+```
+
+```{r 18S_data_genus, echo=FALSE}
+
+## Grab the matrix of species abundances
+  # row names should be sites, colnames species
+rownames(d18S) <- d18S$zOTU
+Ord_data <- d18S %>% select(-zOTU)
+colnames(Ord_data) <- gsub("_", "-", colnames(Ord_data))
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.95, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "18S_Genus"
+
+ds_list_count <- ds_list_count + 1
+
+```
+
+```{r cleandata}
+clean_up <- ls()[!ls() %in% c("Sample_metadata", "metadata", "ds_list", "cust.cols", "diffs_chemistry", "num_p_tests")]
+rm(list=clean_up)
+rm(clean_up)
+```
