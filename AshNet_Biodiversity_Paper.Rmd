@@ -1,0 +1,722 @@
+---
+title: "Forest soil biotic communities show few responses to wood ash applications at multiple sites across Canada."
+author:
+- \* Emily Smenderovac, Great Lakes Forestry Centre, Natural Resources Canada, emily.smenderovac@nrcan-rncan.gc.ca
+- Lisa Venier, Great Lakes Forestry Centre, Natural Resources Canada, lisa.venier@nrcan-rncan.gc.ca
+- Caroline Emilson, Great Lakes Forestry Centre, Natural Resources Canada, caroline.emilson@nrcan-rncan.gc.ca
+- Paul Hazlett, Great Lakes Forestry Centre, Natural Resources Canada, paul.hazlett@nrcan-rncan.gc.ca
+- Amanda Diochon, Lakehead University, adiochon@lakeheadu.ca
+- Nathan Basiliko, Laurentian University, nbasiliko@laurentian.ca
+- Nicolas Bélanger, Université TELUQ, nicolas.belanger@teluq.ca
+- John Markham, University of Manitoba, John.Markham@umanitoba.ca
+- Dave Morris, Centre for Northern Forest Ecosystem Research, Ontario Ministry of Northern Development, Mines, Natural Resources and Forestry, Thunder Bay CA P7E 2V6, Dave.M.Morris@ontario.ca
+- P. Michael Rutherford, University of Northern British Columbia, Mike.Rutherford@unbc.ca
+- Ken van Rees, University of Saskatchewan, ken.vanrees@usask.ca
+- Teresita Porter, Great Lakes Forestry Centre, Natural Resources Canada, terrimporter@gmail.com
+- Trevor Jones, Great Lakes Forestry Centre, Natural Resources, Canada, trevor.jones@nrcan-rncan.gc.ca
+date: "`r Sys.Date()`"
+bibliography: bibliography.json
+csl: scientific-reports.csl
+output: 
+  bookdown::word_document2:
+    number_sections: false
+    keep_md: true
+---
+# Abstract
+
+
+There is interest in utilizing wood ash as an amendment in forestry operations as a mechanism to return nutrients to soils that are removed during harvesting, with the added benefit of diverting this bioenergy waste material from landfill sites. Existing studies have not arrived at a consensus on what the effects of wood ash amendments are on soil biota. We collected forest soil samples from studies in managed forests across Canada that were amended with wood ash to evaluate the effects on arthropod, bacterial and fungal communities using metabarcoding of F230, 16S, 18S and ITS2 sequences as well as enzyme analyses to assess its effects on soil biotic function. Ash amendment did not result in consistent effects across sites, and those effects that were detected were small. Overall, this study suggests that ash amendment applied to managed forest systems in amounts (up to 20 Mg ha^-1^) applied across the 8 study sties had little to no detectable effects on soil biotic community structure or function. When effects were detected, they were small, and site-specific. These non-results support the application of wood ash to harvested forest sites to replace macronutrients (e.g., calcium) removed by logging operations, thereby diverting it from landfill sites, and potentially increasing stand productivity.   
+
+# Keywords
+
+
+- Metabarcoding
+- functional enzymes
+- forestry
+
+
+# Introduction
+
+
+Canada is increasingly incorporating bioenergy into provincial energy strategies. Historically, manufacturing by-products have been a common source of energy for the timber and pulp and paper industries and, more recently, wood/biomass thermal plants are being established explicitly for electricity and heat production. A by-product of burning these waste materials for heat and power is wood ash, which is typically disposed of in landfills [@hannam2018]. Application of wood ash in forests could result in some economic benefit, by reducing or eliminating the need to landfill ash.  Wood ash has the potential to maintain or enhance site productivity, by possibly supplementing or reducing existing commercial fertilizer and lime use [@hope2017]. Silvicultural harvesting practices can cause increased acidity and calcium limitation in soils, through removal of tree biomass. In some locations, these effects are mitigated through addition of calcium based supplements such as lime [@bowd2019].
+
+
+Wood ash has many properties that could increase soil quality. Wood ash is typically alkaline, and so it can increase the pH of soils which increases microbial activity and nutrient availability  [@adotey2018; @royer-tardif2019]. Wood ash is high in calcium and magnesium, elements crucial for plant growth and health [@reid2014]. In some cases, wood ash amendment can also increase soil carbon pools as well as increase tree growth [@lopez2018]. Emilson et al. [-@emilson2020] observed increased growth of jack pine trees with ash addition. There are additional possible downstream benefits that should also be considered, such as the alleviation of calcium limitation in watersheds that have been affected by acid rain [@azan2019] and, some studies have recorded increases to amphibian and earthworm assemblages [@gorgolewski2016; @mctavish2020]. These alterations have the potential to influence other soil taxa. Ash also has the potential to create negative effects in an ecosystem, as it could be a source of toxic metals such as cadmium or manganese, or create physical disruption to soil surfaces and vegetation [@mortensen2018; @belanger2021]. On the other hand, ash has also been demonstrated to mitigate the toxicity of pollutants [@santas-miguel2020; @fritze2001].
+
+
+Soil arthropod, bacterial and fungal communities are known to be responsive to differences in moisture, pH and calcium levels [@fundamentalsoilecology2018]. While harvest disturbance alters moisture, pH and calcium which results in stark changes to microbial community composition from uncut forest systems, increases to harvesting intensity can be small and undetectable [@smenderovac2017]. The effects of wood ash amendment are likely also small, a recent study of sites across Canada showed inconsistent responses in soil quality metrics due to wood ash amendment [@joseph2021]. In general, reported microbial responses to ash application are inconsistent, and changes in mineral layers take longer than those in organic layers [@noyce2016; @liiri2007; @brais2015; @gomoryova2016].  Though the potential benefits of ash use are great,  a barrier to ash use is that it is generally still classified as an industrial waste product, and attaining regulatory approval remains a confusing and difficult process [@hannam2016; @hannam2018]. 
+
+
+The current body of literature typically consists of case studies that evaluate and identify soil biota responses and changes due to wood ash amendment in specific stands and silvicultural systems [@noyce2016; @royer-tardif2019]. Comparison of these studies can be challenging due to methodological differences between studies (i.e., metabarcoding has not been widely applied, and so use of various methods to assess community composition have been employed such as PLFA, microbial respiration, etc.). These site-specific results make it difficult to extrapolate the effects of ash amendment to systems at large, and has impeded the classification of ash as a safe and viable soil amendment.  We used a collaborative network (AshNet; a cross-Canada network assessing the effects of wood ash amendment in harvested forests), with standardized sample collections, data sharing and archiving, that allows for the ability to study several sites along a gradient of ash amendment treatments and ecosystems across Canada [@hannam2017]. 
+
+
+Along with site specific studies, literature often focuses on one or two components of a biological community (e.g., 16S targeted sequencing for bacterial communities, ectomycorrhizal communities or arthropod communities)  [@noyce2016; @klavina2016a; @bang-andreasen2017; @vestergard2018]. As sequencing technology continues to become more cost-effective, multi-taxa studies can be used to provide data for more comprehensive evaluation of the soil biotic community. By collectively examining multiple groups of taxa, along with a functional assessment associated with community change, a more holistic analysis of treatment effects can be achieved. Examining enzyme activities is a well-established methodology for studying a "snapshot" of the in-situ metabolic activity of soil biotic communities. N-acetylglucosaminidase and phosphatase activity are two such enzymes. N-acetylglucosaminidase serves as a measure of nitrogen scavenging from bacterial and fungal cells, as well as insect exoskeletal material, whereas phosphatase serves as a measure of phosphate scavenging from organic molecules [@ekenler2004; @margalef2017]. Included along with soil biotic information, these measures can provide evidence of nitrogen or phosphorus excess or limitation and the efficiency of nutrient cycling processes within the system. Targeted metabarcoding provides a robust measure of the whole community assemblage, including the organisms past and present. They provide both a snapshot of current community structures, as well as information about organisms that have existed and those that could become important, should conditions change, and these technologies have been rapidly improving [@vestergaard2017].
+
+
+This study utilizes a multi-metric analysis of soil community structure and function within eight AshNet sites to determine if there are any measurable impacts on the ecology of forest soil systems. This study assesses what effects wood ash amendment has on soil biota composition and function; and, explores whether those changes are affected by site characteristics, ash characteristics or, the amount of ash added. We anticipate there will be minimal or inconsistent effects of wood ash amendment on the soil biotic community composition or functional enzyme responses when applied to managed forested sites. We expect that any detectable differences (i.e., community shifts or functional changes) will be infrequent, site-specific, small, confined to organic soil horizons [@brais2015], and, correspond to higher ash application rates (i.e., supporting that wood ash amendment does not create large changes to soil community structures).
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, dev = c('png', "postscript")) ## Make so code doesn't print in knitted document
+
+memory.limit(size=70000)
+
+## Load libraries
+library(vegan)
+library(ALDEx2)
+library(tidyverse)
+library(GGally)
+library(ggrepel)
+library(ggpubr)
+library(lme4)
+library(nlme)
+library(RColorBrewer)
+library(indicspecies)
+library(Mediana)
+library(pheatmap)
+library(eulerr)
+library(performance)
+library(MASS)
+library(flextable)
+
+num_p_tests <- 0
+
+## Set a colorblind-safe palette
+cust.cols <- c("#332288", "#117733", "#44AA99", "#88CCEE", "#DDCC77", "#CC6677", "#AA4499", "#882255")
+```
+
+# Methods
+
+## Experimental Conditions
+
+
+In order to assess the potential biodiversity effects of wood ash amendment in forestry operations, soil samples from eight sites were assessed from the AshNet Network [@emilson2018] (Table \@ref(tab:SiteProperties), Figure \@ref(fig:SiteMap)). Additional details about these sites are described in Emilson et al. [-@emilson2018] To ensure that a range of conditions were assessed, sites from different provinces were selected for barcoding and functional enzyme analyses: Aleza Lake (N & S) in British Columbia;  Mistik (Burness) in Saskatchewan; Pineland in Manitoba; 25th Sideroad, Haliburton, and, Island Lake in Ontario; Eastern Townships - Sugar Maple in Quebec. These sites represent multiple ecozones (i.e., Montane Cordillera, Boreal Plains, Boreal Shield, and Mixedwood Plains). Dominant tree species and soil characteristics vary accordingly due to ecozone and location. Additionally, different harvesting systems were used, ranging from single tree selection to more intensive practices of clearcutting and disc-trenching. See Table \@ref(tab:SiteProperties) for a summary of site characteristics. At each site, a single application of wood ash was applied. There was a range of stand ages at the time of application, some directly after harvest, to as long as 24 years after harvest. Each site contained either paired control and treatment plots, or block designs with treatments and controls included in each block. Sites also had a variety of wood ash types and application amounts, including fly and bottom ash from different sources and ranging from 5 to 20 dry tonne equivalent per hectare. 
+
+
+```{r load_Site_metadata_enzymes}
+## Load data
+load("data/AshNet_Clean_meta_func.RData")
+```
+
+
+```{r SiteMap, echo=FALSE, fig.cap="Location of the wood ash study sites across Canada. Site names from left to right include 1) Aleza Lake N, 2) Aleza Lake S, 3) Mistik, 4) Pineland, 5) 25th Sideroad, 6) Island Lake, 7) Haliburton, 8) Eastern Townships Maple. The map is shaded by major forested Vegetation Zones of Canada [@baldwin2019]", warning=FALSE, fig.width=8}
+## Will Add Site Map here. With sites over ecozones. 
+library(sf)
+library(sp)
+veg <- read_sf("gis", "vegetation_zones_of_canada_2020")
+veg <- st_transform(veg, "WGS84")
+prov <- read_sf("gis", "lpr_000b16a_e")
+prov <- st_transform(prov, "WGS84")
+
+point_dat <- Sample_metadata
+coordinates(point_dat) <- ~X_Longitude+Y_Latitiude
+point_dat <- st_as_sf(point_dat)
+point_dat <- unique(point_dat[,c("Site", "Site_name")])
+point_dat$lab <-  c("1,2", "", "8", "5", "6", "7", "4", "3")
+st_crs(point_dat) <- "WGS84"
+
+ggplot() + 
+  geom_sf(data = veg, aes(fill = level_1, colour= level_1)) +
+  geom_sf(data=prov, fill=NA, color="grey88", size = .01) +
+  geom_sf(data=point_dat, colour="black")+
+  geom_sf_text(data=point_dat, aes(label=lab), colour="black", nudge_y = 1.5) + 
+  theme_minimal() + 
+  xlab("") + ylab("") +
+  scale_fill_manual(name = "", values = c("snow1", "snow2", "palegreen4", "paleturquoise", "darkolivegreen2", "lightgoldenrod2", "gray75", "seagreen2")) +
+  scale_colour_manual(name = "", values = c("snow1", "snow2", "palegreen4", "paleturquoise", "darkolivegreen2", "lightgoldenrod2", "gray75", "seagreen2")) +
+  coord_sf(ylim = c(42.5, 65)) 
+
+ggsave("Figure1.png")
+rm(point_dat, veg, prov)
+
+```
+
+
+```{r SiteProperties}
+## Include a table of important site properties (Variables selected for inclusion in models)
+
+site_props <- Sample_metadata %>%
+  group_by(Site, Site_name, May_mean_monthly_maximum_temperature, Precipitation_of_Wettest_Quarter) %>%
+  summarize(`Ash application (Mg/ha)` = str_c(unique(ash_amt), collapse = ", "), `Ash Calcium additions (kg/ha)` = str_c(unique(Ca_application_amt), collapse = ", "), Years_ash = Years_ash[Years_ash!=0], `Ash Types` = str_c(c(unique(ash_type[!is.na(ash_type)])[1], tolower(unique(ash_type[!is.na(ash_type)])[-1])), collapse = ", ")) %>%
+  mutate(`Ash Types` = ifelse(Site %in% c("ALN", "ALS"), "Bottom ashes from gasifier and single boiler", paste(`Ash Types`, "ash from a single boiler"))) %>%
+  distinct() %>%
+  left_join(metadata %>% select(Site_name, Soil.type, `Stand type`, `Disturbance.type`, Province), by="Site_name") %>%
+  rename(`Site Code` = Site, `Site Name` = Site_name, `May mean monthly maximum temperature (C)` = May_mean_monthly_maximum_temperature, `Precipitation of Wettest Quarter (mm)` = Precipitation_of_Wettest_Quarter, `Years between Ash application and sampling` = Years_ash, `Soil Type` = Soil.type, `Stand Type` = `Stand type`, `Harvesting` = Disturbance.type) %>%
+  select(`Site Code`, `Site Name`,`Ash Types`, `Ash application (Mg/ha)`, `Ash Calcium additions (kg/ha)`, `Years between Ash application and sampling`, `Harvesting`, Province, `Soil Type`, `Stand Type`, `May mean monthly maximum temperature (C)`, `Precipitation of Wettest Quarter (mm)`)
+  
+site_props$Province <- gsub("Satskatchewan", "Saskatchewan", as.character(site_props$Province))
+
+## Site Properties Subset
+ft <- flextable(site_props[match(c("ALN", "ALS", "MSK", "PLD", "SRD", "ILK", "HLB", "ETM"), site_props$`Site Code`), ])
+ft <- theme_vanilla(ft)
+ft <- set_caption(ft, " Site and climate characteristics associated with the eight AshNet sites used in this study.")
+ft
+```
+
+
+
+## Soil Sampling
+
+All soil samples were collected in June or July 2017 or 2018. Due to logistical constraints, aside from ETM, HLB and ILK where two replicates were sampled from each block, one sample was collected from each block within each site that was sampled. The fresh litter-moss horizon (L), the fermentation-humus (FH horizons) and upper mineral soil (MIN, 0-10 cm) were sampled separately. When L and FH horizons could not be effectively separated during sampling, a pooled sample was taken (LFH). L and FH horizons were sampled from a 15 x 15 cm frame, after which mineral soil was collected in a 5cm diameter PVC pipe to a depth of 20 cm. PVC pipes were sanitized with bleach or concentrated alcohol before sampling was performed. All sampling was completed with gloves to reduce cross-contamination. Samples were immediately frozen at -20˚C  after sampling and held at that temperature until analysis. All samples were shipped to the Great Lakes Forestry Centre (Sault Ste. Marie) where soils were homogenized, and subsamples were aseptically taken for enzyme and metabarcoding analyses. One homogenized sample was taken for each treatment at each block of each site.
+
+
+## Enzyme Analyses
+
+Enzyme analyses were performed for the ecologically important enzymes N-acetylglucosaminidase (NAG) and phosphatase (PHOS). All enzyme activities were performed in 96-well plates under controlled conditions using 4-methylumbelliferone-fluorescence tagged substrates (pH 5 and room temperature) and measured with a BioTek Synergy H1 Hybrid spectrophotometer/fluorometer. Incubation times were based on time-trials conducted on a subset of samples. Samples were stored at -20˚C prior to analysis via existing protocols [@findlay2007; @saiya-cork2002].
+
+
+## Metabarcoding
+
+DNA extractions were performed on homogenized bulk soil samples using Qiagen DNEasy Powersoil extraction kits. Extracted DNA was then amplified using primers targeted for specific groups of organisms (Supplemental Materials, Tables S1, S2). Paired-end sequencing for Arthropods (F230, 18S), Fungi (18S and ITS) and Bacteria (16S) were performed on the Illumina MiSeq platform in the Hajibabaei lab at the Centre for Biodiversity  Genomics, University of Guelph. A total of ~265 million paired-end reads were generated from 5 amplicons (Supplemental Materials, Table S3). Data was processed into ASVs (Amplicon Sequence Variants) using the MetaWorks pipeline v1.4.0 [@porter2020]. Sequence retention details are provided in Tables S3 and S4 of the Supplemental Materials. Samples with less than 1000 reads were removed. Taxonomic assignments with at least 80% accuracy were retained using the bootstrap cutoff values for the ITS, COI and 18S classifiers genus level for 300 bp reads. We used a cut off value of 80% for the 16S region as recommended by the RDP classifier documentation. Taxonomy of 16S data was assigned using the RDP 2.1.3 database included with MetaWorksv1.4.0. Taxonomic assignment of 18S sequences was completed with SILVA 138 SSURef Nr99 trained to work with the RDP 2.13 classifier [@wang2007a]. F230 sequences were classified using the CO1 Classifier v4 [@porter2018]. ITS sequences were classified with the UNITE v8.2 ITS reference set database[@koljalg2019; @porter2020a]. Functional guilds were assigned through FAPROTAX (16S), FUNGuild (ITS) or using the BETSI database (F230) [@FAPROTAX; @nguyen2016; @hedde2012]. A summary of the percent of ASVs identified to Genus using the appropriate cut-off values, and the subsequent successful assignment of functional guild with those taxonomy are provided in Table S5 of the Supplemental Materials.
+
+
+## Site and Ash Characteristics
+
+
+Several variables were included in the dataset to represent site and ash characteristics. These data were acquired through collaborators or performed at Great Lakes Forestry Centre analytical facilities. Stand age (age of stand at ash application), dominant tree species (most common tree species type), precipitation seasonality (a coefficient that represents how much variation in precipitation there is throughout the year), precipitation of the wettest quarter (how much rain occurred in the wettest quarter of the sampling year), and May mean monthly maximum temperature (maximum may temperature during the year of sampling) represented site differences in models. Stand age and dominant tree species were selected as variables because there were common characteristics across sites, where other variables (e.g. soil class), corresponded exactly with site differences. May monthly temperature and precipitation of the wettest quarter (summer, in these sites) were selected as they represented differences in temperature and precipitation across the sites in a uniform period before the sampling time (June-July). Precipitation seasonality was included because it gave an indication of whether there was variation in precipitation across the year. Climate variables were produced by the climate models of McKenney et al. [-@mckenney2011]. Total soil carbon and total soil nitrogen data were calculated via TOC/TON analysis as described in Joseph et al. [-@joseph2021].  Differences between control and treatment soil samples were used as explanatory parameters within models.
+
+Ash characteristics utilized in the analysis included the calcium, phosphorus and sodium quantities added to the sites via ash addition. These variables were selected from a larger set of ash chemical parameters to serve as representatives in the analysis due to completeness, high correlation with other parameters in the dataset and their ecological relevance to nutrients and metal toxicity, importance as a limiting nutrient and toxicity respectively.  
+
+
+
+## Statistical Analyses
+
+
+ANOVA mixed effects models were performed in R to assess whether ash amendment of amount of amendment affected enzyme activity with the different soil horizons and sites as random effects. Additional fixed-effects ANOVA were performed on the same variables with interaction terms, leading to the decision to investigate site-level responses with pairwise comparisons[@R2021]. Differences in enzyme response between treatments and controls were not normally distributed among blocks and were assessed by Wilcoxon-tests for each parameter and significance was discussed in the context of a Bonferonni corrected $\alpha$ of 0.05. Wilcoxon tests were performed on the difference in enzyme response within blocks to remove the influence of within-site spatial variation. Difference in enzyme activities were also subjected to multiple regression. Models were determined using forward selection with site characteristics (i.e., stand age, dominant tree species, age of stand at ash treatment, precipitation seasonality, precipitation of the wettest quarter, May mean monthly maximum temperature, and, differences between control and treatment soil for total soil carbon and soil total nitrogen) and, components supplied by ash (i.e, total applied calcium, sodium, phosphorus) as input. Organic (ORG - L, FH and LFH) and mineral (MIN 0-10 cm) soil horizons were assessed in separate models.
+
+Metabarcoding data were analysed in R using data transformation functions found in the tidyverse package, ALDEx2 for compositional analyses and vegan for diversity analyses using a more standard approach [@R2021; @ALDEx; @wickham2019; @R-vegan]. For standard diversity analyses, bacterial (16S) communities were assessed as relative abundance using Bray-Curtis distance, and all other metabarcoding communities were assessed as presence/absence matrixes using Jaccard distances. Alpha diversity metrics (Shannon, inverse Simpsons and, richness) for each metabarcode were subjected to mixed effects ANOVA with interactions including whether ash was applied and, ash addition amount with site and soil horizon as random effects to test the effect of ash amendment after accounting for site and horizon differences. In order to test whether there were effects that were masked by variation between blocks, we performed Wilcoxon tests of the difference in diversity metrics between controls and treatment within each block evaluated at a Bonferroni corrected alpha. Compositional analyses were performed on data transformed using centered log ratio (clr) and consisted of PCA and RDA with ash parameters (i.e. total applied calcium, phosphorus, and, sodium) as constraining variables. ALDEx2 was used to assess the compositional change of individual taxa. ALDEX glms were performed for each targeted amplicon (i.e., 16S, 18S, ITS, F230) with site characteristics (i.e., Stand age, dominant tree species, precipitation seasonality, precipitation of the wettest quarter, and May mean monthly maximum temperature, soil total carbon, soil total nitrogen) and, components supplied by ash (i.e, total applied calcium, sodium, phosphorus) as input, mineral soil horizons and organic soil horizons were assessed in separate models. ALDEX pair-wise analyses were performed on each targeted amplicon, for each treatment-control pairing with separate models for organic and mineral soil horizons to identify any ASV, functional group or genus with statistically significant change in composition. 
+
+A general summary of all models run for the analysis can be found in the Supplemental Materials (Table S6).
+
+# Results
+
+
+## Enzyme Analyses
+
+
+```{r get_chem_differences}
+## Look at individual differences in measured parameters due to ash addition from control sites
+## Look at whether characteristics of the ash, amount of ash, are correlated with the enzyme data
+
+## Grab control values
+by_block_controls <- Sample_metadata %>%
+        select(Label, Site, Soil_type, Treatment, Replicate, pH, Moisture.content....DW., MBC..mg.C.g.soil., C.N, C., N.) %>%
+        pivot_longer(!c(Label, Site, Soil_type, Treatment, Replicate), values_to = "value", names_to = "parameter")%>% 
+        filter(Treatment == "C") %>%
+        select(-Label, -Treatment) %>%
+        group_by(Site, Soil_type, Replicate, parameter) %>%
+        summarize(control.value = mean(value))
+
+## Grab sample values
+by_block_samples <- Sample_metadata %>%
+         select(Label, Site, Soil_type, Treatment, Replicate, ash_type, ash_amt, Ca_application_amt, pH, Moisture.content....DW., MBC..mg.C.g.soil., C.N, C., N.) %>%
+        pivot_longer(!c(Label, Site, Soil_type, Treatment, Replicate, ash_type, ash_amt, Ca_application_amt), values_to = "value", names_to = "parameter")%>% 
+        filter(!Treatment == "C") %>%
+        left_join(by_block_controls, by=c("Site", "Soil_type", "Replicate", "parameter")) %>% 
+        mutate(diff = value - control.value) 
+
+## Get the differences in between treatments and controls and interpolate missing values using group mean
+diffs_chemistry <- by_block_samples %>%
+  mutate(MIN_ORG = ifelse(names(Soil_type)== "MIN", "MIN", "ORG"), CONTROL = Treatment=="C") %>%
+  group_by(Site, Treatment, MIN_ORG, CONTROL, parameter) %>%
+  mutate(diff = ifelse(is.na(diff), mean(diff, na.rm=TRUE), diff)) %>%
+  group_by() %>%
+  select(!c("MIN_ORG", "CONTROL")) %>%
+  group_by(Site, Soil_type, Replicate, Treatment, parameter) %>%
+  summarize(diff = mean(diff, na.rm=TRUE)) %>%
+  pivot_wider(id_cols = c("Site", "Soil_type", "Replicate", "Treatment"), values_from = diff, names_from = parameter)
+
+rm(by_block_controls, by_block_samples)
+```
+
+
+```{r Enzyme_Modelling, fig.width=8, include=FALSE}
+## Model the difference between control and treatment
+## Look at whether characteristics of the ash, amount of ash, are correlated with the enzyme data
+by_block_controls <- Hydrolases %>%
+        select(Label, enzyme, activity_nmol.h.g_g.dry.wt, Soil_Moisture) %>%
+        left_join(Sample_metadata[, colnames(Sample_metadata) %in% c("Label", "Site", "Soil_type", "Replicate", "Treatment", "Stand", "Soil.type")], by="Label") %>% 
+        filter(Treatment == "C") %>%
+        select(-Label, -Treatment) %>%
+        rename(control.activity = activity_nmol.h.g_g.dry.wt)
+
+by_block_controls <- by_block_controls %>%
+  select(-Soil_Moisture)
+
+by_block_samples <- Hydrolases %>%
+        select(Label, enzyme, activity_nmol.h.g_g.dry.wt, Soil_Moisture) %>%
+        left_join(Sample_metadata[, colnames(Sample_metadata) %in% c("Label", "Site", "Soil_type", "Replicate", "Treatment")], by="Label") %>%
+        filter(!Treatment == "C") %>% 
+        select(-Label) 
+
+## Scale numerical data before joining
+Samp_data_4join <- Sample_metadata[, colnames(Sample_metadata) %in% c("Soil_type","Soil Sample Type", "Treatment", "Site", "Replicate", "Label", "Ca_application_amt", "Ash.TC.kg.applied", "Ash.TN.kg.applied", "Ash.P.kg.applied", "Ash.Na.kg.applied", "Moisture.content....DW.", "Years_ash", "May_mean_monthly_maximum_temperature", "Oldest_Stand_age", "Precipitation_Seasonality_(C_of_V)", "Precipitation_of_Wettest_Quarter")] %>% 
+  left_join(unique(diffs_chemistry[, colnames(diffs_chemistry) %in% c("Site", "Soil_type", "Replicate", "Treatment", "C.", "N.")]), by = c("Site", "Soil_type", "Replicate", "Treatment")) %>%
+        pivot_longer(cols = Ca_application_amt:N., values_to = "value", names_to = "Variable") %>%
+        group_by(Variable) %>%
+        mutate(value = scale(value)) %>%
+        pivot_wider(id_cols = c("Site", "Soil_type", "Replicate", "Treatment"), names_from = "Variable", values_from = "value", values_fn=mean, values_fill = 0)
+
+by_block_rep <- by_block_controls %>%
+        left_join(by_block_samples, by=c("Site", "Soil_type", "Replicate", "enzyme")) %>% 
+        mutate(diff_activity = activity_nmol.h.g_g.dry.wt - control.activity) %>%
+        left_join(Samp_data_4join, by = c("Site", "Soil_type", "Replicate", "Treatment"))
+
+rm(by_block_controls, by_block_samples)
+
+moddat <- list()
+count <- 1
+
+for(enz in unique(Hydrolases$enzyme)){
+  ## Subset data to just MIN samples, single enzyme and combine with the Sample metadata
+  for(soils in list("MIN", c("LFH", "L", "FH"))){
+    modelingdata <- by_block_rep %>%
+      filter(enzyme == enz & names(Soil_type) %in% soils & !is.na(diff_activity) & complete.cases(.)) %>%
+      data.frame() 
+    mod <- lm(diff_activity ~ Ca_application_amt + Ash.P.kg.applied +
+                Ash.Na.kg.applied + May_mean_monthly_maximum_temperature + `Precipitation_Seasonality_.C_of_V.` + 
+                Precipitation_of_Wettest_Quarter + Years_ash + Stand + C. + N., data=modelingdata, verbose=FALSE)
+    mod <- MASS::stepAIC(mod, direction = "both", verbose=FALSE)
+    #summary(mod)
+    #performance::r2(mod)
+    #plot(mod)
+    
+    moddat[[count]] <- mod
+    names(moddat)[count] <- paste(ifelse(soils == "MIN", "MIN", "ORG"), enz, sep = "-")
+    
+    count= count + 1
+
+  }
+
+}
+
+num_p_tests <- num_p_tests + length(moddat)
+
+## Make dataframe of model effect sizes, model fits
+
+modfits <- data.frame()
+modvariance <- data.frame()
+modestimates <- data.frame()
+
+for(i in 1:length(moddat)){
+  modestimates <- rbind(modestimates, data.frame(model=names(moddat)[i], summary(moddat[[i]])$coefficients, param = row.names(summary(moddat[[i]])$coefficients)))
+  modvariance <- rbind(modvariance, data.frame(model = names(moddat)[i], variance_explained  = (anova(moddat[[i]])$`Sum Sq`/ sum(anova(moddat[[i]])$`Sum Sq`)), param=row.names(anova(moddat[[i]])), signif = anova(moddat[[i]])$`Pr(>F)` <= 0.05))
+  modfits <- rbind(modfits, data.frame(model=names(moddat[i]), R2 = performance::r2(moddat[[i]])$R2, R2_adjusted = performance::r2(moddat[[i]])$R2_adjusted, p.val = pf(summary(moddat[[i]])$fstatistic[1], 
+            summary(moddat[[i]])$fstatistic[2], summary(moddat[[i]])$fstatistic[3], lower.tail = FALSE), variance.explained = 1-(anova(moddat[[i]])$`Sum Sq`[length(anova(moddat[[i]])$`Sum Sq`)] / sum(anova(moddat[[i]])$`Sum Sq`))))
+}
+
+#knitr::kable(modestimates)
+
+#knitr::kable(modfits)
+
+## variable for if parameter is significant or not 
+modestimates$signif <- modestimates$Pr...t.. <= 0.05
+modestimates$param <- ifelse(modestimates$param %in% c("C.", "N."), paste(modestimates$param, "Difference"), modestimates$param)
+
+modestimates <- modestimates[!grepl("XY", modestimates$model), ] ## Exclude the xylose models because they were such poor fits...
+
+modvariance <- modvariance[!grepl("XY", modvariance$model), ]
+```
+
+
+```{r EnzmodsVariance, fig.height=6, fig.width=8, warning=FALSE, fig.cap=" Variance of difference explained by linear modelling parameters for models of the difference in enzyme activities (NAG = N-acetylglucosamine, PHOS = phosphatase) between ash amended soils and controls for mineral (MIN = 0-10 cm of mineral soil) and organic (ORG = L, FH and LFH) soil horizons."}
+modvariance$param = factor(as.character(modvariance$param), levels = c("Residuals", "C.", "N.", "May_mean_monthly_maximum_temperature", "Precipitation_Seasonality_.C_of_V.", "Precipitation_of_Wettest_Quarter", "Stand", "Ash.Na.kg.applied"))
+
+levels(modvariance$param) = c("Residuals", "Change in soil C", "Change in soil N", "May mean monthly maximum temperature", "Precipitation of seasonality", "Precipitation of wettest quarter", "Dominant tree species", expression(Sodium ~ applied ~ `in` ~ ash ~ kg ~ ha^-1))
+
+ggplot(modvariance, aes(model, variance_explained, fill=param)) +
+        geom_bar(stat="identity") +
+        #facet_grid(~model, scales = "free_x") +
+        scale_fill_manual(values = c("gray", cust.cols[c(7, 8, 6, 1, 4, 2, 5)]), labels = c("Residuals", "Change in soil C", "Change in soil N", "May mean monthly maximum temperature", "Precipitation of seasonality", "Precipitation of wettest quarter", "Dominant tree species", expression(Sodium ~ applied ~ `in` ~ ash ~ kg ~ ha^-1)))+ 
+        theme_minimal() +
+        ylab("Proportion of variance explained")+
+        xlab("") #+
+        #theme(axis.text.x = element_text(angle=90), axis.text.y = element_text(face=c("bold", "plain", "plain", "plain", "plain", "plain", "plain", "plain", "plain")), legend.position = "none")
+
+ggsave("Figure2.png")
+```
+
+
+Mixed effects ANOVA results showed that ash addition did not significantly explain any difference in either NAG or PHOS activity after accounting for site and soil horizon (p < 0.05) (Supplemental Materials, Tables S7-S10). When linear modelling of the difference in activity between treatments and controls was performed, all fitted models were significant (p < 0.05), with adjusted R^2^ values ranging from `r str_c(range(round(modfits$R2_adjusted, 2)), collapse="-")` explaining variance between `r str_c(range(round(modfits$R2, 2)), collapse="-")`. The linear model which explained a high amount of variance (0.5) was the model for NAG activity in organic horizons, for which most of the variance was explained by stand composition. There was no significant (p < 0.05) direct influence of ash application on NAG or PHOS activity in mineral soils. More of the variance in enzyme activity differences across sites in organic horizons to ash addition was explained by the dominant tree species in the stand, climate related variables (precipitation, temperature), and carbon differences in the soils, than because of ash sodium additions (Figure \@ref(fig:EnzmodsVariance)). While precipitation seasonality and may mean temperature were also incorporated into models for enzyme response in organic horizons, parameters related to soil characteristics (increased N or C as compared to controls) or calcium and sodium application rates were found to be significantly influencing changes in NAG and PHOS activity.
+
+
+```{r Enzymes_mixed_effects_results}
+## Join hydrolase data with sample metadata
+Hyd.anal <- Hydrolases %>% 
+        left_join(Sample_metadata[, colnames(Sample_metadata) %in% c("Label", "Site", "Soil_type", "Soil Sample Type", "block", "Replicate", "Treatment", "ash_amt", "Ca_application_amt", "C.", "N.", "C.N", "MBC..mg.C.g.soil.", "pH")], by="Label")
+
+## Pull the control data for each site and block
+by_block_controls <- Hydrolases %>%
+        select(Label, enzyme, activity_nmol.h.g_g.dry.wt) %>%
+        left_join(Sample_metadata[, colnames(Sample_metadata) %in% c("Label", "Site", "Soil_type", "Soil Sample Type", "Replicate", "Treatment")], by="Label") %>% 
+        filter(Treatment == "C") %>%
+        select(-Label, -Treatment) %>%
+        rename(control.activity = activity_nmol.h.g_g.dry.wt)
+
+## pull the sample data for each treatment sample and block
+by_block_samples <- Hydrolases %>%
+        select(Label, enzyme, activity_nmol.h.g_g.dry.wt) %>%
+        left_join(Sample_metadata[, colnames(Sample_metadata) %in% c("Label", "Site", "Soil_type","Soil Sample Type", "Replicate", "Treatment")], by="Label") %>%
+        filter(!Treatment == "C") %>% 
+        select(-Label) 
+
+## Bind the control and treatment data and calculate the difference between treatments and controls
+by_block_rep <- by_block_controls %>%
+        left_join(by_block_samples, by=c("Site", "Soil_type", "Replicate", "enzyme")) %>% 
+        mutate(diff_activity = activity_nmol.h.g_g.dry.wt - control.activity) %>%
+        left_join(Sample_metadata[, colnames(Sample_metadata) %in% c("Site", "Soil_type","Soil Sample Type", "block", "Replicate", "Treatment", "ash_amt", "Ca_application_amt", "ash_type", "C.", "N.", "C.N", "MBC..mg.C.g.soil.", "pH")], by = c("Site", "Soil_type", "Replicate", "Treatment"))
+
+rm(by_block_controls, by_block_samples)
+
+## run t.tests tests (b/c all the data in low sample size but we are assuming they come from normal distributions, on differences)
+
+one_way_tests <- by_block_rep %>%
+  group_by(enzyme) %>%
+  mutate(bonf.alph = 0.05/n()) %>% ## Bonferroni correction
+  group_by(Site, Treatment, Soil_type, `Soil Sample Type`, Ca_application_amt, ash_type, ash_amt, enzyme) %>%
+  mutate(n = n(), t_p = wilcox.test(diff_activity, exact=FALSE)$p.value, t.mean = wilcox.test(diff_activity, exact=FALSE)$estimate, t.conf.upp = max(diff_activity), t.conf.low = min(diff_activity), bonf.alph = unique(bonf.alph)) %>%
+  group_by(enzyme) %>%
+  mutate(sig.res = factor(ifelse(t_p < bonf.alph, "bonf", ifelse(t_p<0.05, ".05", "NS")), levels= c("bonf", ".05", "NS"))) %>% ## Bonferroni correction for testing significance of each enzyme
+  group_by(Soil_type, enzyme) %>%
+  mutate(anot.loc = min(t.conf.low * 1.1, na.rm=T), Site = factor(as.character(Site), levels = c("ALN", "ALS", "MSK", "PLD", "SRD", "ETM", "HLB", "ILK")), Lab2 = paste(Site, ash_type, ash_amt, sep=", ")) %>%
+        arrange(Site) %>%
+        mutate(Lab2 = factor(as.character(Lab2), levels=unique(Lab2))) %>% 
+  group_by(Site) %>%
+  mutate(grp_2 = "LFH" %in% `Soil Sample Type`)
+
+## Add the appropriate number of tests to the p-test counter.
+num_p_tests = num_p_tests + length(unique(one_way_tests$enzyme))
+
+#### checked normality of distributions of data before assessing what test to run #### 
+## Nothing is normally distributed, but also all are low sample sizes - used wilcoxon.test to be safe. ##
+
+```
+
+
+
+
+```{r nag-enz, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+
+#.05, NS
+plot1 <- ggplot(one_way_tests[one_way_tests$enzyme == "NAG" & one_way_tests$`Soil Sample Type`%in% c("L"),], aes(y=Lab2, group=Lab2, fill=sig.res, color=sig.res))+
+  geom_boxplot(aes(x=diff_activity), alpha=0.5)+
+   geom_vline(xintercept = 0, color="black")+
+ # geom_text(aes(x=anot.loc, label=n), color="gray44")+
+  theme_minimal()+
+        scale_color_manual(values = c("black", "gray"))+ ## no bonferroni significant ones
+  scale_fill_manual(values = c("white", "white"))+
+  theme(axis.text.x = element_text(angle=90))+
+        xlab(expression(""))+
+        ylab("")+
+  theme(legend.position = "none")
+
+## bonf, 0.5, NS
+plot2 <- ggplot(one_way_tests[one_way_tests$enzyme == "NAG" & one_way_tests$`Soil Sample Type`%in% c("FH"),], aes(y=Lab2, group=Lab2, fill=sig.res, color=sig.res))+
+  geom_boxplot(aes(x=diff_activity), alpha=0.5)+
+   geom_vline(xintercept = 0, color="black")+
+ # geom_text(aes(x=anot.loc, label=n), color="gray44")+
+  theme_minimal()+
+        scale_color_manual(values = c("black", "black", "gray"))+ 
+  scale_fill_manual(values = c("black", "white", "white"))+
+  theme(axis.text.x = element_text(angle=90))+
+        xlab(expression(""))+
+        ylab("")+
+  theme(legend.position = "none", axis.text.y = element_blank())
+
+## all NS
+plot3 <- ggplot(one_way_tests[one_way_tests$enzyme == "NAG" & one_way_tests$`Soil Sample Type`%in% c("LFH"),], aes(y=Lab2, group=Lab2, fill=sig.res, color=sig.res))+
+  geom_boxplot(aes(x=diff_activity), alpha=0.5)+
+   geom_vline(xintercept = 0, color="black")+
+ # geom_text(aes(x=anot.loc, label=n), color="gray44")+
+  theme_minimal()+
+        scale_color_manual(values = c("gray", "gray"))+ ## took out green, because only non-significant
+  scale_fill_manual(values = c("white", "white"))+
+  theme(axis.text.x = element_text(angle=90))+
+        xlab("")+
+        ylab("")+
+  theme(legend.position = "none", axis.title.x = element_text(hjust = 1))
+
+empty_plot <- plot(0,type='n',axes=FALSE,ann=FALSE)
+
+## .05 & NS
+plot4 <- ggplot(one_way_tests[one_way_tests$enzyme == "NAG" & one_way_tests$`Soil Sample Type`%in% c("MIN") & !one_way_tests$grp_2,], aes(y=Lab2, group=Lab2, fill=sig.res, color=sig.res))+
+  geom_boxplot(aes(x=diff_activity), alpha=0.5)+
+   geom_vline(xintercept = 0, color="black")+
+ # geom_text(aes(x=anot.loc, label=n), color="gray44")+
+  theme_minimal()+
+        scale_color_manual(values = c( "black", "gray"))+ ## No bonferonni significant levels
+  scale_fill_manual(values = c( "white", "white"))+
+  theme(axis.text.x = element_text(angle=90))+
+        xlab(expression(""))+
+        ylab("")+
+  theme(legend.position = "none", panel.spacing = unit(2.55, "lines"))
+
+
+### only NS
+plot5 <- ggplot(one_way_tests[one_way_tests$enzyme == "NAG" & one_way_tests$`Soil Sample Type`%in% c("MIN") & one_way_tests$grp_2,], aes(y=Lab2, group=Lab2, fill=sig.res, color=sig.res))+
+  geom_boxplot(aes(x=diff_activity), alpha=0.5)+
+   geom_vline(xintercept = 0, color="black")+
+  #geom_text(aes(x=anot.loc, label=n), color="gray44")+
+  theme_minimal()+
+        scale_color_manual(values = c("gray", "gray"))+ 
+  scale_fill_manual(values = c( "white", "white"))+
+  theme(axis.text.x = element_text(angle=90))+
+        xlab("")+
+        ylab("")+
+  theme(legend.position = "none", panel.spacing = unit(2.55, "lines"), axis.title.x = element_text(hjust = 1))
+
+
+plot.obj <- ggarrange(
+  ggarrange(
+  ggarrange(plot1, plot2, ncol=2, widths = c(1.2, .8), labels = c("a", "b")),
+                    ggarrange(empty_plot, plot3, ncol = 2, widths=c(.67, 1.33),
+labels = c("", "c")), 
+ncol=1,
+nrow=2
+),
+ggarrange(plot4, plot5, nrow = 2, heights = c(1, 1)) + theme(plot.background = element_rect(colour="black")), 
+ncol=2, 
+labels = c("", "d"), 
+widths=c(1, 0.7)) + theme(plot.background = element_rect(colour="black")) 
+  
+annotate_figure(plot.obj, left = text_grob(label = expression("Site, Ash type, Amount of ash added (kg ha" ^-1 *")"), rot = 90, just = "centre"), bottom = text_grob(label = expression("Difference in activity (nmol h" ^-1 * " g dry wt"^-1 *") from control"), rot = 0, just = "centre"))
+
+ggsave("Figure3.png", width = 8, units = "in")
+
+#rm(by_block_rep, one_way_tests, Hyd.anal)
+
+```
+
+
+```{r phos-enz, warning=FALSE, message=FALSE, echo=FALSE, include=FALSE}
+
+## only 0.5 & NS
+plot1 <- ggplot(one_way_tests[one_way_tests$enzyme == "PHOS" & one_way_tests$`Soil Sample Type`%in% c("L"),], aes(y=Lab2, group=Lab2, fill=sig.res, color=sig.res))+
+  geom_boxplot(aes(x=diff_activity), alpha=0.5)+
+   geom_vline(xintercept = 0, color="black")+
+  #geom_text(aes(x=anot.loc, label=n), color="gray44")+
+  theme_minimal()+
+        scale_color_manual(values = c("black", "gray"))+ 
+  scale_fill_manual(values = c("white", "white"))+
+  theme(axis.text.x = element_text(angle=90))+
+        xlab(expression(""))+
+        ylab("")+
+  theme(legend.position = "none")
+
+## only 0.5 & NS
+plot2 <- ggplot(one_way_tests[one_way_tests$enzyme == "PHOS" & one_way_tests$`Soil Sample Type`%in% c("FH"),], aes(y=Lab2, group=Lab2, fill=sig.res, color=sig.res))+
+  geom_boxplot(aes(x=diff_activity), alpha=0.5)+
+   geom_vline(xintercept = 0, color="black")+
+  #geom_text(aes(x=anot.loc, label=n), color="gray44")+
+  theme_minimal()+
+        scale_color_manual(values = c("black", "gray"))+ 
+  scale_fill_manual(values = c("white", "white"))+
+  theme(axis.text.x = element_text(angle=90))+
+        xlab("")+
+        ylab("")+
+  theme(legend.position = "none", axis.text.y = element_blank())
+
+## only NS
+plot3 <- ggplot(one_way_tests[one_way_tests$enzyme == "PHOS" & one_way_tests$`Soil Sample Type`%in% c("LFH"),], aes(y=Lab2, group=Lab2, fill=sig.res, color=sig.res))+
+  geom_boxplot(aes(x=diff_activity), alpha=0.5)+
+   geom_vline(xintercept = 0, color="black")+
+  #geom_text(aes(x=anot.loc, label=n), color="gray44")+
+  theme_minimal()+
+        scale_color_manual(values = c("gray"))+ ## took out green, because only non-significant
+  scale_fill_manual(values = c("white"))+
+  theme(axis.text.x = element_text(angle=90))+
+        xlab("")+
+        ylab("")+
+  #facet_grid(grp_2~`Soil Sample Type`, scales = "free")+
+  #ggtitle("Difference in phosphatase activity due to ash Addition")+
+  theme(legend.position = "none", axis.title.x = element_text(hjust = 1))
+
+empty_plot <- plot(0,type='n',axes=FALSE,ann=FALSE)
+
+## only 0.5 & NS
+plot4 <- ggplot(one_way_tests[one_way_tests$enzyme == "PHOS" & one_way_tests$`Soil Sample Type`%in% c("MIN") & !one_way_tests$grp_2,], aes(y=Lab2, group=Lab2, fill=sig.res, color=sig.res))+
+  geom_boxplot(aes(x=diff_activity), alpha=0.5)+
+   geom_vline(xintercept = 0, color="black")+
+ # geom_text(aes(x=anot.loc, label=n), color="gray44")+
+  theme_minimal()+
+        scale_color_manual(values = c("black", "gray", "gray"))+ 
+  scale_fill_manual(values = c("white", "white", "white"))+
+  theme(axis.text.x = element_text(angle=90))+
+        xlab("")+
+        ylab("")+
+  #ggtitle("Difference in phosphatase activity due to ash Addition")+
+  theme(legend.position = "none", panel.spacing = unit(2.55, "lines"))
+
+## only NS
+plot5 <- ggplot(one_way_tests[one_way_tests$enzyme == "PHOS" & one_way_tests$`Soil Sample Type`%in% c("MIN") & one_way_tests$grp_2,], aes(y=Lab2, group=Lab2, fill=sig.res, color=sig.res))+
+  geom_boxplot(aes(x=diff_activity), alpha=0.5)+
+   geom_vline(xintercept = 0, color="black")+
+  #geom_text(aes(x=anot.loc, label=n), color="gray44")+
+  theme_minimal()+
+        scale_color_manual(values = c("gray", "gray"))+ 
+  scale_fill_manual(values = c( "white", "white"))+
+  theme(axis.text.x = element_text(angle=90))+
+        xlab("")+
+        ylab("")+
+  #facet_grid(grp_2~., scales = "free")+
+  #ggtitle("Difference in phosphatase activity due to ash Addition")+
+  theme(legend.position = "none", panel.spacing = unit(2.55, "lines"), axis.title.x = element_text(hjust = 1))
+
+
+plot.obj <- ggarrange(
+  ggarrange(
+  ggarrange(plot1, plot2, ncol=2, widths = c(1.2, .8), labels = c("a", "b")),
+                    ggarrange(empty_plot, plot3, ncol = 2, widths=c(.67, 1.33),
+labels = c("", "c")), 
+ncol=1,
+nrow=2
+),
+ggarrange(plot4, plot5, nrow = 2, heights = c(1, 1)) + theme(plot.background = element_rect(colour="black")), 
+ncol=2, 
+labels = c("", "d"), 
+widths=c(1, 0.7)) + theme(plot.background = element_rect(colour="black"))
+
+ annotate_figure(plot.obj, left = text_grob(label = expression("Site, Ash type, Amount of ash added (kg ha" ^-1 *")"), rot = 90, just = "centre"), bottom = text_grob(label = expression("Difference in activity (nmol h" ^-1 * " g dry wt"^-1 *") from control"), rot = 0, just = "centre"))
+
+ggsave("Figure4.png", width = 8, units = "in")
+``` 
+
+
+![(\#fig:nag-enz)Differences in *N*-acetyl-glucosamine activity between treatments and controls.Results significantly different than zero as determined by Wilcoxon-test are shown with black outline and dark gray fill (Bonferonni corrected p < 0.05) or black outline and white fill (p < 0.05), results that were not significant are shown with a gray outline and white fill. Panels show different soil horizons a = L, b = FH, c = LFH, d = 0-10 cm of mineral soil.](Figure3.png){width=8in}
+
+
+![(\#fig:phos-enz) Differences in phosphatase activity between treatments and controls. Results significantly different than zero as determined by Wilcoxon-test are shown with black outline and white fill (p < 0.05), results that were not significant are shown with a gray outline and white fill. Panels show different soil horizons a = L, b = FH, c = LFH, d = 0-10 cm of mineral soil. No responses were significant at a Bonferroni corrected $\alpha$.](Figure4.png){width=8in}
+
+
+Statistically significant responses of enzyme activity to ash amendment, as assessed with Wilcoxon tests against a Bonferonni corrected alpha, were only found in the ILK site. NAG activities were significantly increased for three ash application rates in the Island Lake FH horizon (Fig \@ref(fig:nag-enz)). Significant effects at an uncorrected $\alpha$ of 0.05 were found in ETM, HLB, and ILK sites. Island Lake had one amendment rate that resulted in significantly increased MIN horizon PHOS activity (Fig. \@ref(fig:phos-enz)). There was decreased PHOS activity for different levels of ash amendment in L and MIN horizons at HLB sites and one amendment rate in the MIN horizon at the ILK site, and increases in PHOS activity for different amendment rates in the L and MIN horizons at the ILK sites, and in the FH horizon of the ETM site (Fig. \@ref(fig:phos-enz)). NAG appeared to have non-significant trends of increased activity in mineral soils of ALN, ILK and PLD sites, but decreased activity in ALS, all HLB amendment rates and MSK (Fig. \@ref(fig:nag-enz)). There were non-significant trends of decreased NAG activity in the L horizon of the HLB site, while ILK showed non-significant trends of increased NAG activity in MIN and FH horizons. Across sites, there was no consistent relationship between the activity changes of different soil horizons. The direction of response for both NAG and PHOS activity were inconsistent across sites and amendment rates.
+
+
+## Biodiversity analyses
+
+Mixed effects ANOVA results showed that ash addition did not affect diversity for any metabarcode group after accounting for site and soil horizon (p < 0.05). While there were some significant changes in alpha diversity metrics pair-wise Wilcoxon tests (at a Bonferroni-corrected $\alpha$ of 0.05), no site exhibited changes in alpha diversity across all assessed groups, for all metrics across all levels of grouping assessed (ASV, functional, genus). Most of the significant differences were at ASV or genus level and significant results were infrequent and inconsistent in direction (Supplemental Materials Tables S11-S12, Fig. S1, S2). 
+
+
+```{r ITS_functional_diversity_plot}
+
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_ITS.RData")
+
+## Grab the matrix of species abundances
+  # row names should be sites, colnames species
+rownames(ITS) <- ITS$zOTU
+Ord_data <- ITS %>% select(-zOTU)
+colnames(Ord_data) <- gsub("_", "-", colnames(Ord_data))
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+# Make the data presence-absence (b/c fungi)
+Orddf <- t(apply(Orddf, 2, function(x){ifelse(x>0, 1, 0)}))
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(row.names(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+FunGuild_data <- Ord_data
+
+FunGuild_data$Genus <- ifelse(FunGuild_data$gBP >=0.7, FunGuild_data$Genus, "unidentified")
+FunGuild_data$Species <- gsub("\\|.+$", "", ifelse(FunGuild_data$sBP >=0.6, FunGuild_data$Species, "unidentified"))
+
+FunGuild_data$`OTU ID` <- rownames(FunGuild_data)
+
+FunGuild_data <- FunGuild_data[,c("OTU ID", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")]
+
+write_delim(FunGuild_data, file("FUNGuild/FunGuild.taxa.txt", encoding="UTF-8"), delim="\t")
+
+```
+
+
+
+```{asis, eval=FALSE}
+## Conducted on Powershell on Windows
+cd FUNGuild
+
+python FUNGuild.py guild -taxa FunGuild.taxa.txt
+
+```
+
+
+PCA of clr transformed values suggested that the variance in the community compositions are not responding to strong, simple gradients (i.e., small proportions of variance were explained across many principal components). The 16S dataset, had 23% of the compositional variance explained in the first two principal components, and none of the eukaryotic groups (18S, ITS, F230) had more than 20% of the compositional variance explained in the first two principal components (Supplemental Materials, Fig. S3). When the influence of site and soil type were accounted for, RDA constrained with ash-related parameters (applied ash calcium, sodium and phosphorus) explained less than 3% of compositional variance (Fig. \@ref(fig:CODARDAVar)). Subsequent visual investigation of these RDAs showed that these relationships were not consistent across sites (Supplemental Materials Fig. S4-S7). This supported the use of pairwise analyses to investigate the impact of ash amendment by direct comparison of treatments and controls.
+
+
+![(\#fig:CODARDAVar) Proportion of variance explained by RDA axes constrained by the ash amendment parameters of applied calcium kg ha^-1^, applied phosphorus kg ha^-1^, and, applied sodium kg ha^-1^, after controlling for site and soil horizon. Model names are described as the targeted gene (16S, 18S, ITS, or, F230), summarization level (ASV, genus, or functional groupings).](Supplemental-Materials_files/figure-html/Figure5-1.jpeg){width=6in}
+
+
+ALDEx2 glm models found one ericoid mycorrhizal fungus, *Distigmoptera* (a genus of herbivore beetles), and four other arthropod ASVs to be significantly associated with ash related parameters after Benjamini-Hochberg corrections in ORG horizons and one *Archaeorhyzomyces* (root endophyte) in the MIN horizon, no other groups were significantly associated with ash related parameters (Supplemental Materials Fig. S8). Subsequently, ALDEx2 pairwise models did not reveal any statistically significant differences between control and treatment samples for any site after the Benjamini-Hochberg corrections (Fig. \@ref(fig:ALDex2Pairwise)). GLMs of gain/loss comparisons between controls and treatments within blocks did find six groups that were significantly associated with a higher incidence of presence or absence of that group across ash treatments in ORG horizons (Supplemental Materials Fig. S9). These groups corresponded to mycorrhizae (*Rhizoschyphus*,  Sebacinales), saprotrophs (*Toxicocladosporium*), ciliates (*Uroleptus*) or unidentified. Subsequent analysis suggested these relationships were site specific and inconsistent, with most sites having small increases or decreases in gain or loss of a particular group (e.g., Losses of *Uroleptus* at the SRD site and gains at ALN and ALS sites, with little change elsewhere) (Supplemental Materials Fig. S10). Taken together these results show that the organisms may have had significant changes in their compositional importance, but were generally present regardless of treatment.
+
+![(\#fig:ALDex2Pairwise) Benjamini-Hochberg corrected significance of pairwise ALDex2 from each control-treatment pairing for each site and metabarcoding target in the study at three levels of organization (functional, genus and ASV). Significance (p < 0.05) is shown on the graph as a light coloured dashed line. Colour and shape are used to differentiate the targeted sequence and grouping level used for each test.](Supplemental-Materials_files/figure-html/Figure6-1.jpeg){width=8in}
+
+
+# Discussion
+
+There are reports of changes to soil functional and community composition due to the addition of ash throughout the literature. However these lack consistency in the amount of amendment required to elicit a response and the direction of response [@noyce2016; @domes2018; @gomoryova2016; @pugliese2014; @bang-andreasen2020]. Comparing the results of these studies is further complicated by methodological differences between them. Though sites and treatments were varied, the standardized data collection and analysis provided by AshNet allowed for highly comparable results amongst sites. As far as we are aware, AshNet is the first study to analyze experiments at multiple sites across Canada in a multi-targeted metabarcoding analysis of the effect of ash amendment on forest soil biotic communities. The infrequent and inconsistent responses across the many parameters in this study showed that soil arthropod, bacterial and fungal community responses to one-time wood ash additions are likely to be site-specific and small in comparison to within-site variation.
+
+
+The lack of difference in metabarcoding community structures resulting from wood ash addition demonstrate very little evidence of direct effects of wood ash amendment on overall community composition for arthropod, bacterial or fungal communities (Fig. \@ref(fig:CODARDAVar), \@ref(fig:ALDex2Pairwise)). There could be some biodiversity implications to this, as we saw that alpha diversity metrics had some site-specific differences as well for specific targeted groups. The lack of demonstrable community differences, as well as the lack of consistency within-sites and between sites for alpha diversity and compositional tests confirms that we cannot make generalized conclusions about the effects of ash amendment on community assemblages. This study is not unique in this finding, as other studies have found soil communities to be unresponsive to ash addition [@haimi2000; @aronsson2004; @omil2007; @taylor2003; @wallander2005; @kjoller2017]. In other studies where community-level or functional responses were detected, they were limited to higher amendment rates (9 Mg ha^-1^ or higher) and upper organic layers of soil [@bang-andreasen2020; @gomoryova2016; @peltoniemi2016]. The magnitude of Bray-Curtis or Jaccard distance differences and low explanatory power of constrained RDA axes also supports that ash amendment did not result in particularly large shifts in community structure. The infrequent effects as seen in this study and others within the AshNet network suggest that negative effects on biological community structure and function are minimal [@boisvert-marsh2016; @couch2021; @joseph2021]. Other studies imply that the risk of damaging soil biotic function associated with heavy metal increases are low, and likely to be mitigated by the high calcium and magnesium concentrations in ash [@perkiomaki2005; @reid2014]. Observed responses were also in line with the known soil chemical response to ash addition [@joseph2021]. In general, chemical response to ash addition is variable, with reports of increased soil quality after ash addition [@domes2018; @brais2015; @reid2014], some where minimal or no changes were detected or, the changes were limited to specific ash and amendment rates [@couch2021; @reid2014]. So it is not unexpected that we also saw variability among site functional responses, which are, in part, regulated by soil chemistry. Given that results do not indicate frequent and consistent effects of ash on soil biota, the benefits of ash can likely be explored without large impacts to soil biodiversity. Emilson et al. [-@emilson2020] found models including ash addition amounts explained some variance (~18%) in short term tree growth response on AshNet sites, and much of the variance was attributed to species specific response differences. Additional growth benefits may be more apparent in longer-term time scales, or in species with faster growth, such as Acer species [@reid2014]. There may be other value-added benefits in response to ash addition, such as increased nutrient availability that were not assessed in their study. Hope et al. [@hope2017] estimated that ash amendment only becomes preferable to landfilling when an additional $15 CAD/tonne in benefits can be achieved. The site and species dependence of tree growth responses mean that the efficacy of ash amendment needs to be assessed before it is applied on operational scales.
+
+
+In general, enzyme activities and functional community analysis confirms that ash amendment did not have any consistent measurable effects on functional attributes in soil biotic communities. While there were some positive and negative trends, and some shifts in functional community attributes, these results were infrequent, inconsistent and site specific. While differences between controls and treatments were shown in multiple regression models, models of the difference in enzyme response supported that the site characteristics had a greater impact on whether ash amendment changed NAG or PHOS activity than the specific chemical additions of ash (Fig \@ref(fig:EnzmodsVariance)). That the ash signal was not also observed in the mixed model ANOVA tests or the fixed effects ANOVA with interactions, which did not account for block effects, showed that these responses in enzyme activity were small enough to be masked by in-site spatial variation, or were very site dependent (Supplemental Materials Tables S7-S10). The observed differences in enzyme activity, as demonstrated via pairwise Wilcoxon tests, were not linked to functional activities present in the metabarcoding communities (e.g., ILK treatments had significant increases in N-acetylglucosamine activity in the L horizon, but no corresponding shift in functional community structure or alpha-diversity metrics) (Fig. \@ref(fig:nag-enz), Supplemental Materials Fig. S4-S7). This indicates that these changes are likely temporary adaptations rather than persistent selective forces that would result in differences corresponding particular functional adaptations or species. The restriction of response to specific soil horizons at different sites, and lack of consistency of response is supported by similar results or lack of significant soil change, either chemical or biological, in other studies [@noyce2016; @reid2014; @gomoryova2016; @pugliese2014; @belanger2021]. 
+
+
+The site and amendment-rate dependence of the enzyme responses were apparent in the results of the Wilcoxon tests. Phosphatase results were even more inconsistent, with significant increases in ILK treatments, but only at a different amendment level for each soil horizon and, HLB treatments had decreases in PHOS restricted to the L horizon. The ILK and HLB sites were the most responsive, but they had different responses. The ILK and HLB sites varied in quite a few aspects, particularly forest structure and harvesting intensity which could be driving the different responses. These sites also had very different litter compositions, with HLB featuring deciduous leaves and understory plants, while ILK had pine needles and any mosses that survived harvesting. It may be that sites that are more established respond to ash amendment in ways that decrease metabolic activity (e.g., pH change outside of optimum ranges for enzyme activity), while younger stands are more likely to respond positively to the application of wood ash. This explanation supports why ALS and HLB sites had reduced enzymatic activities due to ash treatment, while the ALN, ETM, ILK, PLD and SRD sites had positive responses. That the ALN and sites did not respond similarly could be related to its fire history. The historical burn at the ALS site could have altered the response to ash treatment, as ash application and fire can contribute similar compounds to soil (Fig. \@ref(fig:phos-enz), \@ref(fig:nag-enz)). Alternatively, enzyme activity responses may just signal shifts in nutrient acquisition strategy, and not net reductions in activity. In an earlier study, Noyce et al. [-@noyce2016] did not observe changes in microbial respiration at soils from the ILK or HLB sites relatively shortly after ash amendment. Pugliese et al. [-@pugliese2014] also did not find that ash addition at a rate of 5 Mg ha^-1^ to HLB soils had an effect on respiration. If this pattern held true in 2017, then the decreases in enzyme activity at the HLB site may reflect a higher availability of nitrogen and phosphorus, decreasing the need for the production of enzymes required to scavenge these nutrients from organic materials. Bang-Andreasen et al. [-@bang-andreasen2020] show that there are up-regulations in microbial growth associated genes with higher levels of ash amendment (12 Mg ha^-1^, 90 Mg ha^-1^), but no response at a lower amendment rate (3 Mg ha^-1^). Our amendment rates may be large enough to modify the metabolic strategies of organisms, but not so large as to effect growth or provide selective pressures for particular functional attributes in systems with less severe disturbance. Ash addition at the amendment rates in this study may provide benefits to forest ecosystems that are freshly disturbed, by being incorporated into initial disturbance events and aiding recovery, but have more subtle effects on the microbial activity of more established forest systems where there are less nutrient limitation, low water holding capacity and acidity stressors. 
+
+
+The measured responses to ash and site characteristics were variable. The inconsistency of response affected the ability to model enzyme activity responses to ash addition. Modeling of effects across sites was inconclusive as the models appeared to be driven by activity differences at few sites. The variance that was explained did suggest that changes in MIN soil horizons were driven more by indirect climate and site characteristics and that changes to enzyme activities within ORG horizons were driven more directly by soil chemical characteristics and ash chemistry (Fig \@ref(fig:EnzmodsVariance)). It may be that functional responses are temporary and may transition through the soil profile over time. Gomoyrova et al. [-@gomoryova2016] observed that functional responses were limited to organic horizons and progressed through those horizons during a six month trial. Sites in this study showed both increased and decreased activities in response to ash amendment in both layers even when the application was within two years of the sampling. It should be noted though, that the different soil layers that did have response could be because of the movement of the effect through the soil profile over time. Many studies on microbial activity have been short-lived [@pugliese2014; @noyce2016]. The time-frame where ash amendment is most influential has yet to be established, with suggestions that effects may appear in mineral horizons within the first few months after application or not until years after application [@reid2014; @gomoryova2016; @klavina2016; @hansen2017]. Stand type, site history, soil characteristics and climate variables are understandably influential on the responses of PHOS and NAG activities to ash amendment. Tree composition can also have an influence on the mineral soil community, through direct effects in root associations, or through indirect effects via their effects on litter composition and understory vegetation [@fu2015]. Climate and soil variables are equally important, as they influence soil moisture, chemistry, and, temperature. Previous studies have shown that soil type is an important consideration for wood ash amendment [@pitman2006]. Soil moisture, chemistry and temperature can be limiting on microbial community composition, growth and activity, as well as contribute to weathering and leaching of ash materials [@cruz-paredes2021]. Though the mechanisms that drove the few observed responses in enzyme activity cannot be determined with surety, these results demonstrate the importance of considering site characteristics and climate regimes when evaluating the effects of wood ash amendment. 
+
+
+Metabarcoding community responses were also generally site-specific or nonexistent. Differences in community structure between ash treatments and controls were comparable to the differences between controls within sites, as evidenced by the small amount of compositional variance explained by ash related parameters and, the control-treatment distances that were comparable or lower than control-control distances (Supplemental Materials Fig. S2, S3). The limited number of organisms found to have potential increases or decreases after amendment were all eukaryotic and no single type of organism (parasite, rhizosphere-associate) universally benefited or was negatively affected across the study sites. Only three site-treatment combinations had a group that was universally lost or gained from the site after treatment (SRD 10 Mg ha ^-1^, ALN CPLP Ash 5 Mg ha^-1^, ALS-A2 CPLP Ash 5 Mg ha^-1^). As eukaryotic DNA signatures are more susceptible to random sampling biases due to their multicellular nature, and varied sizes (i.e., cells are attached, and less likely to be evenly distributed in samples), this is not particularly strong evidence of community shift. As there was also little evidence of changes to soil quality or pH in these sites, the lack of community response to ash addition is likely because the changes to soil characteristics were minor to non-detectable[@joseph2021]. It has been demonstrated that harvesting can cause detectable community changes [@smenderovac2017]. While the quantities of wood ash added in this study are considered reasonable operational amount, they might have been insufficient to mitigate stresses (e.g., calcium and magnesium depletion, high acidity) and create further community shifts. Our highest amendment rate of 20 Mg ha^-1^ was much lower than the 90 Mg ha^-1^ required to observe changes to bacterial and fungal community composition in Bang-Andreasen et al. [-@bang-andreasen2020] There is another potential explanation for the lack of observed changes; there has been some evidence that the high calcium content and pH ameliorating effects of ash mitigates the toxicity of metal components [@omil2007; @perkiomaki2005].It may be that competing interactions of ash components negate eachother, or prevent use of those components, buffering any positive or negative effects of the wood ash amendments.
+
+# Conclusion
+
+The interactions between site characteristics, ash characteristics and ash application rates remain complex. Though we did see soil enzyme activity responses, they were limited and inconsistent. Soil communities did not have large responses to ash amendment, and there were few sites and treatments which resulted in truly disruptive changes, (i.e., changes found in multiple metabarcoding targets). The enzyme and community responses that did occur were not correlated, i.e., there were not consistent community shifts that corresponded to enzyme responses, indicating short-term functional responses, rather than long-term changes. Finally, there was no strong response to the constituents added via ash amendment, showing that ash properties alone are not good predictors of response. While our results allowed us to determine that site characteristics are important in determining responses to ash amendment, our study was limited in its capacity to determine drives these interactions, and we suggest that this requires more study. Though there do not appear to be any consistently beneficial or deleterious effects to soil function or community structure, the potential benefits (e.g., increased tree growth) of ash amendment are apparent. There are many studies that indicate positive effects of ash amendment, and risks of heavy metal toxicity appear to be minimal. Current guidelines and sufficient economic incentives may justify the use of ash as an amendment. There is interest in applying ash in commercial harvesting operations, but also in small-scale private land-management [@azan2019]. It may be worth investigating the time-frame and harvesting practices in which ash should be applied, as there may be different functional effects when ash is applied to older or less intensive harvesting systems compared to clearcut systems where regeneration is at an early stage. Te number of applications should also be investigated; our study only looked at single applications, but it may be that different application strategies result in different effects. It may also be that ash is more effective at sites without N limitation, further studies should evaluate whether N-limitation influences the effectiveness of ash. This study did not find strong effects of ash amendment on arthropod, bacterial and fungal community composition, and further studies should expect small, inconsistent effects that may require highly intensive sampling and replication to detect. 
+
+
+# Data availability
+All data used in this experiment and supplemental materials are available on the public github repository located at [https://github.com/smendero/AshNet_Biodiversity](github.com/smendero/AshNet_Biodiversity)
+
+Raw, de-multiplexed Illumina paired-end reads are available through the NCBI SRA Bioproject PRJNA751922.  Infiles and scripts are available from the author’s github page [https://github.com/smendero/AshNet_Biodiversity](github.com/smendero/AshNet_Biodiversity).  MetaWorks is available from https://github.com/terrimporter/MetaWorks.  The reference set used with the COI classifier is available from https://github.com/terrimporter/CO1Classifier, the 18S classifier is available from https://github.com/terrimporter/18SClassifier, and the ITS classifier is available from https://github.com/terrimporter/UNITE_ITSClassifier.  
+
+
+# Figure Legends
+
+
+Figure 1. Location of the wood ash study sites across Canada. Site names from left to right include 1) Aleza Lake N, 2) Aleza Lake S, 3) Mistik, 4) Pineland, 5) 25th Sideroad, 6) Island Lake, 7) Haliburton, 8) Eastern Townships Maple. The map is shaded by major forested Vegetation Zones of Canada [@baldwin2019]
+
+
+Figure 2. Variance of difference explained by linear modelling parameters for models of the difference in enzyme activities (NAG = N-acetylglucosamine, PHOS = phosphatase) between ash amended soils and controls for mineral (MIN = 0-10 cm of mineral soil) and organic (ORG = L, FH and LFH) soil horizons.
+
+
+Figure 3. Differences in *N*-acetyl-glucosamine activity between treatments and controls.Results significantly different than zero as determined by Wilcoxon-test are shown with black outline and dark gray fill (Bonferonni corrected p < 0.05) or black outline and white fill (p < 0.05), results that were not significant are shown with a gray outline and white fill. Panels show different soil horizons a = L, b = FH, c = LFH, d = 0-10 cm of mineral soil.
+
+
+Figure 4. Differences in phosphatase activity between treatments and controls. Results significantly different than zero as determined by Wilcoxon-test are shown with black outline and white fill (p < 0.05), results that were not significant are shown with a gray outline and white fill.Panels show different soil horizons a = L, b = FH, c = LFH, d = 0-10 cm of mineral soil. No responses were significant at a Bonferroni corrected $\alpha$.
+
+
+Figure 5.  Proportion of variance explained by RDA axes constrained by the ash amendment parameters of applied calcium kg ha^-1^, applied phosphorus kg ha^-1^, and, applied sodium kg ha^-1^, after controlling for site and soil horizon. Model names are described as the targeted gene (16S, 18S, ITS, or, F230), summarization level (ASV, genus, or functional groupings).
+
+
+Figure 6.  Benjamini-Hochberg corrected significance of pairwise ALDex2 from each control-treatment pairing for each site and metabarcoding target in the study at three levels of organization (functional, genus and ASV). Significance (p < 0.05) is shown on the graph as a light coloured dashed line. Colour and shape are used to differentiate the targeted sequence and grouping level used for each test.
+
+
+# Tables
+
+
+# Competing interests
+The authors declare no competing interests.
+
+
+# Acknowledgements
+We thank all members of AshNet who collected and contributed samples and data for this collaborative effort. Funding for this project was provided by the Program of Energy Research and Development (PERD) of Natural Resources Canada through the project "Amelioration of biomass harvested sites with wood ash waste: Improving Canadian forest productivity and sustainability through and alternative appoach to bioenergy waste management." and the Canadian Wood Fibre Centre Sustainable Fibre Solutions Program. We would like to acknowledge the efforts of Derek Chartrand for the enzyme and DNA extractions he performed for this study and Kerrie Wainio-Keizer for preparing sampling materials and processing received samples. As well as the Aleza Lake Research Forest Society staff and summer students and L. Sealey for aiding in soil sample collection. Special acknowledgements to the work of Kristen Hannam who compiled much of the information on the site characteristics for the AshNet study sites. 
+
+
+# Author contributions
+D.M. and L.V. conceived the experiment(s). T.P. helped design the molecular biology protocols, performed preliminary bioinformatics and data analysis, developed and maintains the MetaWorks pipeline and curated reference sets.  C.E. performed bioinformatics and conducted the experiments. E.S. performed statistical analysis, figure generation and draft preparation. All authors contributed soil samples from their study sites and reviewed the manuscript.
+
+# References
+

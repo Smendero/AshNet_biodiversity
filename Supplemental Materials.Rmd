@@ -1,0 +1,2746 @@
+---
+title: "Supplemental Materials"
+author: "Emily Smenderovac"
+date: "`r Sys.Date()`"
+output: 
+  bookdown::html_document2:
+    number_sections: false
+bibliography: bibliography.json
+csl: scientific-reports.csl
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, message=FALSE, include = FALSE, warnings = FALSE, dev = c('jpeg', "postscript")) ## Make so code doesn't print in knitted document
+
+memory.limit(size=80000)
+
+## Load libraries
+library(devtools)
+library(vegan)
+library(ALDEx2)
+library(tidyverse)
+library(GGally)
+library(ggrepel)
+library(lme4)
+library(nlme)
+library(RColorBrewer)
+library(indicspecies)
+library(Mediana)
+library(pheatmap)
+library(performance)
+library(MASS)
+library(kableExtra)
+require(compositions)
+library(flextable)
+
+num_p_tests <- 0
+
+## Set a colorblind-safe palette
+cust.cols <- c("#332288", "#117733", "#44AA99", "#88CCEE", "#DDCC77", "#CC6677", "#AA4499", "#882255")
+```
+
+# Methods 
+
+## Metabarcoding analysis
+
+DNA from all samples were extracted using the Qiagen DNEasy Power Soil kit. Amplification of 18S, CO1-F230 and, ITS sequences were performed at the Great Lakes Forestry Centre, Sault Ste. Marie using the primer sets in (Table S\@ref(tab:primers)). Triplicate PCR reactions were performed on each sample using primers using HotStarTaq Plus with illumina adaptor sequences, pooled, purified and quantified using the QiaCube fluorometric quantification. PCR reaction conditions are listed in Table S\@ref(tab:PCR).
+Metabarcoding was performed on the Illumina MiSeq platform at the Centre for Biodiversity Genomics, University of Guelph for 18S, CO1-F230 and, ITS amplicons. Amplification of amplicons and Metabarcoding were performed at Metagenombio for 16S amplicons from submitted environmental DNA. 
+
+```{r primers, include=TRUE}
+primers  <- list(d16S = c(target="16S v4-v5", 
+             forward = "5′-CCTACGGGNBGCASCAG [@emilson2018a]", 
+             reverse = "5′-GACTACNVGGGTATCTAATCC [@emilson2018a]"),
+     d18S = c(target="18S v4", 
+             forward = "5’- CCAGCASCYGCGGTAATTCC [@stoeck2010]", 
+             reverse = "5’- ACTTTCGTTCTTGATYRA [@stoeck2010]"),
+     CO1F230 = c(target="CO1 - F230", 
+             forward = "5’- GGTCAACAAATCATAAAGATATTGG [@folmer1994]", 
+             reverse = "5’- CTTATRTTRTTTATICGIGGRAAIGC [@gibson2015]"),
+     ITS2 = c(target = "ITS2", 
+              forward = "5’- GAACGCAGCRAAIIGYGA[@menkis2012]",
+              reverse = "5’- TCCTCCGCTTATTGATATGC [@white1990]")
+     )
+primers <- t(as.data.frame(primers)) %>% as.data.frame()
+
+ft <- flextable(primers)
+ft <- theme_vanilla(ft)
+ft <- set_caption(ft, " Primers used for sequence amplification.")
+#ft
+
+knitr::kable(primers, caption = " Base primers used for sequence amplification.", format = "markdown")
+rm(primers)
+```
+
+In addition to the main primer sequence, primers used for amplification of 18S, ITS, and COI sequences had an illumina p5 adapter (5'-TCGTCGGCAGCGTCAGATGTGTATAAGAGACAG-3’) fused to the 5' end of the forward primer, and another illumina p7 adapter (5’ -GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG-primer-3’) fused to the 5' end of the reverse primer. 
+
+
+```{r PCR, include=TRUE}
+PCR <- list(d18S = c(target="18S v4", 
+             `PCR conditions` = "95&deg;C for 5 min, 5 cycles (94&deg;C for 45 s, 54&deg;C for 45 s, 72&deg;C for 45 s), 25 cycles (94&deg;C for 45 s, 47&deg;C for 45 s, 72&deg;C for 45 s), 72&deg;C for 10 min"),
+     CO1F230 = c(target="CO1 - F230", 
+             `PCR conditions` ="95&deg;C for 5 min, 30 cycles (94&deg;C for 45 s, 43&deg;C for 45 s, 72&deg;C for 45 s), 72&deg;C for 10 min"),
+     ITS2 = c(target = "ITS2", 
+              `PCR conditions` = "95&deg;C for 5 min, 30 cycles (94&deg;C for 45 s, 53&deg;C for 45 s, 72&deg;C for 45 s), 72&deg;C for 10 min"))
+
+PCR <- t(as.data.frame(PCR)) %>% as.data.frame()
+
+ft <- flextable(PCR)
+ft <- theme_vanilla(ft)
+ft <- set_caption(ft, " PCR conditions used for sequence amplifications performed at the Great Lakes Forestry Centre, Sault Ste. Marie")
+#ft
+
+knitr::kable(PCR, caption = " PCR conditions used for sequence amplifications performed at the Great Lakes Forestry Centre, Sault Ste. Marie.", format = "markdown")
+
+rm(PCR)
+
+```
+
+
+```{r, include=FALSE, eval=FALSE}
+folder <- "//NRONP6AwvFSP001/EnvChem/wet_analyses_bioinformatics_archive/AshNet.Biodiversity"
+
+statdirs <- list.dirs(folder, full.names = T) %>% str_subset("stats") %>% str_subset("BR5", negate=TRUE)
+
+summarystats <- data.frame()
+
+for(i in statdirs){
+        files <- list.files(i)
+        summary.table.1 <- data.frame()
+        for(stat in c("R1", "R2", "paired", "Ftrimmed", "Rtrimmed")){
+                temp <-  as.data.frame(read.delim(paste(i, paste0(stat, ".stats"), sep = "/"), header = TRUE))
+                temp.sum <- as.data.frame(as.list(c(sum(temp$TotSeqs),mean(temp$TotSeqs), mean(temp$MinLength), mean(temp$MaxLength), mean(temp$MeanLength))),col.names=c("Total seq number (across samples)","Mean seq number (per sample)", "min seq length","max seq length","mean seq length"), check.names = FALSE)
+                summary.table.1 <- rbind(summary.table.1, temp.sum)
+                assign(stat, temp)
+                rm(temp, temp.sum)
+        }
+        rownames(summary.table.1) <- c("R1", "R2", "paired", "Ftrimmed", "Rtrimmed")
+  summary.table.1 <- summary.table.1 %>% rownames_to_column("Step")      
+  summary.table.1$amplicon <- str_extract(i, "16S|18S|F230|ITS")
+        
+  summarystats <- rbind(summarystats, summary.table.1)      
+        
+}
+
+write_rds(summarystats, "data/summarystats.rds")
+
+```
+
+```{r processing-Stats, include=TRUE}
+summarystats <- readRDS("data/summarystats.rds")
+
+knitr::kable(summarystats, caption = " Summary statistics from read merging and primer trimming via the MetaWorks v1.4.0 pipeline", format = "markdown")
+
+#sum(summarystats$`Total seq number (across samples)`[summarystats$Step=="R1"])/1000000
+
+```
+
+
+```{r, include=FALSE, eval=FALSE}
+folder <- "//NRONP6AwvFSP001/EnvChem/wet_analyses_bioinformatics_archive/AshNet.Biodiversity"
+
+statdirs <- list.dirs(folder, full.names = T, recursive = F) %>% str_subset("16S|18S|F230|ITS")
+
+summarystats <- data.frame()
+
+for(i in statdirs){
+        files <- list.files(i)
+        dereplication <- read.csv(paste(i,  "dereplication.log", sep = "/"), header = FALSE)
+        dereplication<-as.list(c(as.character(dereplication$V1[5]),as.character(dereplication$V2[4]), as.character(dereplication$V3[4]), as.character(dereplication$V4[4])))
+        dereplication[1]<-gsub(" unique sequences", "", dereplication[1])
+        dereplication[2]<-gsub(" min ", "", dereplication[2])
+        dereplication[3]<-gsub(" max ", "", dereplication[3])
+        dereplication[4]<-gsub(" avg ", "", dereplication[4])
+        
+        chimeraRemoval <- read.csv(paste(i, "chimeraRemoval.log", sep = "/"), header=FALSE)
+        chimeraRemoval<-as.list(c(as.character(chimeraRemoval$V1[12]),as.character(chimeraRemoval$V2[4]), as.character(chimeraRemoval$V3[4]), as.character(chimeraRemoval$V4[4])))
+        chimeraRemoval[1]<-gsub("F230/cat.denoised: 66/9694 chimeras ", "", chimeraRemoval[1])
+        chimeraRemoval[2]<-gsub(" min ", "", chimeraRemoval[2])
+        chimeraRemoval[3]<-gsub(" max ", "", chimeraRemoval[3])
+        chimeraRemoval[4]<-gsub(" avg ", "", chimeraRemoval[4])
+        
+        dereplication <- as.data.frame(dereplication, col.names=c("number","min", "max", "mean"))
+        chimeraRemoval <- as.data.frame(chimeraRemoval, col.names=c("number","min", "max", "mean"))
+        summary.table.2 <- rbind(dereplication, chimeraRemoval) 
+        row.names(summary.table.2) <- c("dereplication", "chimera removal")
+       
+        summary.table.2 <- summary.table.2 %>% rownames_to_column("Step")      
+        summary.table.2$amplicon <- str_extract(i, "16S|18S|F230|ITS")
+        
+        summarystats <- rbind(summarystats, summary.table.2)      
+        
+}
+
+write_rds(summarystats, "data/derepstats.RDS")
+```
+
+```{r processing-derep, include=TRUE}
+summarystats <- readRDS("data/derepstats.RDS")
+
+knitr::kable(summarystats, caption = " Summary statistics from dereplication and chimera filtering via the MetaWorksv1.4.0 pipeline", format = "markdown")
+```
+
+The rarecurve function in vegan was used to visually examine samples for sufficient read depths (whether the number of ASVs reached a plateau) before it was decided that data analysis could proceed without rarefying[@R-vegan].
+
+
+
+
+```{r load_Site_metadata_enzymes}
+## Load data
+load("data/AshNet_Clean_meta_func.RData")
+```
+
+
+
+```{r ash_treat_diff}
+
+## Look at individual differences in measured parameters due to ash addition from control sites
+## Look at whether characteristics of the ash, amount of ash, are correlated with the enzyme data
+
+by_block_controls <- Sample_metadata %>%
+        select(Label, Site, Soil_type, Treatment, Replicate, pH, Moisture.content....DW., MBC..mg.C.g.soil., C.N, C., N.) %>%
+        pivot_longer(!c(Label, Site, Soil_type, Treatment, Replicate), values_to = "value", names_to = "parameter")%>% 
+        filter(Treatment == "C") %>%
+        select(-Label, -Treatment) %>%
+        group_by(Site, Soil_type, Replicate, parameter) %>%
+        summarize(control.value = mean(value))
+
+by_block_samples <- Sample_metadata %>%
+         select(Label, Site, Soil_type, Treatment, Replicate, ash_type, ash_amt, Ca_application_amt, pH, Moisture.content....DW., MBC..mg.C.g.soil., C.N, C., N.) %>%
+        pivot_longer(!c(Label, Site, Soil_type, Treatment, Replicate, ash_type, ash_amt, Ca_application_amt), values_to = "value", names_to = "parameter")%>% 
+        filter(!Treatment == "C") %>%
+        left_join(by_block_controls, by=c("Site", "Soil_type", "Replicate", "parameter")) %>% 
+        mutate(diff = value - control.value) 
+
+## Get the differences in chemistry and interpolate missing values
+diffs_chemistry <- by_block_samples %>%
+  mutate(MIN_ORG = ifelse(names(Soil_type)== "MIN", "MIN", "ORG"), CONTROL = Treatment=="C") %>%
+  group_by(Site, Treatment, MIN_ORG, CONTROL, parameter) %>%
+  mutate(diff = ifelse(is.na(diff), mean(diff, na.rm=TRUE), diff)) %>%
+  group_by() %>%
+  select(!c("MIN_ORG", "CONTROL")) %>%
+  group_by(Site, Soil_type, Replicate, Treatment, parameter) %>%
+  summarize(diff = mean(diff, na.rm=TRUE)) %>%
+  pivot_wider(id_cols = c("Site", "Soil_type", "Replicate", "Treatment"), values_from = diff, names_from = parameter)
+
+
+by_block_samples <- by_block_samples %>%
+    filter(!is.na(diff)) %>%
+  distinct()
+
+rm(by_block_controls)
+
+## pH across sites
+
+## run t.tests tests (b/c all the data in low sample size but we are assuming they come from normal distributions, on differences)
+
+#one_way_tests <- by_block_samples %>%
+#  group_by(parameter) %>%
+#  mutate(bonf.alph = 0.05/n()) %>% ## Bonferroni correction
+#  group_by(Site, Treatment, Soil_type, Ca_application_amt, ash_type, ash_amt, parameter) %>%
+#  summarize(n = n(), t_p = wilcox.test(diff)$p.value, t.mean = wilcox.test(diff, conf.level = #unique(1-bonf.alph))$estimate, t.conf.upp = max(diff), t.conf.low = min(diff), bonf.alph = unique(bonf.alph)) %>%
+#  group_by(parameter) %>%
+#  mutate(sig.res = t_p < bonf.alph) %>% 
+#  group_by(Soil_type, parameter) %>%
+#  mutate(anot.loc = min(t.conf.low * 1.1))
+
+# num_p_tests = num_p_tests + length(unique(one_way_tests$parameter))
+
+rm(by_block_samples)
+
+## pH difference
+#ggplot(one_way_tests[one_way_tests$parameter == "pH",], aes(x=paste(Site, ash_type, ash_amt, sep=", "), group=ash_type, color=sig.res))+
+#  geom_point(aes(y=t.mean, size=Ca_application_amt), alpha=0.5)+
+#  geom_errorbar(aes(ymin = t.conf.low, ymax=t.conf.upp))+
+#   geom_hline(yintercept = 0, color="black")+
+#  geom_text(aes(y=anot.loc, label=n), color="black")+
+#  theme_minimal()+
+#  theme(axis.text.x = element_text(angle=90))+
+#  facet_wrap(~Soil_type, scales = "free")+
+#  ggtitle("Difference in pH due to Ash Addition")
+
+## C across sites
+
+#ggplot(one_way_tests[one_way_tests$parameter == "C.",], aes(x=paste(Site, ash_type, ash_amt, sep=", "), group=ash_type, color=sig.res))+
+#  geom_point(aes(y=t.mean, size=Ca_application_amt), alpha=0.5)+
+#  geom_errorbar(aes(ymin = t.conf.low, ymax=t.conf.upp))+
+#   geom_hline(yintercept = 0, color="black")+
+#  geom_text(aes(y=anot.loc, label=n), color="black")+
+#  theme_minimal()+
+#  theme(axis.text.x = element_text(angle=90))+
+#  facet_wrap(~Soil_type, scales = "free")+
+#  ggtitle("Difference in C due to Ash Addition")
+
+## N across sites
+
+#ggplot(one_way_tests[one_way_tests$parameter == "N.",], aes(x=paste(Site, ash_type, ash_amt, sep=", "), group=ash_type, color=sig.res))+
+#  geom_point(aes(y=t.mean, size=Ca_application_amt), alpha=0.5)+
+#  geom_errorbar(aes(ymin = t.conf.low, ymax=t.conf.upp))+
+#   geom_hline(yintercept = 0, color="black")+
+#  geom_text(aes(y=anot.loc, label=n), color="black")+
+#  theme_minimal()+
+#  theme(axis.text.x = element_text(angle=90))+
+#  facet_wrap(~Soil_type, scales = "free")+
+#  ggtitle("Difference in N due to Ash Addition")
+
+## Difference in C/N ratio
+
+## ggplot(one_way_tests[one_way_tests$parameter == "C.N",], aes(x=paste(Site, ash_type, ash_amt, sep=", "), group=ash_type, color=sig.res))+
+#  geom_point(aes(y=t.mean, size=Ca_application_amt), alpha=0.5)+
+#  geom_errorbar(aes(ymin = t.conf.low, ymax=t.conf.upp))+
+#   geom_hline(yintercept = 0, color="black")+
+#  geom_text(aes(y=anot.loc, label=n), color="black")+
+#  theme_minimal()+
+#  theme(axis.text.x = element_text(angle=90))+
+#  facet_wrap(~Soil_type, scales = "free")+
+#  ggtitle("Difference in C/N due to Ash Addition")
+
+## Microbial Biomass Carbon
+
+#ggplot(one_way_tests[one_way_tests$parameter == "MBC..mg.C.g.soil.",], aes(x=paste(Site, ash_type, ash_amt, sep=", "), #group=ash_type, color=sig.res))+
+#  geom_point(aes(y=t.mean, size=Ca_application_amt), alpha=0.5)+
+#  geom_errorbar(aes(ymin = t.conf.low, ymax=t.conf.upp))+
+#   geom_hline(yintercept = 0, color="black")+
+#  geom_text(aes(y=anot.loc, label=n), color="black")+
+#  theme_minimal()+
+#  theme(axis.text.x = element_text(angle=90))+
+#  facet_wrap(~Soil_type, scales = "free")+
+#  ggtitle("Difference in MBC due to Ash Addition")
+
+## Soil Moisture
+
+#ggplot(one_way_tests[one_way_tests$parameter == "Moisture.content....DW.",], aes(x=paste(Site, ash_type, ash_amt, sep=", "), group=ash_type, color=sig.res))+
+#  geom_point(aes(y=t.mean, size=Ca_application_amt), alpha=0.5)+
+#  geom_errorbar(aes(ymin = t.conf.low, ymax=t.conf.upp))+
+#   geom_hline(yintercept = 0, color="black")+
+#  geom_text(aes(y=anot.loc, label=n), color="black")+
+#  theme_minimal()+
+#  theme(axis.text.x = element_text(angle=90))+
+#  facet_wrap(~Soil_type, scales = "free")+
+#  ggtitle("Difference in soil moisture due to Ash Addition")
+
+#rm(one_way_tests)
+```
+
+
+
+
+```{r initiate_dslist}
+ds_list = list()
+ds_list_count = 1
+```
+
+
+```{r ITS_diversity}
+
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_ITS.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-ITSraw[!ITSraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(ITSraw)[c(1, 4:ncol(ITSraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("ITS_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+rownames(Ord_data) <- Ord_data$`OTU ID`
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Dataframe with species information (e.g., Taxonomic breakdown, if applicable and to be used in plotting, example only has species code)
+spec_char_data <- data.frame(species = colnames(Orddf))
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = Ord_data)
+names(ds_list)[ds_list_count] <- "ITS_ASV"
+
+
+ds_list_count <- ds_list_count + 1
+
+FunGuild_data <- Ord_data
+
+FunGuild_data$Genus <- ifelse(FunGuild_data$gBP >=0.7, FunGuild_data$Genus, "unidentified")
+FunGuild_data$Species <- gsub("\\|.+$", "", ifelse(FunGuild_data$sBP >=0.6, FunGuild_data$Species, "unidentified"))
+
+FunGuild_data$`OTU ID` <- rownames(FunGuild_data)
+
+FunGuild_data <- FunGuild_data[,c("OTU ID", "Kingdom", "Phylum", "Class", "Order", "Family", "Genus", "Species")]
+
+write_delim(FunGuild_data, file("FUNGuild/FunGuild.taxa.txt", encoding="UTF-8"), delim="\t")
+
+```
+
+
+```{asis, eval=FALSE}
+## Conducted on Powershell on Windows
+cd FUNGuild
+
+python FUNGuild.py guild -taxa FunGuild.taxa.txt
+
+```
+
+```{r Fun_functional_data}
+FunGuild_data <- read.delim("FUNGuild/FunGuild.taxa.guilds.txt")
+
+Func_cover <- data.frame()
+
+## Make sure order matches
+FunGuild_data <- FunGuild_data[match(row.names(Ord_data), FunGuild_data$OTU), ]
+
+## Bind Ord_data and FunGuild assignments and cluster results
+funcOrddf <- Ord_data %>%
+  mutate(OTU = rownames(Ord_data)) %>%
+  left_join(FunGuild_data[, c("OTU", "taxon", "trait", "trophicMode", "guild", "growthForm")], by="OTU") %>%
+  filter(!guild %in% c("na", "NULL")) %>%
+  mutate(guild = gsub("Wood Saprotrop", "Wood Saprotroph", guild)) %>%
+  mutate(guild2 = ifelse(grepl("Gasteroid", growthForm),paste(guild, "Gasteroid", sep="-"), guild)) %>%
+  mutate(guild2 = ifelse(grepl("Rot", trait), paste(guild2, trait, sep="-"), guild2)) %>%
+  pivot_longer(cols = colnames(Orddf), names_to = "Sample", values_to = "count") %>%
+  group_by(Sample, guild2) %>%
+  summarize(count = sum(count>0)) %>% ## get the number of identified ASV in the sample with the activity
+  separate_rows(guild2, sep="-|=") %>%
+  filter(!guild2=="") %>%
+  pivot_wider(names_from = guild2, values_from = count, values_fn = sum) %>%
+  data.frame()
+
+row.names(funcOrddf) <- funcOrddf$Sample
+
+funcOrddf <- t(funcOrddf[, 2:ncol(funcOrddf)])
+
+cov.percent <- Ord_data %>%
+  mutate(OTU = rownames(Ord_data)) %>%
+  left_join(FunGuild_data[, c("OTU", "taxon", "trait", "trophicMode", "guild", "growthForm")], by="OTU") %>%
+  mutate(guild = gsub("Wood Saprotrop", "Wood Saprotroph", guild)) %>%
+  mutate(guild = ifelse(grepl("Gasteroid", growthForm),paste(guild, "Gasteroid", sep="-"), guild)) %>%
+  mutate(guild = ifelse(grepl("Rot", trait), paste(guild, trait, sep="-"), guild)) %>% 
+  select(c("guild", unique(as.character(char_data$Label)))) %>%
+  pivot_longer(-guild, values_to = "count", names_to = "sample") %>%
+  summarize(coverage = sum(count[!guild=="na"])/sum(count)*100)
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = funcOrddf, char_data=char_data, coverage = cov.percent$coverage)
+names(ds_list)[ds_list_count] <- "ITS_functional"
+
+ds_list_count <- ds_list_count + 1
+```
+
+
+```{r ITS_genus_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_ITS.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-ITSraw[!ITSraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(ITSraw)[c(1, 4:ncol(ITSraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("ITS_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.7, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "ITS_Genus"
+
+ds_list_count <- ds_list_count + 1
+```
+
+
+
+```{r 16S_data}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_16S.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-d16Sraw[!d16Sraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(d16Sraw)[c(1, 4:ncol(d16Sraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("X16S_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("\\.","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+rownames(Ord_data) <- Ord_data$`OTU ID`
+Orddf <- Ord_data[, colnames(Ord_data) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[ifelse(colnames(Orddf) %in% Sample_metadata$Label, 
+                                    match(colnames(Orddf), Sample_metadata$Label),
+                                    match(gsub("[[:alpha:]]$", "", colnames(Orddf)), gsub("[[:alpha:]]$", "", (Sample_metadata$Label)))), ]
+char_data$Label <- ifelse(char_data$Label %in% colnames(Orddf), char_data$Label, gsub("[[:alpha:]]$", "", (char_data$Label)))
+char_data$Seq_count <- low_num 
+
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = Ord_data)
+names(ds_list)[ds_list_count] <- "16S_ASV"
+
+ds_list_count <- ds_list_count + 1
+
+## Dataframe with species information (e.g., Taxonomic breakdown, if applicable and to be used in plotting, example only has species code)
+spec_char_data <- data.frame(species = colnames(Orddf))
+
+FaproTax_data <- Ord_data
+
+FaproTax_data$Genus <- ifelse(FaproTax_data$gBP >=0.5, FaproTax_data$Genus, "unidentified") 
+ ## No Species in bac df
+
+FaproTax_data$`OTU ID` <- rownames(FaproTax_data)
+
+FaproTax_data$taxonomy <- paste(paste("d", FaproTax_data$Domain, sep="__"), 
+                                paste("p", FaproTax_data$Phylum, sep="__"),
+                                paste("c", FaproTax_data$Class, sep="__"),
+                                paste("o", FaproTax_data$Order, sep="__"),
+                                paste("f", FaproTax_data$Family, sep="__"),
+                                paste("g", FaproTax_data$Genus, sep="__"),
+                                sep=";")
+
+FaproTax_data<- FaproTax_data[,c("taxonomy", colnames(Orddf))]
+
+write_delim(FaproTax_data, file("FAPROTAX_1.2.4/FaproTax_data.tsv", encoding="UTF-8"), delim="\t")
+
+```
+
+```{asis, eval=FALSE}
+## Conducted on Powershell on Windows
+cd FAPROTAX_1.2.4
+
+## Replaced is not statements with "!="
+
+python collapse_table_v2.py -i FaproTax_data.tsv -g FAPROTAX.txt -f -o functional_otu_table.tsv -r report.txt --column_names_are_in first_data_line  --keep_header_comments --non_numeric consolidate -v --row_names_are_in_column "taxonomy" --omit_columns 0 --normalize_collapsed none --group_leftovers_as 'other'
+
+## Matching was poor- as no id's to species - only 6087, 21452 leftovers
+
+```
+
+```{r 16S_functional_data}
+FaproTax_data <- read.delim("FAPROTAX_1.2.4/functional_otu_table.tsv", skip = 2)
+
+## Make sure order matches
+rownames(FaproTax_data) <- FaproTax_data$group
+
+funcOrddf <- FaproTax_data[,2:ncol(FaproTax_data)]
+
+colnames(funcOrddf) <- gsub("\\.", "-", colnames(funcOrddf))
+
+funcOrddf <- funcOrddf[, match(char_data$Label, colnames(funcOrddf))]
+
+cov.percent <- FaproTax_data %>% 
+  data.frame() %>% 
+  pivot_longer(-group, values_to = "count", names_to = "sample") %>%
+  summarize(coverage = sum(count[!group=="other"])/sum(count)*100)
+
+### Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = funcOrddf, char_data=char_data, coverage = cov.percent$coverage)
+names(ds_list)[ds_list_count] <- "16S_functional"
+
+ds_list_count <- ds_list_count + 1
+  
+```
+
+
+```{r 16S_genus_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_16S.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-d16Sraw[!d16Sraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(d16Sraw)[c(1, 4:ncol(d16Sraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("X16S_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("\\.","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.5, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% gsub("[[:alpha:]]$", "", Sample_metadata$Label)]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[ifelse(colnames(Orddf) %in% Sample_metadata$Label, 
+                                    match(colnames(Orddf), Sample_metadata$Label),
+                                    match(gsub("[[:alpha:]]$", "", colnames(Orddf)), gsub("[[:alpha:]]$", "", (Sample_metadata$Label)))), ]
+char_data$Label <- ifelse(char_data$Label %in% colnames(Orddf), char_data$Label, gsub("[[:alpha:]]$", "", (char_data$Label)))
+char_data$Seq_count <- low_num 
+
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "16S_Genus"
+
+ds_list_count <- ds_list_count + 1
+```
+
+```{r arthropods_for_func}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_Arthro_Seq.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-F230raw[!F230raw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(F230raw)[c(1, 4:ncol(F230raw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("F230_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+rownames(Ord_data) <- Ord_data$`OTU ID`
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = Ord_data)
+names(ds_list)[ds_list_count] <- "F230_ASV"
+
+ds_list_count <- ds_list_count + 1
+
+
+
+BETSI_search <- str_c(gsub('^undef_', '', c(unique(Ord_data$Phylum), unique(Ord_data$Class), unique(Ord_data$Family), unique(Ord_data$Genus[Ord_data$gBP >= 0.3]), gsub("_", " ", unique(Ord_data$Species[Ord_data$sBP >= 0.7])))),
+                      collapse=";")
+
+
+BETSI_search1 <- str_c(c(unique(Ord_data$Class), unique(Ord_data$Family), unique(Ord_data$Genus[Ord_data$gBP >= 0.3])),
+                      collapse=";")
+
+BETSI_species <-  paste(c(gsub("_", " ", unique(Ord_data$Species[Ord_data$sBP >= 0.7]))), ";", sep="")
+write(c("Taxon_name", BETSI_species), "BETSI/BETSI_Species_check.csv")
+
+BETSI_species <- readLines("BETSI/transform.csv")[3:523]
+
+species_corrected <- data.frame()
+
+for(sp in BETSI_species){
+  species_corrected <-  rbind(species_corrected, 
+                              data.frame(original.species = str_split(sp, ";")[[1]][1], Corrected = str_split(sp, ";")[[1]][2]))
+}
+
+not_in_BETSI <- paste(sum(species_corrected$Corrected == "")/nrow(species_corrected)*100, "%")
+
+species_corrected <- species_corrected[!species_corrected$Corrected == "", ]
+
+BETSI_species_search <-  str_c(gsub("\t","", species_corrected$Corrected), collapse = ";")
+```
+
+```{r BETSI_diet_habitat}
+## Pull in the Class, Order, Genus search results for diet (includes species within the genus)
+unzip("BETSI/BETSI_0_cog_diet.zip", exdir="BETSI")
+
+BETSI_db_res <- read.delim("BETSI/BETSI_A.csv")
+BETSI_db_mat <- read.delim("BETSI/BETSI_B.csv")
+
+BETSI_db_mat <- BETSI_db_mat[, 1:(ncol(BETSI_db_mat)-2)]
+
+col_repl <- data.frame(orig=colnames(BETSI_db_mat), row.2 = t(BETSI_db_mat[1,])) %>%
+  mutate(grp = cumsum(!grepl("X", orig))) %>%
+  group_by(grp) %>%
+  mutate(first.term=orig[!grepl('X', orig)])
+
+colnames(BETSI_db_mat) <- c("Taxon", paste(col_repl$first.term, col_repl$X1, sep=".")[2:ncol(BETSI_db_mat)])
+
+BETSI_db_mat_diet <- BETSI_db_mat[2:nrow(BETSI_db_mat),] %>% pivot_longer(-Taxon, values_to = "presence", names_to = "Function")
+
+## Pull in the Class, Order, Genus search results for diet (includes species within the genus)
+unzip("BETSI/BETSI_0_cog_microhabitat.zip", exdir="BETSI")
+
+BETSI_db_res <- read.delim("BETSI/BETSI_A.csv")
+BETSI_db_mat <- read.delim("BETSI/BETSI_B.csv")
+
+BETSI_db_mat <- BETSI_db_mat[, 1:(ncol(BETSI_db_mat)-2)]
+
+col_repl <- data.frame(orig=colnames(BETSI_db_mat), row.2 = t(BETSI_db_mat[1,])) %>%
+  mutate(grp = cumsum(!grepl("X", orig))) %>%
+  group_by(grp) %>%
+  mutate(first.term=orig[!grepl('X', orig)])
+
+colnames(BETSI_db_mat) <- c("Taxon", paste(col_repl$first.term, col_repl$X1, sep=".")[2:ncol(BETSI_db_mat)])
+
+BETSI_db_mat_microhabitat <- BETSI_db_mat[2:nrow(BETSI_db_mat),] %>% pivot_longer(-Taxon, values_to = "presence", names_to = "Function")
+
+## Combine trait Matrixes
+
+BETSI_db_mat_combined <- rbind(BETSI_db_mat_diet, BETSI_db_mat_microhabitat)
+
+##
+
+BETSI_db_mat_combined <- BETSI_db_mat_combined %>%
+  filter(!presence == 0) %>%
+  group_by(Taxon) %>%
+  summarize(Function = str_c(unique(Function), collapse = "-")) 
+
+## Pull out traits data
+Traits <- data.frame()
+
+## Bind traits to each taxon by identified Genus - because almost as many distinct genus as identified species & not many species-level data in database from our dataset
+for(r in 1:nrow(Ord_data)){
+  
+  temp <- Ord_data[r,]
+  zOTU <- rownames(temp)
+  if(temp$gBP >= 0.3 & sum(grepl(temp$Genus, BETSI_db_mat_combined$Taxon))>0){
+     Trait <- unique(BETSI_db_mat_combined[grepl(temp$Genus, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else if(sum(grepl(temp$Family, BETSI_db_mat_combined$Taxon))>0){
+    Trait <- unique(BETSI_db_mat_combined[grepl(temp$Family, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else if(sum(grepl(temp$Order, BETSI_db_mat_combined$Taxon))>0){
+    Trait <- unique(BETSI_db_mat_combined[grepl(temp$Order, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else if(sum(grepl(temp$Class, BETSI_db_mat_combined$Taxon))>0){
+    Trait <- unique(BETSI_db_mat_combined[grepl(temp$Class, BETSI_db_mat_combined$Taxon), ]$Function)
+  }else{Trait <- "other"}
+ 
+  
+  Traits <- rbind(Traits, 
+                  data.frame(OTU=zOTU, Trait=Trait)) %>%
+    mutate(Trait = gsub("trophh", "troph", Trait))
+}
+
+
+## 1/3rd of data classified into a functional feeding group
+```
+
+```{r arthropods_functional_data_set-up}
+## Bind Ord_data and FunGuild assignments and cluster results
+funcOrddf <- Ord_data %>%
+  mutate(OTU = rownames(Ord_data)) %>%
+  left_join(Traits, by="OTU") %>%
+  pivot_longer(cols = colnames(Orddf), names_to = "Sample", values_to = "count") %>%
+  group_by(Sample, Trait) %>%
+  summarize(count = sum(count>0)) %>% ## get the number of identified ASV in the sample with the activity
+  separate_rows(Trait, sep="-|=") %>%
+  filter(!Trait=="|other") %>%
+  pivot_wider(names_from = Trait, values_from = count, values_fn = sum) %>%
+  data.frame()
+
+
+row.names(funcOrddf) <- funcOrddf$Sample
+
+funcOrddf <- funcOrddf[, !colnames(funcOrddf) == "Sample"]
+
+funcOrddf <- t(funcOrddf[match(char_data$Label, row.names(funcOrddf)), ])
+
+cov.percent <- Ord_data %>%
+  mutate(OTU = rownames(Ord_data)) %>%
+  left_join(Traits, by="OTU") %>%
+  select(-OTU) %>%
+  pivot_longer(cols = colnames(Orddf), values_to = "count", names_to = "sample") %>%
+  summarize(coverage = sum(count[!Trait=="other"])/sum(count)*100)
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = funcOrddf, char_data=char_data, coverage = cov.percent$coverage)
+names(ds_list)[ds_list_count] <- "F230_functional"
+
+ds_list_count <- ds_list_count + 1
+```
+
+```{r F230_genus_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+load("data/AshNet_Arthro_Seq.RData")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-F230raw[!F230raw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(F230raw)[c(1, 4:ncol(F230raw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("F230_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("OTU ID"), Tax %>% rownames_to_column("OTU ID"), by="OTU ID")
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.3, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "F230_Genus"
+
+ds_list_count <- ds_list_count + 1
+
+```
+
+
+```{r 18S_data, echo=FALSE}
+source("src/HelperFunctions_CommunityData.R")
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-d18Sraw[!d18Sraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(d18Sraw)[c(1, 4:ncol(d18Sraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("X18S_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("ESV"), Tax %>% rownames_to_column("ESV"), by="ESV")
+rownames(Ord_data) <- Ord_data$`OTU ID`
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data, Orig = d18S)
+names(ds_list)[ds_list_count] <- "18S_ASV"
+
+ds_list_count <- ds_list_count + 1
+
+```
+
+```{r 18S_data_genus, echo=FALSE}
+
+## create the matrix of species abundances ## Run all data on non-rarefied datasets.
+data.ESV<-d18Sraw[!d18Sraw$SampleName == "", ] %>%
+  pivot_wider(id_cols = colnames(d18Sraw)[c(1, 4:ncol(d18Sraw))], names_from = "SampleName", values_from ="ESVsize", values_fn =sum, values_fill = 0) %>% 
+  column_to_rownames("X18S_GlobalESV") %>%
+  data.frame()
+
+colnames(data.ESV) <- gsub("_","-",colnames(data.ESV))
+Tax <- data.ESV[, !colnames(data.ESV) %in% Sample_metadata$Label]
+data.ESV <- data.ESV[,colnames(data.ESV) %in% Sample_metadata$Label]
+## Remove all samples with <1000 sequences and any ESVs lost as a result"
+data.ESV<-data.ESV[,colSums(data.ESV, na.rm=T)>1000]
+data.ESV<-data.ESV[rowSums(data.ESV)>0, ]
+
+  # row names should be sites, colnames species
+Ord_data <- left_join(data.ESV %>% rownames_to_column("ESV"), Tax %>% rownames_to_column("ESV"), by="ESV")
+
+Ord_data <- Ord_data %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= 0.95, Genus, paste("Unclassified", Phylum))) %>%
+  group_by(Sample, Genus) %>%
+  summarize(abundance = sum(value)) %>%
+  group_by() %>%
+  pivot_wider(names_from = Sample, values_from = abundance, values_fill = 0) %>%
+  data.frame(check.names = F)
+
+row.names(Ord_data) <- Ord_data$Genus
+
+Orddf <- Ord_data[, colnames(Ord_data) %in% Sample_metadata$Label]
+
+Ord_data <- Ord_data[, 2:ncol(Ord_data)]
+
+
+low_num <- colSums(Orddf) ### add to sample data so that can visualize ones where there may be missingness influencing the pull
+
+
+## Grab the dataframe of information that you are associating to the sites (i.e., variables you want to assess grouping on.)
+char_data <- Sample_metadata[match(colnames(Orddf), Sample_metadata$Label), ]
+char_data$Seq_count <- low_num 
+
+## Add to dataset list 
+ds_list[[ds_list_count]] <- list(Orddf = Orddf, char_data=char_data)
+names(ds_list)[ds_list_count] <- "18S_Genus"
+
+ds_list_count <- ds_list_count + 1
+
+```
+
+
+```{r tax-summary, include=TRUE}
+cutoffs <- c(ITS = 0.7, `16S` = 0.5, C01 = 0.3, `18S` = 0.95) # Cutoffs used for at least 80% accuracy from MetaWorks ITS, C01, 18S classifiers or RDP classifier
+
+ds_tax_sum <- data.frame()
+
+for(ds in c("ITS", "16S", "F230", "18S")){
+  
+  ds_name <- paste0(ds, "_ASV")
+  
+  numASV  <- nrow(ds_list[[ds_name]]$Orddf)
+  
+  Ord_data <- left_join(data.ESV %>% rownames_to_column("ESV"), Tax %>% rownames_to_column("ESV"), by="ESV")
+
+  if(ds == "18S"){colnames(ds_list[[ds_name]]$Orig)[1] <- "OTU ID"
+  colnames(ds_list[[ds_name]]$Orig) <- gsub("_", "-", colnames(ds_list[[ds_name]]$Orig))}
+  
+  percent_ASV_Genus <- ds_list[[ds_name]]$Orig %>%
+  pivot_longer(cols = contains("-"), values_to = "value", names_to = "Sample") %>%
+  mutate(Genus = ifelse(gBP >= cutoffs[ds], Genus, paste("Unclassified", Phylum))) %>% 
+  filter(!grepl("Unclassified", Genus)) %>%
+  summarize(num_Genus = length(unique(`OTU ID`))/numASV * 100) %>% as.numeric()
+  
+  percent_groups <- ifelse(!ds=="18S", ds_list[[paste0(ds, "_functional")]]$coverage, NA)
+  
+  ds_tax_sum <- rbind(ds_tax_sum, data.frame(Target = ds, `Number of ASV`=numASV, `Percent of ASV identified to Genus`= percent_ASV_Genus, `Percent of ASV assigned to a functional attribute` = percent_groups))
+  
+}
+
+colnames(ds_tax_sum) <- gsub("\\.", " ", colnames(ds_tax_sum))
+
+knitr::kable(ds_tax_sum, caption = "Percentage of ASV classified to Genus or assigned to a functional attribute for each metabarcoding target.")
+```
+
+
+## Statistical testing 
+
+```{r Table-of-models, include=TRUE}
+
+tab_of_mods <- list(c(`Response variable` = "Enzyme activity", 
+                         Test = "Mixed-effects ANOVA", 
+                         `Explanatory variables` = "ash addition, ash addition amount",
+                         `Random variables` = "site, soil type",
+                         `Data subsets` = "Full datasets for NAG and PHOS activities"), 
+                    c(`Response variable` = "Enzyme activity", 
+                         Test = "Fixed-effects ANOVA", 
+                         `Explanatory variables` = "ash addition, ash addition amount, site, soil type with interaction",
+                         `Random variables` = "None",
+                         `Data subsets` = "Full datasets for PHOS and NAG activities"), 
+                    c(`Response variable` = "Enzyme activity", 
+                         Test = "lm", 
+                         `Explanatory variables` = "applied calcium kg ha-1, applied phosphorus kg ha-1, and, applied sodium kg ha-1, Stand age, dominant tree species, precipitaion of wettest quarter, precipitation of seasonality",
+                         `Random variables` = "None",
+                         `Data subsets` = "Full datasets for PHOS and NAG activities"),
+                    c(`Response variable` = "Difference in enzyme activity between controls and treatment for each block", 
+                         Test = "One-way Wilcoxon test", 
+                         `Explanatory variables` = "None",
+                         `Random variables` = "None",
+                         `Data subsets` = "Each site, ash type and amendment rate evaluated individually for NAG and PHOS"),
+                c(`Response variable` = "One model for each diversity metric (Shannon, Inverse Simpsons, Richness)", 
+                         Test = "Mixed-effects ANOVA", 
+                         `Explanatory variables` = "ash addition, ash addition amount",
+                         `Random variables` = "site, soil type",
+                         `Data subsets` = "Full dataset"),
+                c(`Response variable` = "Difference between controls and treatment for each block model for each diversity metric (Shannon, Inverse Simpsons, Richness)", 
+                         Test = "One-way Wilcoxon test", 
+                         `Explanatory variables` = "None",
+                         `Random variables` = "None",
+                         `Data subsets` = "Each site, ash type and amendment rate evaluated individually"),
+                c(`Response variable` = "Compositional variance of each metabarcoding target and summarization level", 
+                         Test = "PCA", 
+                         `Explanatory variables` = "None",
+                         `Random variables` = "None",
+                         `Data subsets` = "Full dataset"),
+                c(`Response variable` = "Compositional variance of each metabarcoding target and summarization level", 
+                         Test = "Partial RDA", 
+                         `Explanatory variables` = "applied calcium kg ha-1, applied phosphorus kg ha-1, and, applied sodium kg ha-1",
+                         `Random variables` = "Site, soil type",
+                         `Data subsets` = ""), 
+                c(`Response variable` = "Compositional variance of each group for each metabarcoding target and summarization level", 
+                         Test = "Aldex glm", 
+                         `Explanatory variables` = "applied calcium kg ha-1, applied phosphorus kg ha-1, and, applied sodium kg ha-1, Stand age, dominant tree species, precipitaion of wettest quarter, precipitation of seasonality",
+                         `Random variables` = "None",
+                         `Data subsets` = "Soil type"),
+                         c(`Response variable` = "Difference between control and treatment compositional variance of each group for each metabarcoding target and summarization level", 
+                         Test = "Aldex pairwise analysis", 
+                         `Explanatory variables` = "None",
+                         `Random variables` = "None",
+                         `Data subsets` = "Each site, ash type and amendment rate evaluated individually")
+                    )
+
+tab_of_mods <- t(as.data.frame(tab_of_mods))
+
+
+knitr::kable(tab_of_mods, caption=" Summary of statistical tests run in this paper.", row.names = F)
+```
+
+
+# Results 
+
+
+## Enzyme Analyses
+
+```{r get_chem_differences}
+## Look at individual differences in measured parameters due to ash addition from control sites
+## Look at whether characteristics of the ash, amount of ash, are correlated with the enzyme data
+
+## Grab control values
+by_block_controls <- Sample_metadata %>%
+        select(Label, Site, Soil_type, Treatment, Replicate, pH, Moisture.content....DW., MBC..mg.C.g.soil., C.N, C., N.) %>%
+        pivot_longer(!c(Label, Site, Soil_type, Treatment, Replicate), values_to = "value", names_to = "parameter")%>% 
+        filter(Treatment == "C") %>%
+        select(-Label, -Treatment) %>%
+        group_by(Site, Soil_type, Replicate, parameter) %>%
+        summarize(control.value = mean(value))
+
+## Grab sample values
+by_block_samples <- Sample_metadata %>%
+         select(Label, Site, Soil_type, Treatment, Replicate, ash_type, ash_amt, Ca_application_amt, pH, Moisture.content....DW., MBC..mg.C.g.soil., C.N, C., N.) %>%
+        pivot_longer(!c(Label, Site, Soil_type, Treatment, Replicate, ash_type, ash_amt, Ca_application_amt), values_to = "value", names_to = "parameter")%>% 
+        filter(!Treatment == "C") %>%
+        left_join(by_block_controls, by=c("Site", "Soil_type", "Replicate", "parameter")) %>% 
+        mutate(diff = value - control.value) 
+
+## Get the differences in between treatments and controls and interpolate missing values using group mean
+diffs_chemistry <- by_block_samples %>%
+  mutate(MIN_ORG = ifelse(names(Soil_type)== "MIN", "MIN", "ORG"), CONTROL = Treatment=="C") %>%
+  group_by(Site, Treatment, MIN_ORG, CONTROL, parameter) %>%
+  mutate(diff = ifelse(is.na(diff), mean(diff, na.rm=TRUE), diff)) %>%
+  group_by() %>%
+  select(!c("MIN_ORG", "CONTROL")) %>%
+  group_by(Site, Soil_type, Replicate, Treatment, parameter) %>%
+  summarize(diff = mean(diff, na.rm=TRUE)) %>%
+  pivot_wider(id_cols = c("Site", "Soil_type", "Replicate", "Treatment"), values_from = diff, names_from = parameter)
+
+rm(by_block_controls, by_block_samples)
+```
+
+
+
+```{r Enzyme_prep}
+## Model the difference between control and treatment
+## Look at whether characteristics of the ash, amount of ash, are correlated with the enzyme data
+by_block_controls <- Hydrolases %>%
+        select(Label, enzyme, activity_nmol.h.g_g.dry.wt, Soil_Moisture) %>%
+        left_join(Sample_metadata[, colnames(Sample_metadata) %in% c("Label", "Site", "Soil_type", "Replicate", "Treatment", "Stand", "Soil.type")], by="Label") %>% 
+        filter(Treatment == "C") %>%
+        select(-Label, -Treatment) %>%
+        rename(control.activity = activity_nmol.h.g_g.dry.wt)
+
+by_block_controls <- by_block_controls %>%
+  select(-Soil_Moisture)
+
+by_block_samples <- Hydrolases %>%
+        select(Label, enzyme, activity_nmol.h.g_g.dry.wt, Soil_Moisture) %>%
+        left_join(Sample_metadata[, colnames(Sample_metadata) %in% c("Label", "Site", "Soil_type", "Replicate", "Treatment")], by="Label") %>%
+        filter(!Treatment == "C") %>% 
+        select(-Label) 
+```
+
+```{r enzAnova}
+Hydrolase_anal <- Hydrolases %>%
+        select(Label, enzyme, activity_nmol.h.g_g.dry.wt, Soil_Moisture) %>%
+        left_join(Sample_metadata[, colnames(Sample_metadata) %in% c("Label", "Site", "Soil_type", "Replicate", "Treatment", "Stand", "Soil.type", "ash_amt")], by="Label") %>%
+  mutate(Ash = !Treatment == "C")
+
+Enz_anovs <- list()
+enz_count =1
+for(enz in unique(Hydrolase_anal$enzyme)){
+  Enz_anovs[[enz_count]] <- car::Anova(aov(activity_nmol.h.g_g.dry.wt~Site+Soil_type+Ash+ash_amt, data=Hydrolase_anal[Hydrolase_anal$enzyme == enz, ], singular.ok = TRUE), type = 3, singular.ok = TRUE) %>% as.data.frame(check.names = FALSE) %>% rownames_to_column("Parameter") %>% mutate(`Pr(>F)` = round(`Pr(>F)`, 3)) %>%dplyr::select(Parameter, `Sum Sq`, Df, `F value`, `Pr(>F)`)
+  names(Enz_anovs)[enz_count] <- enz
+  enz_count <- enz_count+1
+}
+
+## Run random effects version for Reviewer #2
+#Enz_anovs <- list()
+#enz_count =1
+#for(enz in unique(Hydrolase_anal$enzyme)){
+#  Enz_anovs[[enz_count]] <- car::Anova(lmer(activity_nmol.h.g_g.dry.wt~(1|Site)+(1|Soil_type)+Ash+ash_amt, #data=Hydrolase_anal[Hydrolase_anal$enzyme == enz, ]), type = 3, singular.ok = TRUE) %>% as.data.frame(check.names = FALSE) %>% rownames_to_column("Parameter") %>% mutate(`Pr(>Chisq)` = round(`Pr(>Chisq)`, 3)) %>%dplyr::select(Parameter, `Chisq`, Df, `Pr(>Chisq)`)
+#  names(Enz_anovs)[enz_count] <- enz
+#  enz_count <- enz_count+1
+#}
+
+## Update to include interactions and show why the pair-wise is necessary to see the differences
+Enz_anovs <- list()
+enz_count =1
+for(enz in unique(Hydrolase_anal$enzyme)){
+  Enz_anovs[[enz_count]] <- car::Anova(lmer(activity_nmol.h.g_g.dry.wt~(1|Site)*(1|Soil_type)*Ash+ash_amt, data=Hydrolase_anal[Hydrolase_anal$enzyme == enz, ]), type = 3, singular.ok = TRUE) %>% as.data.frame(check.names = FALSE) %>% rownames_to_column("Parameter") %>% mutate(`Pr(>Chisq)` = round(`Pr(>Chisq)`, 3)) %>%dplyr::select(Parameter, `Chisq`, Df, `Pr(>Chisq)`)
+  names(Enz_anovs)[enz_count] <- enz
+  enz_count <- enz_count+1
+}
+
+## Update to include interactions and show why the pair-wise is necessary to see the differences
+Enz_anovs2 <- list()
+enz_count =1
+for(enz in unique(Hydrolase_anal$enzyme)){
+  Enz_anovs2[[enz_count]] <- car::Anova(aov(activity_nmol.h.g_g.dry.wt~Site*Soil_type*Ash+ash_amt, data=Hydrolase_anal[Hydrolase_anal$enzyme == enz, ]), type = 3, singular.ok = TRUE) %>% as.data.frame(check.names = FALSE) %>% rownames_to_column("Parameter") %>% mutate(`Pr(>F)` = round(`Pr(>F)`, 3)) %>%dplyr::select(Parameter, `Sum Sq`, Df, `F values`, `Pr(>F)`)
+  names(Enz_anovs2)[enz_count] <- enz
+  enz_count <- enz_count+1
+}
+
+
+rm(enz_count, Hydrolase_anal, enz)
+```
+
+```{r PHOSaov, include=TRUE}
+
+ft <- flextable(Enz_anovs$PHOS)
+ft <- theme_vanilla(ft)
+ft <- set_caption(ft, " Type III mixed-effects Analysis of variance results for phosphatase activity as explained by  ash amendment (Ash) and amount of ash amendment (ash_amt) after site and soil horizon (soil_type) were accounted for as random effects.")
+ft
+
+```
+
+```{r PHOSaov2, include=TRUE}
+
+ft <- flextable(Enz_anovs2$PHOS)
+ft <- theme_vanilla(ft)
+ft <- set_caption(ft, " Type III fixed-effects Analysis of variance results for phosphatase activity as explained by site, soil horizon (soil_type), ash amendment (Ash) and amount of ash amendment (ash_amt).")
+ft
+
+```
+
+```{r NAGaov, include=TRUE}
+ft <- flextable(Enz_anovs$NAG)
+ft <- theme_vanilla(ft)
+ft <- set_caption(ft, " Type III mixed-effects Analysis of variance results for N-acetylglucosaminidase activity as explained by  ash amendment (Ash) and amount of ash amendment (ash_amt) after site and soil horizon (soil_type) were accounted for as random effects.")
+ft
+```
+
+```{r NAGaov2, include=TRUE}
+
+ft <- flextable(Enz_anovs2$NAG)
+ft <- theme_vanilla(ft)
+ft <- set_caption(ft, " Type III fixed-effects Analysis of variance results for  N-acetylglucosaminidase activity as explained by site, soil horizon (soil_type), ash amendment (Ash) and amount of ash amendment (ash_amt).")
+ft
+
+```
+
+
+```{r Enzyme_Modelling, fig.width=8, include=FALSE}
+## Scale numerical data before joining
+Samp_data_4join <- Sample_metadata[, colnames(Sample_metadata) %in% c("Soil_type","Soil Sample Type", "Treatment", "Site", "Replicate", "Label", "Ca_application_amt", "Ash.TC.kg.applied", "Ash.TN.kg.applied", "Ash.P.kg.applied", "Ash.Na.kg.applied", "Moisture.content....DW.", "Years_ash", "May_mean_monthly_maximum_temperature", "Oldest_Stand_age", "Precipitation_Seasonality_(C_of_V)", "Precipitation_of_Wettest_Quarter")] %>% 
+  left_join(unique(diffs_chemistry[, colnames(diffs_chemistry) %in% c("Site", "Soil_type", "Replicate", "Treatment", "C.", "N.")]), by = c("Site", "Soil_type", "Replicate", "Treatment")) %>%
+        pivot_longer(cols = Ca_application_amt:N., values_to = "value", names_to = "Variable") %>%
+        group_by(Variable) %>%
+        mutate(value = scale(value)) %>%
+        pivot_wider(id_cols = c("Site", "Soil_type", "Replicate", "Treatment"), names_from = "Variable", values_from = "value", values_fn=mean, values_fill = 0)
+
+by_block_rep <- by_block_controls %>%
+        left_join(by_block_samples, by=c("Site", "Soil_type", "Replicate", "enzyme")) %>% 
+        mutate(diff_activity = activity_nmol.h.g_g.dry.wt - control.activity) %>%
+        left_join(Samp_data_4join, by = c("Site", "Soil_type", "Replicate", "Treatment"))
+
+rm(by_block_controls, by_block_samples)
+
+moddat <- list()
+count <- 1
+
+for(enz in unique(Hydrolases$enzyme)){
+  ## Subset data to just MIN samples, single enzyme and combine with the Sample metadata
+  for(soils in list("MIN", c("LFH", "L", "FH"))){
+    modelingdata <- by_block_rep %>%
+      filter(enzyme == enz & names(Soil_type) %in% soils & !is.na(diff_activity) & complete.cases(.)) %>%
+      data.frame() 
+    mod <- lm(diff_activity ~ Ca_application_amt + Ash.P.kg.applied +
+                Ash.Na.kg.applied + May_mean_monthly_maximum_temperature + `Precipitation_Seasonality_.C_of_V.` + 
+                Precipitation_of_Wettest_Quarter + Years_ash + Stand + C. + N., data=modelingdata, verbose=FALSE)
+    mod <- MASS::stepAIC(mod, direction = "both", verbose=FALSE)
+    #summary(mod)
+    #performance::r2(mod)
+    #plot(mod)
+    
+    moddat[[count]] <- mod
+    names(moddat)[count] <- paste(ifelse(soils == "MIN", "MIN", "ORG"), enz, sep = "-")
+    
+    count= count + 1
+
+  }
+
+}
+
+num_p_tests <- num_p_tests + length(moddat)
+
+## Make dataframe of model effect sizes, model fits
+
+modfits <- data.frame()
+modestimates <- data.frame()
+
+for(i in 1:length(moddat)){
+  modestimates <- rbind(modestimates, data.frame(model=names(moddat)[i], summary(moddat[[i]])$coefficients, param = row.names(summary(moddat[[i]])$coefficients)))
+  modfits <- rbind(modfits, data.frame(model=names(moddat[i]), R2 = performance::r2(moddat[[i]])$R2, R2_adjusted = performance::r2(moddat[[i]])$R2_adjusted, p.val = pf(summary(moddat[[i]])$fstatistic[1], 
+            summary(moddat[[i]])$fstatistic[2], summary(moddat[[i]])$fstatistic[3], lower.tail = FALSE)))
+}
+
+#knitr::kable(modestimates)
+
+knitr::kable(modfits)
+
+## variable for if parameter is significant or not 
+modestimates$signif <- modestimates$Pr...t.. <= 0.05
+modestimates$param <- ifelse(modestimates$param %in% c("C.", "N."), paste(modestimates$param, "Difference"), modestimates$param)
+
+modestimates <- modestimates[!grepl("XY", modestimates$model), ] ## Exclude the xylose models because they were such poor fits...
+```
+
+
+```{r plotenzmods, fig.height=6, fig.width=8, warning=FALSE, fig.cap=" Linear modelling parameter estimates for models of the difference in enzyme activities between ash amended soils and controls for mineral and organic (litter, FH and LFH) soil layers. each estimated parameter value is displayed as a point, while error bars display the standard error of the estimate. Parameters associated with ash quality are bolded and significant results are coloured green. Each panel represents one model and parameters that were not included in models after forward selection are absent from that panel."}
+ggplot(modestimates[!modestimates$param=="(Intercept)", ], aes(Estimate, param, color=signif)) +
+        geom_point(size=2.5, alpha=0.5) +
+        geom_errorbar(aes(xmax = Estimate + Std..Error, xmin = Estimate - Std..Error), width=0.3)+
+        geom_vline(xintercept = 0, color="black")+
+        facet_grid(~model, scales = "free_x") +
+        scale_color_manual(values = c("gray", "#117733"))+ 
+        theme_minimal() +
+        ylab("")+
+        theme(axis.text.x = element_text(angle=90), axis.text.y = element_text(face=c("bold", "plain", "bold", "plain", "plain", "plain", "plain", "plain", "plain")), legend.position = "none")
+        
+## Add line with ranges of w-in site variation for these, for context
+
+```
+
+```{r cleandata}
+clean_up <- ls()[!ls() %in% c("Sample_metadata", "metadata", "ds_list", "cust.cols", "diffs_chemistry", "num_p_tests")]
+rm(list=clean_up)
+rm(clean_up)
+```
+
+## Community Analyses
+
+
+### Alpha Diversity
+
+
+```{r alphadiv_code, include=TRUE, fig.cap=" Scaled differences in alpha diversity metrics between treatments and controls of blocks within each site."}
+Alpha_dat <- data.frame()
+num_p_tests <- 1
+
+div_anovs <- list()
+div_count =1
+
+for(ds_n in 1:length(ds_list)){
+  ds_name <- names(ds_list)[ds_n]
+  
+  Orddf <- ds_list[[ds_name]]$Orddf
+  
+   ## If bacterial, use Bray-Curtis because are count data (rarefied), otherwise- are presence absence.
+  if(grepl("16S", ds_name)){
+    dist_met <- "bray"
+    Orddf <- t(apply(Orddf, 2, function(x){x/sum(x)})) ## relabund
+  } else {
+    dist_met <- "jaccard"
+    Orddf <- t(apply(Orddf, 2, function(x){ifelse(x>0, 1, 0)}))
+  }
+  
+  char_data <- ds_list[[ds_name]]$char_data
+  
+ diversity_data <- data.frame(char_data, Shannon = diversity(Orddf, index="shannon"),
+                             InverseSimpson = diversity(Orddf, index="invsimpson"),
+                             richness = specnumber(Orddf)) %>% pivot_longer(cols=c("Shannon", "InverseSimpson", "richness"), names_to = "diversity_metric", values_to = "diversity")
+
+ diversity_data <- diversity_data %>%
+  mutate(Ash = !Treatment == "C")
+
+ ## Regular Type III anova to see if there is an effect of ash amendment after site and soil horizon accounted for
+for(div_var in unique(diversity_data$diversity_metric)){
+  div_anovs[[div_count]] <- car::Anova(lmer(diversity~(1|Site)*(1|Soil_type)*Ash*ash_amt, data=diversity_data[diversity_data$diversity_metric == div_var, ]), type = 3)
+  names(div_anovs)[div_count] <- paste(ds_name, div_var, sep="-")
+  div_count <- div_count+1
+}
+
+
+## Calculate the difference in diversity metrics between controls and treatments for each block treatment
+
+by_block_controls <- diversity_data %>%
+        select(Label, diversity_metric, diversity) %>%
+        left_join(char_data[, colnames(char_data) %in% c("Label", "Site", "Soil_type", "Replicate", "Treatment")], by="Label") %>% 
+        filter(Treatment == "C") %>%
+        select(-Label, -Treatment) %>%
+        rename(control.div = diversity)
+
+by_block_samples <- diversity_data %>%
+        select(Label, diversity_metric, diversity) %>%
+        left_join(char_data[, colnames(char_data) %in% c("Label", "Site", "Soil_type", "Replicate", "Treatment")], by="Label") %>%
+        filter(!Treatment == "C") %>% 
+        select(-Label) 
+
+by_block_rep <- by_block_controls %>%
+        left_join(by_block_samples, by=c("Site", "Soil_type", "Replicate", "diversity_metric")) %>% 
+        mutate(diff_div = diversity - control.div) %>%
+        left_join(char_data[, colnames(char_data) %in% c("Site", "Soil_type", "block", "Replicate", "Treatment", "ash_amt", "Ca_application_amt", "ash_type")], by = c("Site", "Soil_type", "Replicate", "Treatment"))
+
+by_block_control_comparison <- by_block_controls %>%
+        distinct() %>%
+        left_join(by_block_controls %>% select(-Replicate) %>% distinct(), by=c("Site", "Soil_type", "diversity_metric")) %>% 
+  filter(!control.div.x == control.div.y) %>%
+        distinct() %>%
+        mutate(diff_div = control.div.x - control.div.y) %>%
+        left_join(unique(char_data[char_data$Treatment == "C", colnames(char_data) %in% c("Site", "Soil_type", "block", "ash_amt", "Ca_application_amt", "ash_type", "Treatment")], by = c("Site", "Soil_type"))) %>%
+  rename(control.div = control.div.x, diversity = control.div.y) %>% mutate(Replicate = 0)
+
+by_block_rep$Ash <- ifelse(by_block_rep$Treatment == "C", FALSE, TRUE)
+
+
+rm(by_block_controls, by_block_samples)
+
+## Paired T-tests for control and each treatment ##
+one_way_tests <- by_block_rep %>%
+  group_by(diversity_metric) %>%
+  mutate(diff_div = diff_div) %>% ## scaling to make results comparable across all results
+  mutate(bonf.alph = 0.05/n()) %>% ## Bonferroni correction
+  group_by(Site, Treatment, Soil_type, Ca_application_amt, ash_type, ash_amt, diversity_metric) %>%
+  summarize(n = n(), t_p = wilcox.test(diff_div, conf.level = unique(1-bonf.alph), exact=F)$p.value, t.mean =  mean(diff_div), t.conf.upp = max(diff_div), t.conf.low = min(diff_div), bonf.alph=unique(bonf.alph)) %>%
+  group_by(diversity_metric) %>%
+  mutate(sig.res = t_p < bonf.alph) %>% ## Bonferroni correction for testing significance of each enzyme
+  group_by(Soil_type, diversity_metric) %>%
+  mutate(anot.loc = min(t.conf.low * 1.1), Set = ds_name) 
+
+Alpha_dat <- rbind(Alpha_dat, one_way_tests)
+
+num_p_tests = num_p_tests + length(unique(by_block_rep$diversity_metric))
+  
+}
+rm(div_count, div_var)
+```
+
+
+```{r divaovres, include=TRUE}
+anov_tab <- data.frame()
+
+for(i in 1:length(div_anovs)){
+  anov_tab <- rbind(anov_tab, data.frame(div_anovs[[i]], Parameter = rownames(div_anovs[[i]]), set = names(div_anovs)[i]))
+  }
+anov_tab <- anov_tab %>% mutate(Amplicon = str_extract(set, "^[[:alnum:]]+"),
+                                `Diversity metric` = str_replace(str_extract(set, "-.+$"), "-", "")) %>%
+  filter(grepl("ASV", set), !is.na(Chisq)) %>% 
+  select(Amplicon, `Diversity metric`, Parameter, Chisq, Df, Pr..Chisq.) %>%
+  rename(`Pr(>Chisq)` = Pr..Chisq.,  `Degrees of Freedom` = Df)
+
+options(knitr.table.NA = "")
+
+#ggplot(anov_tab, aes(`Pr(>Chisq)`, Parameter, fill=`Diversity metric`)) +
+ # geom_bar(stat = "identity", position="dodge") +
+  #theme_minimal() +
+#  geom_vline(xintercept = 0.05)+
+#  scale_fill_manual(values= cust.cols[c(4,3,5)])+
+#  facet_grid(~Amplicon)
+
+knitr::kable(anov_tab, row.names = FALSE, digits=3, format.args = list(big.mark = ","), caption = "Type III Analysis of variance results for diversity metrics for each metabarcoding target as explained by ash amendment (Ash) and amount of ash amendment (ash_amt) after accounting for effects of site and soil horizon (soil type).")
+```
+
+
+```{r ALPHplot, fig.cap=" Scaled differences in alpha diversity metrics between treatments and controls of blocks within each site.", include=TRUE}
+
+Alpha_dat <- Alpha_dat %>%
+  arrange(sig.res) %>%
+  filter(!is.na(sig.res))
+
+ggplot(Alpha_dat, aes(x=paste(Site, ash_type, ash_amt, sep=", "), color=sig.res, shape=sig.res, size=sig.res, group=diversity_metric)) +
+        geom_point(aes(y=t.mean), alpha=0.5) +
+        #geom_errorbar(aes(y = t.mean, ymin = t.conf.low, ymax=t.conf.upp), width=0,)+
+        geom_hline(yintercept = 0, color="black")+
+        #facet_grid(Soil_type~., scales = "free_y") +
+        scale_color_manual(values = c("gray", "#117733"))+
+        scale_shape_manual(values= c(4, 19))+
+        scale_size_manual(values=c(2.5, 4)) +
+        theme_minimal() +
+        ylab("Mean difference from control")+
+        xlab("") +
+        theme(axis.text.x = element_text(angle=90)) +
+        facet_grid(diversity_metric~., scales = "free")
+
+```
+
+
+```{r Alphdetailtable, include=TRUE}
+
+Alph_res_sig <- Alpha_dat %>%
+        mutate(Target = str_extract(Set, "^[[:alnum:]]+"), Set = toupper(str_extract(Set, "[[:alnum:]]+$"))) %>%
+  arrange(Set) %>%
+        group_by(Site, Soil_type, ash_amt, ash_type, Target, diversity_metric) %>%
+        mutate(set = ifelse(sig.res, paste("<b>", str_extract(Set, "^."), "</b>", sep=""), str_extract(Set, "^."))) %>%
+        summarize(`percent of sites` = round(sum(sig.res)/n()*100, 2), `Number of sites` = paste(sum(sig.res), "/", n()), for.prin = str_c(set, collapse = " ")) %>%
+  group_by(Site, Soil_type, ash_amt, ash_type, diversity_metric) %>%
+        filter(!sum(`percent of sites`) == 0) %>%
+        select(-`percent of sites`) %>% 
+        arrange(Soil_type, Site, diversity_metric) %>%
+        pivot_wider(id_cols = c("Site", "Soil_type", "diversity_metric", "ash_amt", "ash_type"), names_from = Target, values_from = for.prin) %>% 
+        rename(`Mg/ha Ash` = ash_amt, `Type of Ash` = ash_type, `Soil Type` = Soil_type)
+        
+
+
+kbl(Alph_res_sig, caption = "Table 1. Distribution of the alpha diversity pairwise wilcoxon test results for site and treatment combinations with at least one significant result. Tests for ASV, genus and functional groups are represented by A, G and F respectively and bolded where the result was significant at a Bonferonni corrected $\\alpha$ of 0.05. 92 of 1494 tests are displayed in this table with only 28 significant results (~2%).", escape = F) %>%
+        kable_paper("striped", full_width=F) 
+
+kbl(Alph_res_sig, "html", escape = F) %>%
+        kable_classic(full_width=T) %>%
+        save_kable(file = "AlphaDiversity_results.png")
+
+```
+
+
+```{r Dist_diff, echo=FALSE}
+Dist_diff_res_full <- data.frame()
+
+contl_dist <- data_frame()
+
+for(ds_n in 1:length(ds_list)){
+  ds_name <- names(ds_list)[ds_n]
+  
+  Orddf <- ds_list[[ds_name]]$Orddf
+  
+ ## If bacterial, use Bray-Curtis because are count data (rarefied), otherwise- are presence absence.
+  if(grepl("16S", ds_name)){
+    dist_met <- "bray"
+    Orddf <- t(apply(Orddf, 2, function(x){x/sum(x)})) ## relabund
+  } else {
+    dist_met <- "jaccard"
+    Orddf <- t(apply(Orddf, 2, function(x){ifelse(x>0, 1, 0)}))
+  }
+  
+  char_data <- ds_list[[ds_name]]$char_data 
+  
+ ### Distance calculation 
+
+## Calculate distances. Jaccard was selected presence/absence for each site
+Distances <- c()
+
+for(grp in c("LFH", "FH", "LM", "MIN")){
+  for(ste in unique(char_data[char_data$`Soil Sample Type` %in% grp,]$Site)){
+    tempord <- Orddf[char_data$`Soil Sample Type` %in% grp & char_data$Site == ste, ]
+        tempord <- tempord[, !colSums(tempord) == 0]
+        Dist_mat <- vegdist(tempord, distance = dist_met)
+        ## Extract site plotting data
+        distplot_tmp <- as.data.frame(as.matrix(Dist_mat))
+        distplot_tmp$Label <- rownames(distplot_tmp)
+        distplot_tmp <- distplot_tmp %>%
+          pivot_longer(cols = -Label, values_to = "distance", names_to = "Site_2") %>% 
+          filter(grepl("-C-", Site_2) & !Label == Site_2) %>% ## Control data is compared to all the other controls in the site
+          left_join(char_data, by="Label") %>%
+          filter(ifelse(!grepl("-C-", Label), Replicate == gsub("[[:alpha:]]", "", str_extract(Site_2, "[[:alnum:]]+$")), TRUE)) ## Only keeping distances for the block that the site is part of for comparison
+        Distances <- rbind(Distances, distplot_tmp)
+        rm(distplot_tmp, Dist_mat)
+  }
+}
+
+## Look for patterns in the distances between sites
+#ggplot(Distances, aes(as.factor(ash_amt), distance)) +
+#  geom_boxplot() + 
+#  theme_minimal()+
+#  facet_wrap(Soil_type~Site, scale="free")
+
+## Is there more between site variability than treatment variability?
+
+## What is the difference of between control differences to paired block control-treatment differences? 
+
+by_block_controls <- Distances %>%
+        select(Label, distance) %>%
+        left_join(char_data[, colnames(char_data) %in% c("Label", "Site", "Soil_type", "Replicate", "Treatment")], by="Label") %>% 
+        filter(Treatment == "C") %>%
+        select(-Label, -Treatment) %>%
+        rename(control.distance = distance)
+
+contl_dist <- rbind(contl_dist, by_block_controls %>% mutate(Target = str_extract(ds_name, "^[[:alnum:]]+"), Set = str_extract(ds_name, "[[:alnum:]]+$")))
+
+by_block_samples <- Distances %>%
+        select(Label, distance) %>%
+        left_join(char_data[, colnames(char_data) %in% c("Label", "Site", "Soil_type", "Replicate", "Treatment")], by="Label") %>%
+        filter(!Treatment == "C") %>% 
+        select(-Label) 
+
+by_block_rep <- by_block_controls %>%
+        left_join(by_block_samples, by=c("Site", "Soil_type", "Replicate")) %>% 
+        mutate(diff_dist = distance - control.distance) %>%
+        left_join(char_data[, colnames(char_data) %in% c("Site", "Soil_type", "Replicate", "Treatment", "ash_amt", "Ca_application_amt", "ash_type")], by = c("Site", "Soil_type", "Replicate", "Treatment"))
+
+by_block_control_comparison <- by_block_controls %>%
+        distinct() %>%
+        left_join(by_block_controls %>% select(-Replicate) %>% distinct(), by=c("Site", "Soil_type")) %>% 
+  filter(!control.distance.x == control.distance.y) %>%
+        distinct() %>%
+        mutate(diff_dist = control.distance.x - control.distance.y) %>%
+        left_join(unique(char_data[char_data$Treatment == "C", colnames(char_data) %in% c("Site", "Soil_type", "block", "ash_amt", "Ca_application_amt", "ash_type", "Treatment")], by = c("Site", "Soil_type"))) %>%
+  rename(control.distance = control.distance.x, distance = control.distance.y)
+
+rm(by_block_controls, by_block_samples)
+
+## one-sided T-tests for treatment compared to control ##
+Dist_diff_res_full2 <- by_block_rep %>%
+  rbind(by_block_control_comparison) %>%
+  filter(!is.na(diff_dist)) %>%
+  mutate(bonf.alph = 0.05/n()) %>% ## Bonferroni correction
+  group_by(Site, Treatment, Soil_type, ash_type, ash_amt) %>%
+  mutate(n = n(), t_p = wilcox.test(diff_dist, conf.level = unique(1-bonf.alph))$p.value, t.mean = mean(diff_dist), bonf.alph=unique(bonf.alph)) %>%
+  mutate(sig.res = t_p < bonf.alph) %>% ## Bonferroni correction for testing significance of each dataset
+  mutate(Target = str_extract(ds_name, "^[[:alnum:]]+"), Set = str_extract(ds_name, "[[:alnum:]]+$"))
+
+Dist_diff_res_full <- rbind(Dist_diff_res_full, Dist_diff_res_full2)
+
+num_p_tests <- num_p_tests + 1
+  
+}
+
+Dist_diff_res_full$Lab2 <- paste(Dist_diff_res_full$Site, Dist_diff_res_full$ash_type,Dist_diff_res_full$ash_amt, sep="-")
+Dist_diff_res_full <- Dist_diff_res_full %>%
+  group_by(Lab2, Target, Set) %>%
+  mutate(higher = t.mean > 0 & sig.res & Treatment != "C")%>%
+  group_by(Site) %>%
+  mutate(keep = sum(higher) > 0) %>%
+  group_by() %>%
+  filter(keep) %>%
+  mutate(colgroup = ifelse(ash_amt == 0, "Control", ifelse(sig.res & higher, "Higher than control", "Lower or\nNo Difference from control")), plotnm = ifelse(Treatment == "C", "Site Controls", Lab2))
+```
+
+
+Island Lake was the only site where the distances between ash-treatment and controls were larger than the differences between control replicates within plots. Though there were higher distances at Genus and Functional levels as well, only ASV is used is discussion due to the interpretation issues that are introduced from incomplete Genus and functional assignments.
+
+
+```{r plotdistdiffs, fig.height=6, fig.width=5, fig.cap=" Scaled difference in ASV community distance (Jaccard for Presence-Absence or Bray-Curtis for rarefied data) between Ash Addition plots compared to controls to distance between controls for each block. Only Island Lake is shown, as no other sites had any distances that were significantly higher than controls at $\\alpha$ = 0.05.", include=TRUE}
+## plot difference in distance
+ggplot(Dist_diff_res_full[Dist_diff_res_full$Set == "ASV"& Dist_diff_res_full$Site == "ILK", ], aes(x=plotnm, color=colgroup, fill=colgroup))+
+  geom_boxplot(aes(y=diff_dist), alpha=0.5)+
+  theme_minimal()+
+  geom_hline(yintercept = 0)+
+  scale_color_manual(values = c(cust.cols[c(3,2)], "gray"))+ 
+  scale_fill_manual(values = c(cust.cols[c(3,2)], "gray"))+ 
+  theme(axis.text.x = element_text(angle=90), legend.position="bottom", legend.title = element_blank())+
+        xlab("")+
+        ylab("")+
+  facet_grid(Target~names(Soil_type), scales = "free")
+
+```
+
+
+### CODA PCA
+```{r aldex_clrs, cache=TRUE}
+source("src/HelperFunctions_CommunityData.R")
+
+coda.clrs.res <- list()
+count= 1
+for(ds_n in 1:length(ds_list)){
+        ds_name <- names(ds_list)[ds_n]
+        
+        Orddf <- ds_list[[ds_name]]$Orddf
+        
+        char_data <- ds_list[[ds_name]]$char_data
+        
+              ## flip for ordination
+                Orddf4aldex <- t(Orddf)
+                
+                Orddf4aldex<- Orddf4aldex[, !colSums(Orddf4aldex) == 0]
+                
+                ## for any datasets that are not counts, transform.
+                if(sum(Orddf4aldex > 0 & Orddf4aldex < 1) > 0){
+                  subset_aldex <- round(Orddf4aldex * 10000, 0) ## If its relative abundance, multiply by 10,000 and round
+                }else{
+                  subset_aldex <- Orddf4aldex
+                }
+                
+                ## replace zeros
+                Ord.clr <- cmultRepl(Orddf4aldex, method="CZM", output="p-counts") ## need to surround with "abs" to make sure there aren't negative values. ## aldex just adds 0.5 to everything... any that are negative are just changed to 0.5
+                Ord.clr[Ord.clr<0] <- 0.5
+                
+                
+                ## transform the data to ratios by sample (rows)
+                Ord.clr <- apply(Ord.clr, 1, function(x){x/sum(x)})
+
+                ## make compositional by sample (columns)
+              #  Ord.test <- Ord.clr %>% data.frame(check.names = F) %>%
+              #    rownames_to_column("ASV") %>%
+              #    pivot_longer(-ASV, names_to = "sample", values_to = "proportion") %>%
+              #    group_by(sample, ASV) %>%
+              #    mutate(log.prop = log(proportion), m.log.prop = mean(log.prop), clr = log.prop - m.log.prop) %>%
+              #    filter(is.na(clr))
+                
+                Ord.clr <- apply(Ord.clr, 2, function(x){log(x) - mean(log(x))}) ## We are calculating this like aldex does.
+                coda.clrs.res[[count]] <- list(Ord = Ord.clr, char_data = char_data)
+                names(coda.clrs.res)[count] <- paste(ds_name, sep="_")
+                count=count+1
+          
+                
+        
+}
+
+rm(count)
+```
+
+
+```{r coda-pca-var, include=TRUE, fig.cap= "Compositional variance explained in first two PC axes for each metabarcoding dataset.", echo=FALSE}
+
+clr.pca.plotting <- data.frame()
+
+for(ds_n in 1:length(coda.clrs.res)){
+        ds_name <- names(coda.clrs.res)[ds_n]
+        
+        d.clr.abund <- t(coda.clrs.res[[ds_name]]$Ord)
+        
+        ## SVD PCA of clr values
+        pca <- prcomp(d.clr.abund)
+        
+        char_data <- coda.clrs.res[[ds_name]]$char_data
+        
+       # print(barplot(pca$sdev^2/mvar(d.clr.abund), ylab="variance explained", xlab="Component", main=ds_name))
+        
+        clr.pca.plotting <- rbind(clr.pca.plotting, data.frame(dataset = ds_name, variance=pca$sdev^2/mvar(d.clr.abund)))
+}
+
+pca.plotting <- clr.pca.plotting %>%
+  mutate(temp = 1) %>%
+  group_by(dataset) %>%
+  mutate(PCA = cumsum(temp), max.var = max(variance)) %>% 
+  filter(PCA %in% c(1,2)) %>%
+  summarize(variance=sum(variance)) %>%
+  arrange(desc(variance)) %>%
+  mutate(dataset = factor(as.character(dataset), levels = unique(as.character(dataset))))
+  ggplot(pca.plotting, aes(variance, dataset)) + geom_bar(stat= "identity") + xlab("Variance Explained by PC1 and PC2") + theme_minimal()
+```
+
+
+```{r coda_pca_plots, include=FALSE, echo=FALSE, eval=FALSE}
+clr.pca.plotting <- data.frame()
+
+plotcount <- 1
+
+for(ds_n in 1:length(coda.clrs.res)){
+        
+        ds_name <- names(coda.clrs.res)[ds_n]
+        
+        ## such poor coverage in genus and functional groups that they are excluded here
+        if(grepl("Genus|functional", ds_name)){next}
+        
+        d.clr.abund <- t(coda.clrs.res[[ds_name]]$Ord)
+        
+        ##SVD PCA of the clr values
+        pca <- prcomp(d.clr.abund)
+        
+        char_data <- coda.clrs.res[[ds_name]]$char_data
+        
+        pca.var.explained <- pca$sdev^2/mvar(d.clr.abund)
+        
+        ## Prepare plotting variables
+        xlab.val <- paste("PCA1", round(pca.var.explained[1], 3))
+        ylab.val <- paste("PCA2", round(pca.var.explained[2], 3))
+        
+        ## extract the same way base biplot for princomp works
+        plottingdat <- as.data.frame(pca$x/ncol(pca$x)) %>%
+          select(PC1, PC2) %>%
+          rownames_to_column("Label") %>% 
+          left_join(char_data, by="Label") %>%
+          select(-Label)
+          
+        ## Find Hulls of data
+      hulls = Ordination_hulls(plottingdat, c("Site", "Treatment", "Soil_type"))
+        
+        print(ggplot(plottingdat, aes(PC1, PC2, group=Site))+
+   #geom_text(data = NMSspec, aes(MDS1, MDS2, label=species), color="gray44") +
+   geom_polygon(data=hulls[!hulls$Treatment=="C", ], aes(fill=Soil_type, group=hullgrp), color=NA, alpha=0.25) +
+   geom_point(data=plottingdat[!plottingdat$Treatment=="C",], aes(size=ash_amt, color=Soil_type), alpha=0.25) + 
+   geom_polygon(data=hulls[hulls$Treatment=="C", ], aes(group=hullgrp, color=Soil_type), fill=NA) +
+   geom_point(data=plottingdat[plottingdat$Treatment=="C",], aes(color=Soil_type), shape=3) + 
+   scale_color_manual(values= cust.cols[c(1:3, 6)])+
+   scale_fill_manual(values= cust.cols[c(1:3, 6)])+
+   xlab(xlab.val)+
+   ylab(ylab.val)+
+   theme_minimal() +
+         facet_wrap(~Site, scale = "free"))+ 
+          ggtitle(ds_name)
+        
+}
+
+```
+
+
+
+### CODA RDA
+```{r coda_rda_plots}
+clr.rda.plots <- list()
+
+clr.rda.plotting <- data.frame()
+
+plotcount <- 1
+
+for(ds_n in 1:length(coda.clrs.res)){
+        
+        ds_name <- names(coda.clrs.res)[ds_n]
+        
+        ## such poor coverage in genus and functional groups that they are excluded here
+        #if(grepl("Genus|functional", ds_name)){next}
+        
+        d.clr.abund <- t(coda.clrs.res[[ds_name]]$Ord)
+        
+        ##RDA of the clr values
+        
+        char_data <- coda.clrs.res[[ds_name]]$char_data
+        char_data <- char_data[match(rownames(d.clr.abund), char_data$Label), ]
+        char_data$Layergrp = ifelse(char_data$`Soil Sample Type` == "MIN", "MIN", "ORG")
+        char_data_4rda <- char_data[, str_subset(colnames(char_data), "appl|Site|Soil Sample Type")]
+        char_data_4rda[is.na(char_data_4rda)] <- 0
+        
+        rda.res <- rda(d.clr.abund, char_data_4rda[, c("Ca_application_amt", "Ash.Na.kg.applied", "Ash.P.kg.applied")], char_data_4rda[, c("Site", "Soil Sample Type")])
+        ## unscaled, is ok b/c all in same units
+        
+        clr.rda.plotting <- rbind(clr.rda.plotting, data.frame(data.frame(t(summary(rda.res)$cont$importance)) %>%
+                                                                 rownames_to_column("PC") %>% 
+                                                                 mutate(const = ifelse(grepl("PC", PC), "unconstrained", "constrained")) %>%
+                                                                 group_by(const) %>% 
+                                                                 summarize(proportion.explained = sum(Proportion.Explained)), model = ds_name))
+        
+        rda.vecs <- rda.res$CCA$biplot %>% as.data.frame()
+        
+        ## Prepare plotting variables
+        xlab.val <- paste("RDA1", round(summary(rda.res)$cont$importance[2, 1], 3))
+        ylab.val <- paste("RDA2", round(summary(rda.res)$cont$importance[2, 2], 3))
+        
+        ## extract the same way base biplot for princomp works
+        plottingdat <- as.data.frame(rda.res$CCA$wa) %>%
+          select(RDA1, RDA2) %>%
+          rownames_to_column("Label") %>% 
+          left_join(char_data, by="Label") %>%
+          select(-Label)
+          
+        ## Find Hulls of data
+      hulls = Ordination_hulls(plottingdat, c("Site", "Treatment", "Layergrp"))
+      
+      if(grepl("Genus|functional", ds_name)){next}
+      
+       clr.rda.plots[[plotcount]] <-ggplot(plottingdat, aes(RDA1, RDA2, group=Site))+
+   #geom_text(data = NMSspec, aes(MDS1, MDS2, label=species), color="gray44") +
+   #geom_polygon(data=hulls[!hulls$Treatment=="C", ], aes(fill=Site, group=hullgrp), color=NA, alpha=0.25) +
+   geom_point(data=plottingdat[!plottingdat$Treatment=="C",], aes(color=Site), alpha=0.25) + 
+   geom_polygon(data=hulls[hulls$Treatment=="C", ], aes(group=hullgrp, color=Site), fill=NA) +
+   geom_point(data=plottingdat[plottingdat$Treatment=="C",], aes(color=Site), shape=3) + 
+   geom_text(inherit.aes = FALSE, data = rda.vecs, aes(label=row.names(rda.vecs), x=RDA1, y=RDA2), color="black") +
+   geom_segment(inherit.aes = FALSE, data = rda.vecs, aes(x=0, y=0, xend=RDA1, yend=RDA2), color="black",arrow = arrow()) +
+   scale_color_manual(values= cust.cols)+
+   scale_fill_manual(values= cust.cols)+
+   xlab(xlab.val)+
+   ylab(ylab.val)+
+   theme_minimal()+
+     ggtitle(ds_name) #+
+         #facet_wrap(~Site, scale = "free")
+   
+names(clr.rda.plots)[plotcount] <- ds_name
+        plotcount <- plotcount +1
+}
+
+```
+
+
+```{r RDA_plots_makecode, results='asis', include=FALSE}
+
+for(pl in 1:length(clr.rda.plots)){
+  
+  nm <- names(clr.rda.plots)[pl]
+  
+  set <- str_extract(nm, "^[[:alnum:]]+")
+  
+  taxlev <- str_extract(nm, "[[:alpha:]]+$")
+  
+  plttmp <-clr.rda.plots[[pl]]
+  
+  cat(paste('```{r', paste0("RDA",pl, "',"), 'include=T, fig.cap = "RDA of', set, taxlev,'groups for variance after site and soil type were accounted for. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. Arrows represent ash additions.", fig.width = 7.5}
+            print(clr.rda.plots[[',pl,']])', '\n```'))
+  
+  cat("\n\n")
+}
+
+
+```
+
+
+```{r Figure5, include=TRUE, fig.cap = "Proportion of variance explained by RDA axes constrained by the ash amendment parameters of applied calcium kg ha^-1^, applied phosphorus kg ha^-1^, and, applied sodium kg ha^-1^ after site and soil type have been accounted for. Model names are described as the targeted gene (16S, 18S, ITS, or, F230), summarization level (ASV, genus, or functional groupings) and the soil layers represented in the rda model (MIN = 0-10 cm depth mineral soil samples, LFH = L, FH, or LFH samples).", eval = FALSE}
+### create plot that summarizes constrained vs unconstrained variance for each dataset
+clr.rda.plotting$const <- factor(as.character(clr.rda.plotting$const), levels = c("unconstrained", "constrained"))
+
+ggplot(clr.rda.plotting[!clr.rda.plotting$const == "unconstrained", ], aes(proportion.explained, model)) +
+  geom_bar(stat = "identity") +
+  theme_minimal() + 
+  theme(legend.position = "none")+
+  xlab("Proportion of variance explained") + 
+  ylab("")
+```
+
+
+```{r RDA1, include=T, fig.cap = "RDA of ITS ASV groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. Arrows represent ash additions", fig.width = 7.5}
+            print(clr.rda.plots[[ 1 ]]) 
+
+```
+
+
+```{r RDA2, include=T, fig.cap = "RDA of 16S ASV groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. Arrows represent ash additions", fig.width = 7.5}
+            print(clr.rda.plots[[ 2 ]]) 
+
+```
+
+
+```{r RDA3, include=T, fig.cap = "RDA of F230 ASV groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. Arrows represent ash additions", fig.width = 7.5}
+            print(clr.rda.plots[[ 3 ]]) 
+
+```
+
+
+```{r RDA4, include=T, fig.cap = "RDA of 18S ASV groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. Arrows represent ash additions", fig.width = 7.5}
+            print(clr.rda.plots[[ 4 ]]) 
+
+```
+ 
+ 
+
+
+### Modeling of distinct species
+
+```{r}
+llfile <- list.files("Supplemental-Materials_cache_Linux")
+
+llfile <- unique(gsub("\\..+$", "", grep("aldex_glm_modelling", llfile, value = T)))
+
+lazyLoad(paste0("Supplemental-Materials_cache_Linux/", llfile))
+```
+
+```{r aldex_glm_modelling, cache=TRUE, eval=FALSE}
+
+aldex.glm.res <- data.frame()
+
+for(ds_n in 1:length(ds_list)){
+        ds_name <- names(ds_list)[ds_n]
+        
+        dist_met <- ifelse(grepl("16S|functional", ds_name), "bray", "jaccard") ## If bacterial or functional dataset, use Bray-Curtis because are count data, otherwise- are presence absence.
+        
+        Orddf <- ds_list[[ds_name]]$Orddf
+        
+        char_data <- ds_list[[ds_name]]$char_data
+        
+        if("Orig" %in% names(ds_list[[ds_name]])){
+                Orig <- ds_list[[ds_name]]$Orig
+                colnames(Orig)[1]<- "zOTU"
+                Tax <- Orig[, c("zOTU", colnames(Orig)[grep("seq", colnames(Orig)):ncol(Orig)])]
+        }
+        
+        for(st in list("MIN", c("LFH", "FH", "LM"))){
+                
+                soil_nm <- ifelse("MIN" %in% st, "Mineral", "Organic")
+                
+                Orddf4aldex <- Orddf[, colnames(Orddf) %in% char_data$Label[char_data$`Soil Sample Type` %in% st]]
+                
+                ## Run aldex.glm on the G/L matrix.
+                sam_inf <- char_data[match(colnames(Orddf4aldex), char_data$Label), c("Label", "Site", "Treatment", "Replicate", "Soil_type", "Ca_application_amt", "Ash.TC.kg.applied", "Ash.TN.kg.applied", "Ash.P.kg.applied", "Years_ash", "Precipitation_of_Wettest_Quarter", "May_mean_monthly_maximum_temperature", "Stand")] %>% left_join(diffs_chemistry[, c("Site", "Soil_type", "Replicate", "Treatment", "C.", "N.")], by=c("Site", "Soil_type", "Replicate", "Treatment"))
+                
+                ## Check data bind
+                #View(cbind(sam_inf[,c("Site", "Treatment", "Soil_type")], colnames(Orddf4aldex)))
+                
+                sam_inf[is.na(sam_inf)] <- 0
+                
+                ##Scale and centre all columns so effect sizes are comparable
+                for(cln in colnames(sam_inf)){
+                  if(is.numeric(sam_inf[,cln])){
+                    sam_inf[,cln] <- scale(sam_inf[,cln])
+                  }
+                }
+                
+                mm <- model.matrix(~ Ca_application_amt + C. + N. + Ash.P.kg.applied + Years_ash + Precipitation_of_Wettest_Quarter + May_mean_monthly_maximum_temperature + Stand, sam_inf)
+                
+                if(sum(Orddf4aldex > 0 & Orddf4aldex < 1) > 0){
+                  subset_aldex <- round(Orddf4aldex * 10000, 0) ## If its relative abundance, multiply by 10,000 and round
+                }else{
+                  subset_aldex <- Orddf4aldex
+                }
+                
+                
+                ## select denominators as ESV that are similar amongst all samples
+                
+                aldex.ob <- aldex.clr(subset_aldex, mm, denom="all")
+                
+                glm.res <- aldex.glm(aldex.ob)
+                
+                glm.res <- data.frame(glm.res)
+                
+                glm.res.sum <- glm.res %>% mutate(zOTU=row.names(glm.res)) %>%
+                        pivot_longer(-zOTU, values_to = "Value", names_to = "Metric") %>% 
+                        mutate(Parameter = gsub("\\.Estimate$|\\.Std..Error$|\\.t.value$|\\.Pr...t..$|\\.Pr...t...BH$", "", Metric), Variable= str_extract(Metric,"\\.Estimate$|\\.Std..Error$|\\.t.value$|\\.Pr...t..$|\\.Pr...t...BH$")) %>%
+                        mutate(Variable = gsub("\\.+", "_", gsub("^\\.|\\.+$", "", Variable))) %>%
+                        pivot_wider(id_cols = c("zOTU", "Parameter"), values_from = Value, names_from = Variable) %>%
+                        mutate(Set = ds_name, soil_subset = soil_nm)
+                
+                aldex.glm.res <- rbind(aldex.glm.res, glm.res.sum)
+                
+                num_p_tests = num_p_tests + 1
+                
+        }
+        
+        
+}
+
+```
+
+
+```{r}
+llfile <- list.files("Supplemental-Materials_cache_Linux")
+
+llfile <- unique(gsub("\\..+$", "", grep("aldex_pairwise", llfile, value = T)))
+
+lazyLoad(paste0("Supplemental-Materials_cache_Linux/", llfile))
+```
+
+```{r aldex_pairwise, cache=TRUE, include=FALSE, eval=FALSE}
+aldex.pairwise.res <- data.frame()
+
+for(ds_n in 1:length(ds_list)){
+        ds_name <- names(ds_list)[ds_n]
+        
+        dist_met <- ifelse(grepl("16S|functional", ds_name), "bray", "jaccard") ## If bacterial or functional dataset, use Bray-Curtis because are count data, otherwise- are presence absence.
+        
+        Orddf <- ds_list[[ds_name]]$Orddf
+        
+        char_data <- ds_list[[ds_name]]$char_data
+        
+        if("Orig" %in% names(ds_list[[ds_name]])){
+                Orig <- ds_list[[ds_name]]$Orig
+                colnames(Orig)[1]<- "zOTU"
+                Tax <- Orig[, c("zOTU", colnames(Orig)[grep("seq", colnames(Orig)):ncol(Orig)])]
+        }
+        
+        for(st in list("MIN", c("LFH", "FH", "LM"))){
+                
+                soil_nm <- ifelse("MIN" %in% st, "Mineral", "Organic")
+                
+                  Orddf4aldex <- Orddf[, colnames(Orddf) %in% char_data$Label[char_data$`Soil Sample Type` %in% st]]
+                
+                ## Run aldex.glm on the G/L matrix.
+                sam_inf <- char_data[match(colnames(Orddf4aldex), char_data$Label), c("Label", "Site", "Treatment", "Replicate", "Soil_type", "Ca_application_amt", "Ash.TC.kg.applied", "Ash.TN.kg.applied", "Ash.P.kg.applied", "Years_ash", "Precipitation_of_Wettest_Quarter", "May_mean_monthly_maximum_temperature", "Stand")] %>% left_join(diffs_chemistry[, c("Site", "Soil_type", "Replicate", "Treatment", "C.", "N.")], by=c("Site", "Soil_type", "Replicate", "Treatment"))
+                
+                ## Check data bind
+                #View(cbind(sam_inf[,c("Site", "Treatment", "Soil_type")], colnames(Orddf4aldex)))
+                
+                sam_inf[is.na(sam_inf)] <- 0
+                
+                mm <- model.matrix(~ Ca_application_amt + C. + N. + Ash.P.kg.applied + Years_ash + Precipitation_of_Wettest_Quarter + May_mean_monthly_maximum_temperature + Stand, sam_inf)
+                
+                 if(sum(Orddf4aldex > 0 & Orddf4aldex < 1) > 0){
+                  subset_aldex1 <- round(Orddf4aldex * 10000, 0) ## If its relative abundance, multiply by 10,000 and round
+                }else{
+                  subset_aldex1 <- Orddf4aldex
+                }
+                
+                ## select denominators as ESV that are similar amongst all samples
+                
+                for(site in unique(sam_inf$Site)){
+                        for(treat in unique(sam_inf[sam_inf$Site == site & sam_inf$Treatment != "C", ]$Treatment)){
+                         # print(paste(ds_name, soil_nm, site, treat, sep=" "))
+                                temp_inf <- sam_inf[sam_inf$Site == site & sam_inf$Treatment %in% c("C", treat), ]
+                                
+                                temp_inf$Treatment <- ifelse(temp_inf$Treatment=="C", "C", "Ash")
+                                
+                                ## Go to next iteration of loop if there are not enough samples to run the pairwise statistical test.
+                                if(min(table(temp_inf$Treatment))==1){
+                                        next
+                                }
+                                
+                                subset_aldex <- subset_aldex1[, temp_inf$Label]
+                                
+                                aldex.t.test <- aldex(subset_aldex, temp_inf$Treatment)
+                                
+                                aldex.t.test$zOTU <- rownames(aldex.t.test)
+                                
+                                aldex.t.test$test <- paste(site, treat, sep="-")
+                                
+                                aldex.t.test$Set <- ds_name
+                                aldex.t.test$soil_subset <-  soil_nm
+                                
+                                aldex.pairwise.res <- rbind(aldex.pairwise.res, aldex.t.test)
+                                
+                                num_p_tests = num_p_tests + 1
+                        }
+                }
+        }
+}
+
+
+```
+
+
+```{r}
+llfile <- list.files("Supplemental-Materials_cache_Linux")
+
+llfile <- unique(gsub("\\..+$", "", grep("GLglm_", llfile, value = T)))
+
+lazyLoad(paste0("Supplemental-Materials_cache_Linux/", llfile))
+```
+
+```{r GLglm, cache=TRUE, eval=FALSE}
+source("src/GL analysis.R")
+
+GLglm.res <- data.frame()
+
+Threshold = 0.6 ## Percent of replicates with Gain or Loss # set to 60, so reps with n=3 would be included if 2/3
+Thresh_sites = 1 ## Number of sites that experienced a Gain or Loss
+
+
+for(ds_n in 1:length(ds_list)){
+        ds_name <- names(ds_list)[ds_n]
+        
+        Orddf <- ds_list[[ds_name]]$Orddf
+        
+        char_data <- ds_list[[ds_name]]$char_data
+        
+        if("Orig" %in% names(ds_list[[ds_name]])){
+                Orig <- ds_list[[ds_name]]$Orig
+                colnames(Orig)[1]<- "zOTU"
+                Tax <- Orig[, c("zOTU", colnames(Orig)[grep("seq", colnames(Orig)):ncol(Orig)])]
+        }
+        
+                Orddf4aldex <- Orddf
+                
+                  ## Want to see which organisms are gained or lost with ash addition.
+      Ord_Treat_spec <- as.data.frame(Orddf4aldex)
+      Ord_Treat_spec$Taxlev <- row.names(Orddf4aldex)
+      Ord_Treat_spec <- Ord_Treat_spec %>%
+        pivot_longer(-Taxlev, values_to = "abundance", names_to = "Label") %>%
+        mutate(rep_ID = str_extract(Label, "[[:alnum:]]+$"))%>%
+        left_join(char_data[, c("Label", "Site", "Treatment", "Soil_type" ,"Replicate")], by="Label") %>%
+        pivot_wider(id_cols = c("Taxlev", "Site", "Soil_type", "Replicate", "rep_ID"), names_from = "Treatment", values_from = "abundance") %>%
+        pivot_longer(!c("Taxlev", "Site", "Soil_type", "Replicate", "rep_ID", "C"), names_to = "Treatment", values_to = "abundance") %>% 
+        filter(!(is.na(abundance) | is.na(C))) %>% ## Because Fungi, just treating as presence/absence
+        group_by(Taxlev, Site, Soil_type, Treatment) %>%
+        summarize(G = sum(C==0 & abundance > 0), L = sum(C > 0 & abundance == 0), num = n(), `G%` = G/num*100, `L%` = L/num*100, Gain_Loss = G-L, GL_per = Gain_Loss/num, T_Gain_Loss = (abs(G-L)/num) >= Threshold)
+        
+        for(st in list("MIN", c("LFH", "FH", "LM"))){
+                
+                soil_nm <- ifelse("MIN" %in% st, "Mineral", "Organic")
+                
+                Ord_GL_spec <- Ord_Treat_spec %>%
+                        group_by(Site, Soil_type, Treatment, Taxlev) %>%
+                        summarize(Gain_Loss_percent = 100 + round(mean(GL_per*100))) %>%
+                        group_by(Taxlev) %>%
+                        filter(!Gain_Loss_percent == 0) %>% ## get rid of any that don't have changes compared to controls
+                        arrange(mean(Gain_Loss_percent)) %>%
+                        group_by() %>%
+                        mutate(Taxlev = factor(Taxlev, levels=unique(Taxlev)), Site_Treatment = paste(Site, Treatment, names(Soil_type), sep="-")) %>%
+                        filter(names(Soil_type) %in% st) %>%
+                        pivot_wider(id_cols = c(Taxlev), values_from = Gain_Loss_percent, names_from = Site_Treatment, values_fill = 100) %>% column_to_rownames("Taxlev") %>%  
+                  data.frame()
+                
+                
+                diffs_chemistry2 <- diffs_chemistry %>%
+                        group_by(Site, Soil_type, Treatment) %>%
+                        summarize(C. = mean(C.), N. = mean(N.))
+                
+                ## Run aldex.glm on the G/L matrix.
+                sam_inf <- unique(char_data[match(gsub("LM", "L", colnames(Ord_GL_spec)), paste(char_data$Site, char_data$Treatment, char_data$`Soil Sample Type`, sep=".")), c("Site", "Treatment", "Soil_type", "Ca_application_amt", "Ash.TC.kg.applied", "Ash.TN.kg.applied", "Ash.P.kg.applied", "Years_ash", "Precipitation_of_Wettest_Quarter", "May_mean_monthly_maximum_temperature", "Stand")]) %>% left_join(diffs_chemistry2, by=c("Site", "Soil_type", "Treatment"))
+                
+                ## Check data bind
+                # View(cbind(sam_inf[,c("Site", "Treatment", "Soil_type")], colnames(Ord_GL_spec)))
+        
+                 ##Scale and centre all columns so effect sizes are comparable
+                for(cln in colnames(sam_inf)){
+                  if(is.numeric(sam_inf[,cln])){
+                    sam_inf[,cln][is.na(sam_inf[,cln])] <- 0
+                    sam_inf[,cln] <- scale(sam_inf[,cln])
+                  }
+                }
+                
+                mm <- model.matrix(~ Ca_application_amt + C. + N. + Ash.P.kg.applied + Years_ash + Precipitation_of_Wettest_Quarter + May_mean_monthly_maximum_temperature + Stand, sam_inf)
+                
+                ### GLM with Benjamini-Hochberg corrected p-value for each feature
+                
+                glm.res <- GLglm(Ord_GL_spec, mm)
+                
+                glm.res <- data.frame(glm.res)
+                
+                glm.res.sum <- glm.res %>% mutate(zOTU=row.names(glm.res)) %>%
+                        pivot_longer(-zOTU, values_to = "Value", names_to = "Metric") %>% 
+                        mutate(Parameter = gsub("\\.Estimate$|\\.Std..Error$|\\.t.value$|\\.Pr...t..$|\\.Pr...t...BH$", "", Metric), Variable= str_extract(Metric,"\\.Estimate$|\\.Std..Error$|\\.t.value$|\\.Pr...t..$|\\.Pr...t...BH$")) %>%
+                        mutate(Variable = gsub("\\.+", "_", gsub("^\\.|\\.+$", "", Variable))) %>%
+                        pivot_wider(id_cols = c("zOTU", "Parameter"), values_from = Value, names_from = Variable) %>%
+                        mutate(Set = ds_name, soil_subset = soil_nm)
+                
+                GLglm.res <- rbind(GLglm.res, glm.res.sum)
+                
+                num_p_tests = num_p_tests + 1
+        }
+}
+
+
+```
+
+
+```{r aldexGlmplot, fig.width=8, include=TRUE, fig.cap="Benjamini-Hochberg corrected p-values from aldex-glms performed on ASV, Genus level and functional tables from 16S, 18S, ITS and F230 datasets. $\\alpha$ = 0.05 is shown as a lightly coloured dashed line. Parameters associated with ash quality are bolded.", cache=TRUE}
+aglmplt <- aldex.glm.res %>%
+  filter(!aldex.glm.res$Parameter == "X.Intercept.") %>%
+  mutate(significant = Pr_t_BH <= 0.05, 
+         Target = str_extract(Set, "[[:alnum:]]+$"), 
+         Set=  str_extract(Set, "^[[:alnum:]]+"), 
+         Set = ifelse(Set == "F230",
+                         "Arthropods (F230)",
+                         ifelse(Set == "16S", 
+                                "Bacterial (16S)", 
+                                ifelse(Set == "18S", 
+                                       "Eukaryotic (18S)", 
+                                       "Fungal (ITS)")))) %>%
+  arrange(significant)
+
+ggplot(aglmplt, aes(x=Pr_t_BH, y=Parameter, shape = Set, color=Target)) +
+        geom_point(alpha=0.5)+
+        #scale_y_log10() +
+        scale_x_log10() +
+        geom_vline(xintercept=0.05, color="#CC6677", lty = 2, cex=2) +
+        theme_minimal()+ 
+        scale_shape_manual(values = c(1:10))+
+        scale_colour_manual(values = cust.cols[c(1:8,1,2)]) +
+        ylab("Parameter") + 
+        xlab("Benjamini-Hochberg corrected expected p-value") +
+        theme(axis.text.y = element_text(face=c("bold", "plain", "bold", "plain", "plain", "plain", "plain", "plain", "plain")))
+
+```
+
+
+Ash phosphorus addition was a significantly associated with changes in the compositonal amount of some arthropod ASVs. There were no additional significant associations of ash related paramenters to the centered log-ratio values for any targeted group after Benjamini-Hochberg correction was performed.
+
+
+```{r Figure6, fig.width=8, include=TRUE, fig.cap="Benjamini-Hochberg corrected significance of pairwise ALDex2 testing from metabarcoding subsets summarized at functional, genus and ASV levels. Significance at an $\\alpha$ of 0.05 is shown on the graph as a light coloured dashed line.", cache=TRUE, eval=FALSE}
+aldex_pw_pl <- aldex.pairwise.res %>%
+  mutate(Site = str_extract(test, "^[[:alnum:]]+"), 
+         Treatment = str_extract(test, "[[:alnum:]]+$"), 
+         Target = str_extract(Set, "[[:alnum:]]+$"), 
+         Set=  str_extract(Set, "^[[:alnum:]]+"), 
+         Set = ifelse(Set == "F230",
+                         "Arthropods (F230)",
+                         ifelse(Set == "16S", 
+                                "Bacterial (16S)", 
+                                ifelse(Set == "18S", 
+                                       "Eukaryotic (18S)", 
+                                       "Fungal (ITS)"))))
+  
+
+ggplot(aldex_pw_pl, aes(x=we.eBH, y=Site, shape = Set, color=Target)) +
+        geom_point()+
+        scale_x_log10() +
+        geom_vline(xintercept=0.05, color="#CC6677", lty = 2, cex=2) +
+        #geom_text(aes(x=9, y=0.060), color="#CC6677", label = expression(paste(alpha, "= 0.05")), hjust="right") +
+        theme_minimal()+ 
+        scale_shape_manual(values = c(1:10))+
+        scale_colour_manual(values = cust.cols[c(1:8,1,2)]) +
+        ylab("Site") + 
+        xlab("Benjamini-Hochberg corrected expected p-value")
+
+```
+
+
+When assessed via pairwise comparisons using compositional t-tests, controls and treatments did not have any ASVs, genus or functional groups that were identified as significantly different ($\alpha$ = 0.05).
+
+
+```{r GLglmplot, fig.width=8, include=TRUE, fig.cap="Benjamini-Hochberg corrected p-values from glms on the gain or loss of a target group as compared to a control site. Glms were performed on ASV, Genus level and functional tables from 16S, 18S, ITS and F230 datasets. $\\alpha$ = 0.05 is shown as a lightly coloured dashed line. Parameters associated with ash quality are bolded.", cache=TRUE, eval=TRUE}
+glglmplt <- GLglm.res %>%
+  filter(!GLglm.res$Parameter == "X.Intercept.") %>%
+  mutate(significant = Pr_t_BH <= 0.05, 
+         Target = str_extract(Set, "[[:alnum:]]+$"), 
+         Set=  str_extract(Set, "^[[:alnum:]]+"), 
+         Set = ifelse(Set == "F230",
+                         "Arthropods (F230)",
+                         ifelse(Set == "16S", 
+                                "Bacterial (16S)", 
+                                ifelse(Set == "18S", 
+                                       "Eukaryotic (18S)", 
+                                       "Fungal (ITS)")))) %>%
+  arrange(significant)
+
+ggplot(glglmplt, aes(x=Pr_t_BH, y=Parameter, shape = Set, color=Target)) +
+        geom_point(alpha=0.5)+
+        #scale_y_log10() +
+        scale_x_log10() +
+        geom_vline(xintercept=0.05, color="#CC6677", lty = 2, cex=2) +
+        theme_minimal()+ 
+        scale_shape_manual(values = c(1:10))+
+        scale_colour_manual(values = cust.cols[c(1:8,1,2)]) +
+        ylab("Parameter") + 
+        xlab("Benjamini-Hochberg corrected expected p-value") +
+        theme(axis.text.y = element_text(face=c("bold", "plain", "bold", "plain", "plain", "plain", "plain", "plain", "plain")))
+
+```
+
+
+
+```{r GLglmheatmap, fig.height=8, include=TRUE, fig.cap="Proportion of sites with changes in gain/loss of a target group significantly (B-H p <= 0.05) associated with an ash-amendment related parameter."}
+glglmplt <- GLglm.res %>%
+  filter(!GLglm.res$Parameter == "X.Intercept.") %>%
+  mutate(significant = Pr_t_BH <= 0.05, 
+         Target = str_extract(Set, "[[:alnum:]]+$"), 
+         Set=  str_extract(Set, "^[[:alnum:]]+"), 
+         Set = ifelse(Set == "F230",
+                         "Arthropods (F230)",
+                         ifelse(Set == "16S", 
+                                "Bacterial (16S)", 
+                                ifelse(Set == "18S", 
+                                       "Eukaryotic (18S)", 
+                                       "Fungal (ITS)")))) %>%
+  filter(significant & grepl("appl", Parameter))
+
+
+aglmplt <- aglmplt %>% filter(significant & grepl("appl", Parameter))
+
+orddf1 <- t(ds_list$F230_Genus$Orddf)
+orddf1 <- as.data.frame(orddf1[,colnames(orddf1) == aglmplt$zOTU[aglmplt$Set =="Arthropods (F230)" & aglmplt$Target == "Genus"]]) %>% rownames_to_column("sample") %>% pivot_longer(-sample, names_to = "zOTU", values_to = "pa") %>% mutate(zOTU = paste0(zOTU, "_F230"))
+
+orddf2 <- t(ds_list$ITS_Genus$Orddf)
+orddf2 <- as.data.frame(orddf2[,colnames(orddf2) %in% c(glglmplt$zOTU[glglmplt$Set == "Fungal (ITS)" & glglmplt$Target == "Genus"], aglmplt$zOTU[aglmplt$Set == "Fungal (ITS)" & aglmplt$Target == "Genus"])]) %>% rownames_to_column("sample") %>% pivot_longer(-sample, names_to = "zOTU", values_to = "pa") %>% mutate(zOTU = paste0(zOTU, "_ITS"))
+
+orddf3 <- t(ds_list$`18S_Genus`$Orddf)
+orddf3 <- as.data.frame(orddf3[,colnames(orddf3) %in% unique(c(glglmplt$zOTU[glglmplt$Set == "Eukaryotic (18S)" & glglmplt$Target == "Genus"]))]) %>% rownames_to_column("sample") %>% pivot_longer(-sample, names_to = "zOTU", values_to = "pa") %>% mutate(zOTU = paste0(zOTU, "_18S"))
+
+orddf4 <- t(ds_list$`F230_ASV`$Orddf)
+orddf4 <- as.data.frame(orddf4[,colnames(orddf4) %in% c(aglmplt$zOTU[aglmplt$Set == "Arthropods (F230)" & aglmplt$Target == "ASV"])]) %>% rownames_to_column("sample") %>% pivot_longer(-sample, names_to = "zOTU", values_to = "pa")
+
+orddf5 <- t(ds_list$ITS_functional$Orddf)
+orddf5 <- as.data.frame(orddf5[,colnames(orddf5) %in% aglmplt$zOTU[aglmplt$Set == "Fungal (ITS)" & aglmplt$Target == "functional"]]) %>% rownames_to_column("sample") %>% pivot_longer(-sample, names_to = "zOTU", values_to = "pa")
+
+
+Ord_data<-  rbind(orddf1, orddf2, orddf3, orddf4, orddf5) %>% pivot_wider(names_from = "sample", values_from = "pa")
+Ord_data$zOTU[grepl("orddf", Ord_data$zOTU)] <- c(aglmplt$zOTU[aglmplt$Set == "Arthropods (F230)" & aglmplt$Target == "Genus"], 
+                                                  glglmplt$zOTU[glglmplt$Set == "Eukaryotic (18S)" & glglmplt$Target == "Genus"], 
+                                                  aglmplt$zOTU[aglmplt$Set == "Fungal (ITS)" & aglmplt$Target == "functional"])
+
+rm(orddf1, orddf2, orddf3, orddf4, orddf5)
+
+char_data <- ds_list$ITS_ASV$char_data
+
+      Ord_Treat_spec <- Ord_data %>%
+        pivot_longer(-zOTU, values_to = "abundance", names_to = "Label") %>%
+        mutate(rep_ID = str_extract(Label, "[[:alnum:]]+$")) %>%
+        left_join(char_data[, c("Label", "Site", "Treatment", "Soil_type" ,"Replicate")], by="Label") %>%
+        pivot_wider(id_cols = c("zOTU", "Site", "Soil_type", "Replicate", "rep_ID"), names_from = "Treatment", values_from = "abundance") %>%
+        pivot_longer(!c("zOTU", "Site", "Soil_type", "Replicate", "rep_ID", "C"), names_to = "Treatment", values_to = "abundance") %>% 
+        filter(!(is.na(abundance) | is.na(C))) %>% ## Because Fungi, just treating as presence/absence
+        group_by(zOTU, Site, Soil_type, Treatment) %>%
+        summarize(G = sum(C==0 & abundance > 0), L = sum(C > 0 & abundance == 0), num = n(), `G%` = G/num*100, `L%` = L/num*100, Gain_Loss = G-L, GL_per = Gain_Loss/num, T_Gain_Loss = (abs(G-L)/num) >= 0.6, change = mean(abundance - C))
+
+
+Ord_heat <- Ord_Treat_spec %>%
+  left_join(unique(char_data[,c("Site", "Treatment", "ash_amt")]), by=c("Site", "Treatment")) %>%
+  pivot_wider(id_cols = c(Site, Treatment, ash_amt, Soil_type), values_from = GL_per, names_from = zOTU, values_fill = 0) %>%
+  mutate(Site_Treatment = paste(Site, Treatment, ash_amt, names(Soil_type), sep="_")) %>%
+  data.frame()
+rownames(Ord_heat) <- Ord_heat$Site_Treatment
+
+Ord_heat <- Ord_heat %>% select(-Site_Treatment) %>% data.frame()
+
+## Find those responding the same
+mat_for_eval <- Ord_heat[, 5:(ncol(Ord_heat))]
+rownames(mat_for_eval) <- rownames(Ord_heat)
+
+
+pheatmap(mat_for_eval, color = colorRampPalette(brewer.pal(n = 7, name =
+  "Greys"))(20), cluster_rows = FALSE, cluster_cols = FALSE, gaps_row = c(4,8,11, 29, 41, 45, 47))
+
+```
+
+
+Upon visual inspection of the percentage of sites that had a gain or loss, patterns in ASV or genus that were found to be significantly associated to estimated total phosphorus or total calcium in the applied ash were site dependent, or showed conflicting patterns in different sites (e.g., Losses of *Uroleptus* in SRD and Gains at ALN, ALS sites) 
+
+
+## Traditional diversity analysis
+
+We also ran some more traditional NMDS and beta-diversity analyses using the vegan package in R, which found a lack of consistent influence of ash additions on community composition. Bacterial (16S) datasets were assessed as relative abundance using Bray-Curtis distance, and all other datasets were assessed as presence/absence matrixes using Jaccard distances..
+
+Community assemblages were visually different for some sites at the ASV level. These differences were not consistently present when datasets were summarized at genus or functional levels, which can be at least partially attributed to the loss of ASVs that could not be identified at these levels (Supplemental Results: Figures S12 - S22). 
+
+
+```{r NMDS_code, message=FALSE, warning=FALSE, cache=TRUE}
+source("src/HelperFunctions_CommunityData.R")
+NMDS_figs <- list()
+nmdscounts <- 1
+
+
+for(ds_n in 1:length(ds_list)){
+  ds_name <- names(ds_list)[ds_n]
+  
+  Orddf <- ds_list[[ds_name]]$Orddf
+  
+  ## If bacterial, use Bray-Curtis because are count data (rarefied), otherwise- are presence absence.
+  if(grepl("16S", ds_name)){
+    dist_met <- "bray"
+    Orddf <- t(apply(Orddf, 2, function(x){x/sum(x)})) ## relabund
+  } else {
+    dist_met <- "jaccard"
+    Orddf <- t(apply(Orddf, 2, function(x){ifelse(x>0, 1, 0)}))
+  }
+  
+  char_data <- ds_list[[ds_name]]$char_data %>% as.data.frame()
+  
+  ## Run NMDS. If there are issues with stress, you may need to increase the iterations or adjust other parameters
+NMDS <- metaMDS(Orddf, distance = dist_met) 
+
+## Extract site plotting data
+NMSplot <- Ord_extract_sites(NMDS, char_data)
+
+NMSplot$ash_type[NMSplot$Treatment == "C"] <- "none"
+
+## Find Hulls of data
+hulls = Ordination_hulls(NMSplot, c("Site_name", "ash_amt", "Soil_type", "ash_type"))
+
+## Extract Species data
+#NMSspec <- Ord_extract_spec(NMDS, spec_char_data)
+
+## Create plot - customize as required  
+ NMDS_figs[[nmdscounts]] <- ggplot(NMSplot, aes(MDS1, MDS2, group=Site))+
+   #geom_text(data = NMSspec, aes(MDS1, MDS2, label=species), color="gray44") +
+   geom_polygon(data=hulls[!hulls$Treatment=="C", ], aes(fill=Soil_type, group=hullgrp), color=NA, alpha=0.25) +
+   geom_point(data=NMSplot[!NMSplot$Treatment=="C",], aes(size=ash_amt, color=Soil_type), alpha=0.25) + 
+   geom_polygon(data=hulls[hulls$Treatment=="C", ], aes(group=hullgrp, color=Soil_type), fill=NA) +
+   geom_point(data=NMSplot[NMSplot$Treatment=="C",], aes(color=Soil_type), shape=3) + 
+   scale_color_manual(values= cust.cols[c(1:3, 6)])+
+   scale_fill_manual(values= cust.cols[c(1:3, 6)])+
+   theme_minimal() +
+         facet_wrap(~Site, scale = "free")
+names(NMDS_figs)[nmdscounts] <- ds_name 
+ 
+ nmdscounts <- nmdscounts + 1
+  
+}
+
+```
+
+
+```{r NMDS_plots_makecode, results='asis', include=FALSE}
+
+for(pl in 1:length(NMDS_figs)){
+  
+  nm <- names(NMDS_figs)[pl]
+  
+  set <- str_extract(nm, "^[[:alnum:]]+")
+  
+  taxlev <- str_extract(nm, "[[:alpha:]]+$")
+  
+  plttmp <- NMDS_figs[[pl]]
+  
+  cat(paste('```{r,include=T, fig.cap = "Ordination of', set, taxlev,'groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[',pl,']])','\n', '```'))
+  
+  cat("\n\n")
+}
+
+
+```
+
+
+```{r NMS1,include=T, fig.cap = "Ordination of ITS ASV groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[ 1 ]])
+```
+
+
+```{r NMS2,include=T, fig.cap = "Ordination of ITS functional groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[ 2 ]])
+```
+
+
+```{r NMS3,include=T, fig.cap = "Ordination of ITS Genus groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[ 3 ]]) 
+```
+
+
+```{r NMS4,include=T, fig.cap = "Ordination of 16S ASV groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[ 4 ]])
+```
+
+
+```{r NMS5,include=T, fig.cap = "Ordination of 16S functional groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[ 5 ]])
+```
+
+
+```{r NMS6,include=T, fig.cap = "Ordination of 16S Genus groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[ 6 ]])
+```
+
+
+```{r NMS7,include=T, fig.cap = " Ordination of F230 ASV groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[ 7 ]])
+```
+
+
+```{r NMS8,include=T, fig.cap = "Ordination of F230 functional groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[ 8 ]])
+```
+
+
+```{r NMS9,include=T, fig.cap = "Ordination of F230 Genus groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[ 9 ]])
+```
+
+
+```{r NMS10,include=T, fig.cap = "Ordination of Eukaryote ASV groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[ 10 ]])
+```
+
+
+```{r NMS11,include=T, fig.cap = "Ordination of Eukaryote Genus groups. Control sites are shown as + symbols with a solid line surrounding their distribution, while samples with ash amendment are shown as transparent circles sized to reflect the amount of ash added and surrounding with a transparent hull showing their distribution. Colour is used to represent the soil source of the sample. There was noticeable overlap between treatments and controls in most sites, for most soil layers.", fig.width = 7.5}
+            print(NMDS_figs[[ 11 ]])
+```
+
+
+```{r globADONIS, include=TRUE}
+adon_res_global <- data.frame()
+
+for(ds_n in 1:length(ds_list)){
+  ds_name <- names(ds_list)[ds_n]
+  
+  Orddf <- ds_list[[ds_name]]$Orddf
+  
+  ## If bacterial, use Bray-Curtis because are count data (rarefied), otherwise- are presence absence.
+  if(grepl("16S", ds_name)){
+    dist_met <- "bray"
+    Orddf <- t(apply(Orddf, 2, function(x){x/sum(x)})) ## relabund
+  } else {
+    dist_met <- "jaccard"
+    Orddf <- t(apply(Orddf, 2, function(x){ifelse(x>0, 1, 0)}))
+  }
+  
+  char_data <- ds_list[[ds_name]]$char_data %>% mutate(Ash =!grepl("C", Treatment)) %>% as.data.frame() 
+  
+ ### Adonis test 
+
+adon_res <- adonis(Orddf~Site+Soil_type+Ash+ash_amt, data=char_data, method = dist_met)$aov.tab %>% 
+  rownames_to_column("Parameter") %>%
+  mutate(dataset = ds_name) %>%
+  select(dataset, Parameter, Df, SumsOfSqs, MeanSqs, F.Model, R2, `Pr(>F)`) %>%
+  rename(Dataset = dataset, `Degrees of Freedom` = Df, `Sums of Squares` = SumsOfSqs, `R^2^` = R2)
+
+adon_res_global <- rbind(adon_res_global, adon_res)
+
+num_p_tests <- num_p_tests + 1
+  
+}
+
+kableExtra::kbl(adon_res_global, caption = "Results of mixed effects adonis testing of different metabarcode targets. Ash and ash amount (ash_amt) as well as site and soil horizon (Soil_type) were included in the models.") %>% kableExtra::collapse_rows(columns = 1)
+```
+
+
+
+```{r adonis_code}
+adon_res_full <- data.frame()
+
+for(ds_n in 1:length(ds_list)){
+  ds_name <- names(ds_list)[ds_n]
+  
+  Orddf <- ds_list[[ds_name]]$Orddf
+  
+  ## If bacterial, use Bray-Curtis because are count data (rarefied), otherwise- are presence absence.
+  if(grepl("16S", ds_name)){
+    dist_met <- "bray"
+    Orddf <- t(apply(Orddf, 2, function(x){x/sum(x)})) ## relabund
+  } else {
+    dist_met <- "jaccard"
+    Orddf <- t(apply(Orddf, 2, function(x){ifelse(x>0, 1, 0)}))
+  }
+  
+  char_data <- ds_list[[ds_name]]$char_data %>% as.data.frame()
+  
+ ### Adonis test 
+
+adon_res <- data.frame()
+
+for(grp in c("LFH", "FH", "LM", "MIN")){
+  for(ste in unique(char_data[char_data$`Soil Sample Type` %in% grp,]$Site)){
+    tempord <- Orddf[char_data$`Soil Sample Type` %in% grp & char_data$Site == ste, ]
+    tempchar <- char_data[char_data$`Soil Sample Type` %in% grp & char_data$Site == ste, ]
+        tempord <- tempord[, !colSums(tempord) == 0]
+        sink('NUL')
+        tempadon_res <- pairwise_adonis(tempord, c("Treatment"), tempchar, method = dist_met)
+        sink()## Suppress output for report
+        tempadon_res$Site <- ste
+        tempadon_res$`Soil Sample Type` <- grp
+        adon_res <- rbind(adon_res, tempadon_res)
+  }
+}
+rm(grp, ste, tempord, tempchar, tempadon_res)
+
+adon_res <- adon_res[grepl("C", adon_res$test_pair), ]
+
+adon_res_full2 <- adon_res %>%
+  filter(grepl("C", test_pair)) %>%
+  #group_by(Site, `Soil Sample Type`)%>%
+  mutate(Bonferroni_corrected = 0.05/n(), Dataset = gsub("_", " ", ds_name))
+
+adon_res_full <- rbind(adon_res_full, adon_res_full2)
+
+num_p_tests <- num_p_tests + 1
+  
+}
+
+```
+
+
+```{r betadispersion_code}
+source("src/HelperFunctions_CommunityData.R")
+bdsp_res_full <- data.frame()
+
+for(ds_n in 1:length(ds_list)){
+  ds_name <- names(ds_list)[ds_n]
+  
+  Orddf <- ds_list[[ds_name]]$Orddf
+  
+   ## If bacterial, use Bray-Curtis because are count data (rarefied), otherwise- are presence absence.
+  if(grepl("16S", ds_name)){
+    dist_met <- "bray"
+    Orddf <- t(apply(Orddf, 2, function(x){x/sum(x)})) ## relabund
+  } else {
+    dist_met <- "jaccard"
+    Orddf <- t(apply(Orddf, 2, function(x){ifelse(x>0, 1, 0)}))
+  }
+  
+  char_data <- ds_list[[ds_name]]$char_data %>% as.data.frame()
+  
+ ### Betadispersion test 
+
+bdsp_res <- data.frame()
+
+for(grp in c("LFH", "FH", "LM", "MIN")){
+  for(ste in unique(char_data[char_data$`Soil Sample Type` %in% grp,]$Site)){
+    tempord <- Orddf[char_data$`Soil Sample Type` %in% grp & char_data$Site == ste, ]
+    tempchar <- char_data[char_data$`Soil Sample Type` %in% grp & char_data$Site == ste, ] %>% data.frame()
+        tempord <- tempord[, !colSums(tempord) == 0]
+        sink('NUL')
+        tempbdsp_res <- pairwise_betadisper(tempord, c("Treatment"), tempchar, method = dist_met)
+        sink()## Suppress output for report
+        tempbdsp_res$Site <- ste
+        tempbdsp_res$`Soil Sample Type` <- grp
+        bdsp_res <- rbind(bdsp_res, tempbdsp_res)
+  }
+}
+rm(grp, ste, tempord, tempchar, tempbdsp_res)
+
+bdsp_res <- bdsp_res[grepl("C", bdsp_res$test_pair), ]
+
+bdsp_res_full2 <- bdsp_res %>%
+  filter(grepl("C", test_pair)) %>%
+  #group_by(Site, `Soil Sample Type`)%>%
+  mutate(Bonferroni_corrected = 0.05/n(), Dataset = gsub("_", " ", ds_name))
+
+bdsp_res_full <- rbind(bdsp_res_full, bdsp_res_full2)
+
+num_p_tests <- num_p_tests + 1
+  
+}
+
+```
+
+
+```{r adonisResults, fig.cap=" Significance of pairwise PERMANOVA test results for each soil layer, site and treatment combination as compared to controls. Values lower than 0.05 were spread amongst different taxonomic levels and targets. Lower p-values indicated that there was a low probability of the community from ash treatment being the same as controls from the same site. Colour and shape are used to differentiate the targeted sequence and grouping level used for each test.", include=TRUE, message=FALSE, warning=FALSE}
+site_treatments <- unique(Sample_metadata[,c("Site", "Soil Sample Type", "Soil_type", "Treatment", "ash_amt", "ash_type")])
+
+adon_res_full$Treatment <- gsub(":C|C:", "", adon_res_full$test_pair)
+
+adon_res_full$Target <- ifelse(grepl("ITS", adon_res_full$Dataset),
+                            "Fungal (ITS)",
+                            ifelse(grepl("16S", adon_res_full$Dataset), 
+                                   "Bacterial (16S)", 
+                                   ifelse(grepl("18S", adon_res_full$Dataset), 
+                                          "Eukaryotic (18S)", 
+                                          "Arthropods (F230)")))
+
+adon_res_full$Set <- ifelse(grepl("ASV", adon_res_full$Dataset),
+                            "ASV",
+                            ifelse(grepl("functional", adon_res_full$Dataset), 
+                                   "Functional", 
+                                   "Genus"))
+
+
+adon_res_full <- adon_res_full %>% left_join(site_treatments, by = c("Site", "Treatment", "Soil Sample Type"))
+
+num_sig<- round(sum(adon_res_full$Pr..F. <= 0.05)/nrow(adon_res_full)*100, 2)
+
+ggplot(adon_res_full, aes(y=Pr..F., x=Site, shape = Set, color=Target)) +
+        geom_point()+
+        scale_y_log10() +
+        geom_hline(yintercept=0.05, color="#CC6677", lty = 2, cex=2) +
+        geom_text(aes(x=9, y=0.075), color="#CC6677", label = expression(paste(alpha, "= 0.05")), hjust="right") +
+        geom_hline(aes(yintercept = min(Bonferroni_corrected)), color="#882255", lty = 1, cex=2) +
+        geom_text(aes(x=9, y=min(Bonferroni_corrected)+0.0005), label = expression(paste("Bonferroni corrected ", alpha)), color="#882255", hjust="right") +
+        theme_minimal()+ 
+        scale_shape_manual(values = c(1:10))+
+        scale_colour_manual(values = cust.cols[c(1:8,1,2)]) +
+        xlab("Site") + 
+        ylab("p-value of adonis test against control") #+
+       # facet_grid(~Set, scales = "free_y")
+```
+
+PERMANOVA tests of each metabarcode summarized at ASV, Genus and functional characteristics showed significant (p <0.05) influence of ash amendment or ash amount on community composition for ITS, F230 and 18S datasets. The majority of the variance was explained by site and soil horizon, and ash amendment explained a small proportion of the variance, with R^2^ values less than 0.003. Pairwise assessment of community distributions from block treatment-control pairings showed a small proportion of treatments that resulted in a shift from controls significant at $\alpha$ = 0.05, only the ILK F230 ASV dataset FH layer was found to be significantly different between 2.8 t ha^-1^ wood ash amended soils and controls after using a Bonferroni-corrected alpha to account for the number of tests performed (Figure S\@ref(fig:adonisResults)). 
+
+
+```{r AdonisSignificantOnes, include= TRUE}
+Adon_res_sig <- adon_res_full %>%
+        group_by(Site, Soil_type, ash_amt, ash_type, Target) %>%
+    mutate(set = ifelse(Pr..F. <= 0.05, paste("<b>", str_extract(Set, "^."), "</b>", sep=""), str_extract(Set, "^."))) %>%
+        summarize(`percent of sites` = round(sum(Pr..F. <= 0.05)/n()*100, 2), `Number of sites` = paste(sum(Pr..F. <= 0.05), "/", n()), for.prin = str_c(set, collapse = " ")) %>%
+        filter(!sum(`percent of sites`) == 0) %>%
+        select(-`percent of sites`) %>% 
+        arrange(Soil_type) %>%
+        pivot_wider(id_cols = c("Site", "Soil_type", "ash_amt", "ash_type"), names_from = Target, values_from = for.prin, values_fill = "") %>% 
+        rename(`Mg/ha Ash` = ash_amt, `Type of Ash` = ash_type, `Soil Type` = Soil_type)
+        
+
+
+kbl(Adon_res_sig, caption = " Distribution of the adonis results. Tests for ASV, Genus and Functional groups are represented by A, G and F respectively and bolded where the result was significant at an $\\alpha$ of 0.05.", escape = F) %>%
+        kable_paper("striped", full_width=F) 
+
+kbl(Adon_res_sig, "html", escape = F) %>%
+        kable_classic(full_width=T) %>%
+        save_kable(file = "Adonis_results.png")
+        
+
+```
+
+
+Potential differences detected in some sites occurred in both clearcut (ILK, PLD, SRD) and selection cut systems (HLB). Most of these differences were from the Island Lake site, for 18S and ITS data, indicating a fungal response. Significant (at $\alpha$ = 0.05) PERMANOVA results did not coincide with significant differences in betadispersion, showing that these differences are likely due to a shift in average community composition, rather than a differences in community structure variance (Supplemental Results: Table S10, S11). The differences in betadispersion were mainly from the ASV level analyses of F230 (arthropod) datasets, and corresponded to NMDS analysis, suggesting that there is generally higher dispersion in the controls compared to individual treatments. The solid polygons representing treatment dispersals were generally smaller than the area encapsulated by the solid line (Supplementary Results: Figure S19, Figure S20). Only the ILK sites had shifts in community distance due to treatment that were significantly greater than distances between controls within blocks. However, these differences were comparable to the distances from between-block comparisons (Supplemental Results: Figure S2). 
+
+
+```{r bdispResults, fig.cap=" Significance of pairwise betadispersion testing from metabarcoding subsets summarized at functional, genus and ASV levels. Significance at an $\\alpha$ of 0.05 and the Bonferonni corrected $\\alpha$ for each subset are shown on the graph as a light coloured dashed line, and dark coloured solid line, respectively.", include=TRUE, message=FALSE, warning=FALSE}
+site_treatments <- unique(Sample_metadata[,c("Site", "Soil Sample Type", "Soil_type", "Treatment", "ash_amt", "ash_type")])
+
+bdsp_res_full$Treatment <- gsub(":C|C:", "", bdsp_res_full$test_pair)
+
+bdsp_res_full$Target <- ifelse(grepl("ITS", bdsp_res_full$Dataset),
+                            "Fungal (ITS)",
+                            ifelse(grepl("16S", bdsp_res_full$Dataset), 
+                                   "Bacterial (16S)", 
+                                   ifelse(grepl("18S", bdsp_res_full$Dataset), 
+                                          "Eukaryotic (18S)", 
+                                          "Arthropods (F230)")))
+
+bdsp_res_full$Set <- ifelse(grepl("ASV", bdsp_res_full$Dataset),
+                            "ASV",
+                            ifelse(grepl("functional", bdsp_res_full$Dataset), 
+                                   "Functional", 
+                                   "Genus"))
+
+
+bdsp_res_full <- bdsp_res_full %>% left_join(site_treatments, by = c("Site", "Treatment", "Soil Sample Type"))
+
+num_sig<- round(sum(bdsp_res_full$Pr..F. <= 0.05)/nrow(bdsp_res_full)*100, 2)
+
+ggplot(bdsp_res_full, aes(y=Pr..F., x=Site, shape = Set, color=Target)) +
+        geom_point()+
+        scale_y_log10() +
+        geom_hline(yintercept=0.05, color="#CC6677", lty = 2, cex=2) +
+        geom_text(aes(x=9, y=0.075), color="#CC6677", label = expression(paste(alpha, "= 0.05")), hjust="right") +
+        geom_hline(aes(yintercept = min(Bonferroni_corrected)), color="#882255", lty = 1, cex=2) +
+        geom_text(aes(x=9, y=min(Bonferroni_corrected)+0.0005), label = expression(paste("Bonferroni corrected ", alpha)), color="#882255", hjust="right") +
+        theme_minimal()+ 
+        scale_shape_manual(values = c(1:10))+
+        scale_colour_manual(values = cust.cols[c(1:8,1,2)]) +
+        xlab("Site") + 
+        ylab("p-value of bdspis test against control") #+
+       # facet_grid(~Set, scales = "free_y")
+```
+
+
+```{r BetadisperSignificantOnes, include= TRUE}
+bdsp_res_sig <- bdsp_res_full %>%
+        group_by(Site, Soil_type, ash_amt, ash_type, Target) %>%
+    mutate(set = ifelse(Pr..F. <= 0.05, paste("<b>", str_extract(Set, "^."), "</b>", sep=""), str_extract(Set, "^."))) %>%
+        summarize(`percent of sites` = round(sum(Pr..F. <= 0.05)/n()*100, 2), `Number of sites` = paste(sum(Pr..F. <= 0.05), "/", n()), for.prin = str_c(set, collapse = " ")) %>%
+        filter(!sum(`percent of sites`) == 0) %>%
+        select(-`percent of sites`) %>% 
+        arrange(Soil_type) %>%
+        pivot_wider(id_cols = c("Site", "Soil_type", "ash_amt", "ash_type"), names_from = Target, values_from = for.prin, values_fill = "") %>% 
+        rename(`Mg/ha Ash` = ash_amt, `Type of Ash` = ash_type, `Soil Type` = Soil_type)
+        
+
+
+kbl(bdsp_res_sig, caption = " Distribution of betadispersion results. Tests for ASV, Genus and Functional groups are represented by A, G and F respectively and bolded where the result was significant at an $\\alpha$ of 0.05.", escape = F) %>%
+        kable_paper("striped", full_width=F) 
+
+#kbl(bdsp_res_sig, "html", escape = F) %>%
+#        kable_classic(full_width=T) %>%
+#        save_kable(file = "betadispersion_results.png")
+        
+
+```
+
+
+```{r cleandata2}
+clean_up <- ls()[!ls() %in% c("Sample_metadata", "metadata", "ds_list", "cust.cols", "diffs_chemistry", "num_p_tests")]
+rm(list=clean_up)
+rm(clean_up)
+```
+
+
+
+# References
